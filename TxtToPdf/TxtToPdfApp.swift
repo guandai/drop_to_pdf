@@ -1,17 +1,13 @@
-//
-//  TxtToPdfApp.swift
-//  TxtToPdf
-//
-//  Created by zheng dai on 2/21/25.
-//
-
 import SwiftUI
 
 @main
 struct TxtToPdfApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(appDelegate)  // ✅ Inject AppDelegate correctly
         }
     }
 }
