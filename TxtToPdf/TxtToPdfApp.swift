@@ -1,13 +1,15 @@
 import SwiftUI
 
 @main
-struct TxtToPdfApp: App {
+struct MyApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .environmentObject(appDelegate)  // ✅ Inject AppDelegate correctly
-        }
+        Settings { EmptyView() }
+//        WindowGroup {
+//            ContentView().environmentObject(appDelegate)
+//        }
+//        .defaultSize(width: 250, height: 250)  // ✅ Start window at 300x300
+//        .windowResizability(.contentSize)      // ✅ Disable resizing
     }
 }

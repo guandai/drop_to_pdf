@@ -6,26 +6,19 @@ struct ContentView: View {
     @State private var droppedFiles: [URL] = []
 
     var body: some View {
-        VStack {
-            Text("📂 Drag a TXT File Here")
-                .font(.title)
-                .padding()
-
+        VStack(spacing: 5) { // ✅ Reduced vertical spacing
             Text(droppedFiles.map { $0.lastPathComponent }.joined(separator: ", "))
                 .foregroundColor(.gray)
-                .padding()
+                .padding(.bottom, 5) // ✅ Reduce bottom padding
 
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color.blue, lineWidth: 2)
-                .frame(width: 200, height: 200)
+                .frame(width: 160, height: 160)
                 .onDrop(of: ["public.file-url"], isTargeted: nil) { providers in
                     providers.first?.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, _ in
                         if let data = item as? Data, let fileURL = URL(dataRepresentation: data, relativeTo: nil) {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 self.droppedFiles.append(fileURL)
-
-                                print("📂 DEBUG: Dropped file: \(fileURL.path)")
-
                                 // ✅ Call AppDelegate via EnvironmentObject
                                 appDelegate.convertTxtToPDF(txtFileURL: fileURL)
                             }
@@ -34,6 +27,6 @@ struct ContentView: View {
                     return true
                 }
         }
-        .frame(width: 300, height: 300)
+        .frame(width: 250, height: 250) // Ensure content fits within 300x300 window
     }
 }
