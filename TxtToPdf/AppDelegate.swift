@@ -7,8 +7,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     let bookmarkKey = "SavedFolderBookmark"
     
     func application(_ application: NSApplication, open urls: [URL]) {
-        for url in urls where url.pathExtension == "txt" {
-            convertTxtToPDF(txtFileURL: url)
+        for url in urls where url.pathExtension.lowercased() == "txt" {
+            print("📂 Dragged file onto app icon: \(url.path)")
+            convertTxtToPDF(txtFileURL: url)  // ✅ Automatically generate the PDF
         }
     }
     

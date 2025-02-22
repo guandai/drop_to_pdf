@@ -17,7 +17,7 @@ struct ContentView: View {
 
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color.blue, lineWidth: 2)
-                .frame(width: 300, height: 200)
+                .frame(width: 200, height: 200)
                 .onDrop(of: ["public.file-url"], isTargeted: nil) { providers in
                     providers.first?.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, _ in
                         if let data = item as? Data, let fileURL = URL(dataRepresentation: data, relativeTo: nil) {
@@ -34,6 +34,6 @@ struct ContentView: View {
                     return true
                 }
         }
-        .frame(width: 400, height: 300)
+        .frame(width: 300, height: 300)
     }
 }
