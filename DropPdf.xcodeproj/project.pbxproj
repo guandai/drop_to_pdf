@@ -1,0 +1,599 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		492A35892D6CD0F5004BDC75 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 492A35882D6CD0F5004BDC75 /* ZIPFoundation */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		49235ECD2D6CA9D3002F1FB6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49F4316E2D685CD000BFA997 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49235EBB2D6CA9D1002F1FB6;
+			remoteInfo = DropPdf;
+		};
+		49235ED72D6CA9D3002F1FB6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49F4316E2D685CD000BFA997 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49235EBB2D6CA9D1002F1FB6;
+			remoteInfo = DropPdf;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		49235EBC2D6CA9D1002F1FB6 /* DropPdf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DropPdf.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		49235ECC2D6CA9D3002F1FB6 /* DropPdfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DropPdfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		49235ED62D6CA9D3002F1FB6 /* DropPdfUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DropPdfUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		49235EBD2D6CA9D1002F1FB6 /* DropPdf */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DropPdf;
+			sourceTree = "<group>";
+		};
+		49235ECF2D6CA9D3002F1FB6 /* DropPdfTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DropPdfTests;
+			sourceTree = "<group>";
+		};
+		49235ED92D6CA9D3002F1FB6 /* DropPdfUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DropPdfUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		49235EB92D6CA9D1002F1FB6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				492A35892D6CD0F5004BDC75 /* ZIPFoundation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49235EC92D6CA9D3002F1FB6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49235ED32D6CA9D3002F1FB6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		491A9DAE2D69C190004B42F4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		49F4316D2D685CD000BFA997 = {
+			isa = PBXGroup;
+			children = (
+				49235EBD2D6CA9D1002F1FB6 /* DropPdf */,
+				49235ECF2D6CA9D3002F1FB6 /* DropPdfTests */,
+				49235ED92D6CA9D3002F1FB6 /* DropPdfUITests */,
+				491A9DAE2D69C190004B42F4 /* Frameworks */,
+				49F431772D685CD000BFA997 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		49F431772D685CD000BFA997 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				49235EBC2D6CA9D1002F1FB6 /* DropPdf.app */,
+				49235ECC2D6CA9D3002F1FB6 /* DropPdfTests.xctest */,
+				49235ED62D6CA9D3002F1FB6 /* DropPdfUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		49235EBB2D6CA9D1002F1FB6 /* DropPdf */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49235EDE2D6CA9D3002F1FB6 /* Build configuration list for PBXNativeTarget "DropPdf" */;
+			buildPhases = (
+				49235EB82D6CA9D1002F1FB6 /* Sources */,
+				49235EB92D6CA9D1002F1FB6 /* Frameworks */,
+				49235EBA2D6CA9D1002F1FB6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				49235EBD2D6CA9D1002F1FB6 /* DropPdf */,
+			);
+			name = DropPdf;
+			packageProductDependencies = (
+				492A35882D6CD0F5004BDC75 /* ZIPFoundation */,
+			);
+			productName = DropPdf;
+			productReference = 49235EBC2D6CA9D1002F1FB6 /* DropPdf.app */;
+			productType = "com.apple.product-type.application";
+		};
+		49235ECB2D6CA9D3002F1FB6 /* DropPdfTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49235EE12D6CA9D3002F1FB6 /* Build configuration list for PBXNativeTarget "DropPdfTests" */;
+			buildPhases = (
+				49235EC82D6CA9D3002F1FB6 /* Sources */,
+				49235EC92D6CA9D3002F1FB6 /* Frameworks */,
+				49235ECA2D6CA9D3002F1FB6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				49235ECE2D6CA9D3002F1FB6 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				49235ECF2D6CA9D3002F1FB6 /* DropPdfTests */,
+			);
+			name = DropPdfTests;
+			packageProductDependencies = (
+			);
+			productName = DropPdfTests;
+			productReference = 49235ECC2D6CA9D3002F1FB6 /* DropPdfTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		49235ED52D6CA9D3002F1FB6 /* DropPdfUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49235EE42D6CA9D3002F1FB6 /* Build configuration list for PBXNativeTarget "DropPdfUITests" */;
+			buildPhases = (
+				49235ED22D6CA9D3002F1FB6 /* Sources */,
+				49235ED32D6CA9D3002F1FB6 /* Frameworks */,
+				49235ED42D6CA9D3002F1FB6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				49235ED82D6CA9D3002F1FB6 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				49235ED92D6CA9D3002F1FB6 /* DropPdfUITests */,
+			);
+			name = DropPdfUITests;
+			packageProductDependencies = (
+			);
+			productName = DropPdfUITests;
+			productReference = 49235ED62D6CA9D3002F1FB6 /* DropPdfUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		49F4316E2D685CD000BFA997 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					49235EBB2D6CA9D1002F1FB6 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					49235ECB2D6CA9D3002F1FB6 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 49235EBB2D6CA9D1002F1FB6;
+					};
+					49235ED52D6CA9D3002F1FB6 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 49235EBB2D6CA9D1002F1FB6;
+					};
+				};
+			};
+			buildConfigurationList = 49F431712D685CD000BFA997 /* Build configuration list for PBXProject "DropPdf" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 49F4316D2D685CD000BFA997;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				492A35872D6CD0E8004BDC75 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 49F431772D685CD000BFA997 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				49235EBB2D6CA9D1002F1FB6 /* DropPdf */,
+				49235ECB2D6CA9D3002F1FB6 /* DropPdfTests */,
+				49235ED52D6CA9D3002F1FB6 /* DropPdfUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		49235EBA2D6CA9D1002F1FB6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49235ECA2D6CA9D3002F1FB6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49235ED42D6CA9D3002F1FB6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		49235EB82D6CA9D1002F1FB6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49235EC82D6CA9D3002F1FB6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49235ED22D6CA9D3002F1FB6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		49235ECE2D6CA9D3002F1FB6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49235EBB2D6CA9D1002F1FB6 /* DropPdf */;
+			targetProxy = 49235ECD2D6CA9D3002F1FB6 /* PBXContainerItemProxy */;
+		};
+		49235ED82D6CA9D3002F1FB6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49235EBB2D6CA9D1002F1FB6 /* DropPdf */;
+			targetProxy = 49235ED72D6CA9D3002F1FB6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		49235EDF2D6CA9D3002F1FB6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DropPdf/DropPdfDebug.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"DropPdf/Preview Content\"";
+				DEVELOPMENT_TEAM = 9K333K767R;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/$(PRODUCT_NAME)/Info.plist";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = twindai.DropPdf;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		49235EE02D6CA9D3002F1FB6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DropPdf/DropPdf.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"DropPdf/Preview Content\"";
+				DEVELOPMENT_TEAM = 9K333K767R;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/$(PRODUCT_NAME)/Info.plist";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = twindai.DropPdf;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		49235EE22D6CA9D3002F1FB6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9K333K767R;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = twindai.DropPdfTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DropPdf.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DropPdf";
+			};
+			name = Debug;
+		};
+		49235EE32D6CA9D3002F1FB6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9K333K767R;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = twindai.DropPdfTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DropPdf.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DropPdf";
+			};
+			name = Release;
+		};
+		49235EE52D6CA9D3002F1FB6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9K333K767R;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = twindai.DropPdfUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = DropPdf;
+			};
+			name = Debug;
+		};
+		49235EE62D6CA9D3002F1FB6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9K333K767R;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = twindai.DropPdfUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = DropPdf;
+			};
+			name = Release;
+		};
+		49F431992D685CD100BFA997 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		49F4319A2D685CD100BFA997 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		49235EDE2D6CA9D3002F1FB6 /* Build configuration list for PBXNativeTarget "DropPdf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49235EDF2D6CA9D3002F1FB6 /* Debug */,
+				49235EE02D6CA9D3002F1FB6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		49235EE12D6CA9D3002F1FB6 /* Build configuration list for PBXNativeTarget "DropPdfTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49235EE22D6CA9D3002F1FB6 /* Debug */,
+				49235EE32D6CA9D3002F1FB6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		49235EE42D6CA9D3002F1FB6 /* Build configuration list for PBXNativeTarget "DropPdfUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49235EE52D6CA9D3002F1FB6 /* Debug */,
+				49235EE62D6CA9D3002F1FB6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		49F431712D685CD000BFA997 /* Build configuration list for PBXProject "DropPdf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49F431992D685CD100BFA997 /* Debug */,
+				49F4319A2D685CD100BFA997 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		492A35872D6CD0E8004BDC75 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.19;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		492A35882D6CD0F5004BDC75 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 492A35872D6CD0E8004BDC75 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 49F4316E2D685CD000BFA997 /* Project object */;
+}
