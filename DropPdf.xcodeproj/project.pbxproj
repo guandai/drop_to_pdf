@@ -27,6 +27,18 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		492A35922D6CF6FC004BDC75 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		49235EBC2D6CA9D1002F1FB6 /* DropPdf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DropPdf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49235ECC2D6CA9D3002F1FB6 /* DropPdfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DropPdfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +127,7 @@
 				49235EB82D6CA9D1002F1FB6 /* Sources */,
 				49235EB92D6CA9D1002F1FB6 /* Frameworks */,
 				49235EBA2D6CA9D1002F1FB6 /* Resources */,
+				492A35922D6CF6FC004BDC75 /* CopyFiles */,
 			);
 			buildRules = (
 			);

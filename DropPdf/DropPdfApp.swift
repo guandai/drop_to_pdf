@@ -6,7 +6,7 @@ struct MyApp: App {
 
     var body: some Scene {
         // 1) Give the window a unique "id:"
-        WindowGroup("Main Window", id: "MainWindow") {
+        WindowGroup("Drop To PDF", id: "MainWindow") {
             ContentView()
                 .environmentObject(appDelegate)
         }

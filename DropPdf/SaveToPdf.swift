@@ -12,16 +12,17 @@ func saveToPdf(pdfContext: CGContext, fileURL: URL, pdfData: NSMutableData) asyn
         let newName = getTimeName(name: originalName) // e.g. "photo_20250224_1322.pdf"
 
         // 🔹 Save temporary PDF in Documents folder
-        let tempDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let tempPDF = tempDir.appendingPathComponent(newName) // ✅ Use full file path
+        // let tempDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        // let tempPDF = tempDir.appendingPathComponent(newName) // ✅ Use full file path
 
         do {
-            try pdfData.write(to: tempPDF, options: .atomic)
+            let finalPath = fileURL.deletingLastPathComponent().appendingPathComponent(newName)
+            try pdfData.write(to: finalPath, options: .atomic)
 
             // 🔹 Final destination in OneDrive
-            let finalPath = fileURL.deletingLastPathComponent().appendingPathComponent(newName)
             
-            try FileManager.default.copyItem(at: tempPDF, to: finalPath) // ✅ Correct copy method
+            
+            // try FileManager.default.copyItem(at: tempPDF, to: finalPath) // ✅ Correct copy method
 
             print("✅ Successfully copied PDF to OneDrive: \(finalPath.path)")
             continuation.resume(returning: true)
