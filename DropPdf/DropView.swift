@@ -48,6 +48,7 @@ struct DropView: View {
                             await appDelegate.processDroppedFiles(newFiles)
                         }
                     }
+                    droppedFiles=[]
 
                     return true
                 }

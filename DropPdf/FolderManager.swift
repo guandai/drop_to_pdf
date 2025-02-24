@@ -1,4 +1,15 @@
 import Cocoa
+import AppKit
+
+import Foundation
+
+struct PermissionsManager {
+    static func hasFullDiskAccess() -> Bool {
+        let testPath = "/Library/Application Support"
+        return FileManager.default.isReadableFile(atPath: testPath)
+    }
+}
+
 
 
 class FolderManager {
@@ -60,3 +71,22 @@ class FolderManager {
 
 
 
+func askUserForSaveFolder() -> URL? {
+    var selectedURL: URL? = nil
+    
+    DispatchQueue.main.sync {  // ✅ Ensure UI runs on the main thread
+        let dialog = NSOpenPanel()
+        dialog.title = "Choose the OneDrive Folder to Save PDF"
+        dialog.showsResizeIndicator = true
+        dialog.showsHiddenFiles = false
+        dialog.canChooseDirectories = true
+        dialog.canChooseFiles = false
+        dialog.allowsMultipleSelection = false
+
+        if dialog.runModal() == .OK {
+            selectedURL = dialog.url
+        }
+    }
+    
+    return selectedURL
+}

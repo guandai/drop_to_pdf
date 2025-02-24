@@ -43,13 +43,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         print("📂 Processing file: \(url.path)")
         
         if isImageFile(url: url) {
-            return await convertImageToPDF(imageFileURL: url)
+            return await convertImageToPDF(fileURL: url)
         } else if isTextFile(url: url) {
-            return await convertTxtToPDF(txtFileURL: url, appDelegate: self)
+            return await convertTxtToPDF(fileURL: url, appDelegate: self)
         } else if isDocx(url: url) {
-            return await convertDocxToPDF(docFileURL: url)
+            return await convertDocxToPDF(fileURL: url)
         } else if url.pathExtension.lowercased() == "doc" {
-            return convertDocToPDF(docFileURL: url)
+            return await convertDocToPDF(fileURL: url)
         } else {
             print("⚠️ Unsupported file type → \(url.lastPathComponent)")
             return false

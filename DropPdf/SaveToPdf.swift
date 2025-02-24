@@ -1,71 +1,33 @@
 import Cocoa
 import PDFKit
 
-func convertDocToPDF(docFileURL: URL) -> Bool {
-    print(">>>convertDocToPDF")
-    
-    // 1) catdoc in your bundle
-    guard let catdocBin = Bundle.main.path(forResource: "catdoc", ofType: "") else {
-        print("❌ catdoc not found in Resources")
-        return false
-    }
-    // 2) codepage path in your bundle
-    let codepagePath = (Bundle.main.resourcePath! as NSString)
-        .appendingPathComponent("catdoc_data/mac-roman.txt")
-
-    let task = Process()
-    task.launchPath = catdocBin
-    // 3) Pass `-m codepagePath` so it never touches /usr/local/share
-    task.arguments = ["-m", codepagePath, docFileURL.path]
-
-    let pipe = Pipe()
-    task.standardOutput = pipe
-    task.standardError = pipe
-
-    do {
-        // 4) Access the security-scoped resource if sandboxed
-        let didStart = docFileURL.startAccessingSecurityScopedResource()
-        defer { if didStart { docFileURL.stopAccessingSecurityScopedResource() } }
-
-        try task.run()
-        task.waitUntilExit()
-
-        let outputData = pipe.fileHandleForReading.readDataToEndOfFile()
-        let extractedText = String(data: outputData, encoding: .utf8)?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+func saveToPdf(pdfContext: CGContext, fileURL: URL, pdfData: NSMutableData) async -> Bool {
+    return await withCheckedContinuation { continuation in
         
+        pdfContext.endPage()
+        pdfContext.closePDF()
 
-        guard let text = extractedText, !text.isEmpty else {
-            print("❌ Could not extract text from .doc")
-            return false
+        // 🔹 Generate timestamped name
+        let originalName = fileURL.deletingPathExtension().lastPathComponent
+        let newName = getTimeName(name: originalName) // e.g. "photo_20250224_1322.pdf"
+
+        // 🔹 Save temporary PDF in Documents folder
+        let tempDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let tempPDF = tempDir.appendingPathComponent(newName) // ✅ Use full file path
+
+        do {
+            try pdfData.write(to: tempPDF, options: .atomic)
+
+            // 🔹 Final destination in OneDrive
+            let finalPath = fileURL.deletingLastPathComponent().appendingPathComponent(newName)
+            
+            try FileManager.default.copyItem(at: tempPDF, to: finalPath) // ✅ Correct copy method
+
+            print("✅ Successfully copied PDF to OneDrive: \(finalPath.path)")
+            continuation.resume(returning: true)
+        } catch {
+            print("❌ ERROR: Failed to copy PDF, Error: \(error)")
+            continuation.resume(returning: false)
         }
-
-        // Build PDF
-        let pdfData = NSMutableData()
-        let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData)!
-        var mediaBox = CGRect(x: 0, y: 0, width: 595, height: 842)
-        let pdfContext = CGContext(consumer: pdfConsumer, mediaBox: &mediaBox, nil)!
-
-        pdfContext.beginPage(mediaBox: &mediaBox)
-        NSGraphicsContext.saveGraphicsState()
-        let nsCtx = NSGraphicsContext(cgContext: pdfContext, flipped: false)
-        NSGraphicsContext.current = nsCtx
-
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.systemFont(ofSize: 12),
-            .paragraphStyle: {
-                let p = NSMutableParagraphStyle()
-                p.alignment = .left
-                return p
-            }()
-        ]
-        let textRect = CGRect(x: 20, y: 20, width: 555, height: 800)
-        NSString(string: text).draw(in: textRect, withAttributes: attributes)
-
-        return saveToPdf(pdfContext: pdfContext, docFileURL: docFileURL, pdfData: pdfData)
-
-    } catch {
-        print("❌ ERROR executing catdoc: \(error)")
-        return false
     }
 }

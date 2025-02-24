@@ -1,13 +1,13 @@
 import Cocoa
 import PDFKit
 
-func convertTxtToPDF(txtFileURL: URL, appDelegate: AppDelegate) async -> Bool  {
+func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool  {
     let folderManager = FolderManager()
 
-    return await withCheckedContinuation { continuation in        
+    return await withCheckedContinuation { continuation in
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             do {
-                let text = try String(contentsOf: txtFileURL, encoding: .utf8)
+                let text = try String(contentsOf: fileURL, encoding: .utf8)
                 
                 // 📌 Define A4 Page Size
                 let pdfData = NSMutableData()
@@ -31,32 +31,15 @@ func convertTxtToPDF(txtFileURL: URL, appDelegate: AppDelegate) async -> Bool  {
                 
                 let textRect = CGRect(x: 20, y: 20, width: 555, height: 800)
                 NSString(string: text).draw(in: textRect, withAttributes: attributes)
-                
                 NSGraphicsContext.restoreGraphicsState()
-                pdfContext.endPage()
-                pdfContext.closePDF()
 
-                // 🔹 4. Generate timestamped name
-                let originalName = txtFileURL.deletingPathExtension().lastPathComponent
-                let newName = getTimeName(name: originalName) // e.g. "photo_20250224_1322.pdf"
-                
-                // 🔹 5. Ensure we save in the same folder
-                let pdfURL = txtFileURL.deletingLastPathComponent().appendingPathComponent(newName)
-
-                // 🔹 6. Try writing the file to the same location
-                do {
-                    try pdfData.write(to: pdfURL, options: .atomic)
-                    print("✅ Image PDF saved at: \(pdfURL.path)")
-                    continuation.resume(returning: true)
-                } catch {
-                    print("❌ ERROR: Failed to save Image PDF at: \(pdfURL.path), Error: \(error)")
-                    continuation.resume(returning: false)
+                Task {
+                    let success = await saveToPdf(pdfContext: pdfContext, fileURL: fileURL, pdfData: pdfData)
+                    continuation.resume(returning: success)
                 }
-                
             } catch {
-                print("❌ ERROR: Failed to convert TXT to PDF: \(error)")
+                print("❌ ERROR: Failed to read text file, Error: \(error)")
                 continuation.resume(returning: false)
-                return
             }
         }
     }
