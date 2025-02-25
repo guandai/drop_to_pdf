@@ -32,3 +32,18 @@ func saveToPdf(pdfContext: CGContext, fileURL: URL, pdfData: NSMutableData) asyn
         }
     }
 }
+
+
+
+
+/// 🔹 Generates a timestamp string
+func getTime() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyyMMdd_HHmm" // Format: YYYYMMDD_HHMM
+    return dateFormatter.string(from: Date())
+}
+
+/// 🔹 Generates a timestamped file name
+func getTimeName(name: String) -> String {
+    return "\(name)_\(getTime()).pdf"
+}
