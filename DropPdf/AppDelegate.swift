@@ -13,15 +13,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
     
     func application(_ application: NSApplication, open urls: [URL]) {
-        print("📂 Dropped onto app icon: \(urls.map { $0.path }.joined(separator: ", "))")
+        let existingApp = NSRunningApplication.runningApplications(withBundleIdentifier: Bundle.main.bundleIdentifier!).first
+        if existingApp == nil {
+            print("first run")
+            DispatchQueue.main.async {
+                NSApp.activate(ignoringOtherApps: true)
+            }
+        }
         
         Task {
             await processDroppedFiles(urls)
-        }
-
-        // 🔹 Bring the app window to the foreground
-        DispatchQueue.main.async {
-            NSApp.activate(ignoringOtherApps: true)
         }
     }
     
@@ -55,20 +56,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             return false
         }
     }
-
-    /// Check if the app has Full Disk Access
-    func checkFullDiskAccess() {
-        let restrictedPath = "/Library/Application Support/com.apple.TCC"
-        if FileManager.default.isReadableFile(atPath: restrictedPath) {
-            print("✅ Full Disk Access is enabled.")
-        } else {
-            print("⚠️ Full Disk Access is NOT enabled. Prompting user...")
-            DispatchQueue.main.async {
-                openFullDiskAccessSettings()
-            }
-        }
-    }
-    
 
     /// Checks if the file is a valid text file
     func isTextFile(url: URL) -> Bool {
