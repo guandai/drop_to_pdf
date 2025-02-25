@@ -2,7 +2,7 @@ import Cocoa
 
 import Foundation
 
-struct PermissionsManager {
+class PermissionsManager {
     static func openFullDiskAccessSettings() {
         // Attempt to open Full Disk Access pane
         // - On macOS Ventura (13+), this URL may open System Settings at “Privacy & Security,”
