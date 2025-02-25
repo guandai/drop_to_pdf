@@ -2,16 +2,16 @@ import SwiftUI
 
 struct DropView: View {
     @EnvironmentObject var appDelegate: AppDelegate
+    @EnvironmentObject var processFile: ProcessFile
 
-    @State private var droppedFiles: [URL] = []
 
     var body: some View {
         VStack(spacing: 5) {
-            if droppedFiles.isEmpty {
+            if appDelegate.droppedFiles.isEmpty {
                 Text("Drop one or more files here.")
                     .foregroundColor(.secondary)
             } else {
-                Text(droppedFiles.map { $0.lastPathComponent }.joined(separator: ", "))
+                Text(appDelegate.droppedFiles.map { $0.lastPathComponent }.joined(separator: ", "))
                     .foregroundColor(.gray)
             }
 
@@ -43,12 +43,11 @@ struct DropView: View {
                     // When all item providers are done
                     dispatchGroup.notify(queue: .main)  {
                         // Append all newly loaded files
-                        self.droppedFiles.append(contentsOf: newFiles)
+                        appDelegate.droppedFiles.append(contentsOf: newFiles)
                         Task {
-                            await appDelegate.processDroppedFiles(newFiles)
+                            await processFile.processDroppedFiles(newFiles, appDelegate)
                         }
                     }
-                    droppedFiles=[]
 
                     return true
                 }

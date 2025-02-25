@@ -3,21 +3,21 @@ import SwiftUI
 @main
 struct MyApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @State private var hasFullDiskAccess = PermissionsManager.checkFullDiskAccess()
 
     init() {
         ensureSingleInstance()
     }
 
     var body: some Scene {
-        sceneContent
-    }
-
-    @SceneBuilder
-    var sceneContent: some Scene {
         WindowGroup("Drop To PDF", id: "MainWindow") {
-            ContentView()
-                .environmentObject(appDelegate)
+            if hasFullDiskAccess {
+                DropView() // ✅ Show drop area if FDA is granted
+            } else {
+                FDAView() // ❌ Show FDA request screen if FDA is missing
+            }   
         }
+        .environmentObject(appDelegate)
         .handlesExternalEvents(matching: ["*"])
         .defaultSize(width: 250, height: 250)
         .windowResizability(.contentSize)
