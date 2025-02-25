@@ -11,30 +11,32 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         setupMainWindow()
     }
 
-    /// 🔹 Ensure only one main window exists
+    /// 🔹 Ensure only one main window exists and reuse it
     func setupMainWindow() {
         if let existingWindow = self.window, existingWindow.isVisible {
-            // ✅ Reuse existing window
             existingWindow.makeKeyAndOrderFront(nil)
-        } else {
-            // ❌ No existing window → Create a new one
-            let hostingController = NSHostingController(rootView: DropView()
-                .environmentObject(self) // ✅ Inject AppDelegate
-                .environmentObject(self.processFile)) // ✅ Inject ProcessFile
-
-            let newWindow = NSWindow(
-                contentRect: NSRect(x: 100, y: 100, width: 400, height: 300),
-                styleMask: [.titled, .closable, .resizable],
-                backing: .buffered,
-                defer: false
-            )
-            newWindow.title = "Drop To PDF"
-            newWindow.contentView = hostingController.view
-            newWindow.makeKeyAndOrderFront(nil)
-            newWindow.isReleasedWhenClosed = false // ✅ Prevent accidental window loss
-
-            self.window = newWindow
+            NSApplication.shared.activate(ignoringOtherApps: true)
+            return
         }
+
+        // ✅ If no window exists, create a new one
+        let hostingController = NSHostingController(rootView: DropView()
+            .environmentObject(self) // ✅ Inject AppDelegate
+            .environmentObject(self.processFile)) // ✅ Inject ProcessFile
+
+        let newWindow = NSWindow(
+            contentRect: NSRect(x: 100, y: 100, width: 400, height: 300),
+            styleMask: [.titled, .closable, .resizable],
+            backing: .buffered,
+            defer: false
+        )
+        newWindow.title = "Drop To PDF"
+        newWindow.contentView = hostingController.view
+        newWindow.makeKeyAndOrderFront(nil)
+        newWindow.isReleasedWhenClosed = false // ✅ Prevent accidental window loss
+
+        self.window = newWindow
+        NSApplication.shared.activate(ignoringOtherApps: true) // ✅ Bring to foreground
     }
 
     /// 🔹 Handle files dropped onto the app icon
@@ -54,14 +56,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             self.droppedFiles.append(contentsOf: urls)
         }
 
+        // ✅ Ensure only one window exists before processing files
+        setupMainWindow()
+
         // ✅ Bring app to the foreground
         NSApplication.shared.activate(ignoringOtherApps: true)
 
-        // ✅ Ensure only one window exists
-        setupMainWindow()
-
-        Task {
-            await processFile.processDroppedFiles(urls, self)
+        // ✅ Ensure first file drop correctly converts to PDF
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            Task {
+                await self.processFile.processDroppedFiles(urls, self)
+            }
         }
     }
 }

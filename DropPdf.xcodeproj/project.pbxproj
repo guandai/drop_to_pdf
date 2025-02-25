@@ -45,9 +45,22 @@
 		49235ED62D6CA9D3002F1FB6 /* DropPdfUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DropPdfUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		49CC4F262D6E0DEE006809F4 /* Exceptions for "DropPdf" folder in "DropPdf" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 49235EBB2D6CA9D1002F1FB6 /* DropPdf */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		49235EBD2D6CA9D1002F1FB6 /* DropPdf */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				49CC4F262D6E0DEE006809F4 /* Exceptions for "DropPdf" folder in "DropPdf" target */,
+			);
 			path = DropPdf;
 			sourceTree = "<group>";
 		};

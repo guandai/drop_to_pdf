@@ -1,7 +1,7 @@
 import Cocoa
 import PDFKit
 
-func saveToPdf(pdfContext: CGContext, fileURL: URL, pdfData: NSMutableData) async -> Bool {
+func saveToPdf(pdfContext: CGContext, fileURL: URL, pdfData: Data) async -> Bool {
     return await withCheckedContinuation { continuation in
         
         pdfContext.endPage()

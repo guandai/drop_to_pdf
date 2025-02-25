@@ -64,7 +64,9 @@ func convertDocToPDF(fileURL: URL) async -> Bool {
                 NSGraphicsContext.restoreGraphicsState()
                 
                 Task {
-                    let success = await saveToPdf(pdfContext: pdfContext, fileURL: fileURL, pdfData: pdfData)
+                    
+                    let immutablePdfData = pdfData as Data // ✅ Convert NSMutableData to immutable Data
+                    let success = await saveToPdf(pdfContext: pdfContext, fileURL: fileURL, pdfData: immutablePdfData)
                     continuation.resume(returning: success)
                 }
                 
