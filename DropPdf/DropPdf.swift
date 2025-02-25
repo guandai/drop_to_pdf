@@ -10,19 +10,8 @@ struct MyApp: App {
     }
 
     var body: some Scene {
-        WindowGroup("Drop To PDF", id: "MainWindow") {
-            if hasFullDiskAccess {
-                DropView() // ✅ Show drop area if FDA is granted
-            } else {
-                FDAView() // ❌ Show FDA request screen if FDA is missing
-            }   
-        }
-        .environmentObject(appDelegate)
-        .handlesExternalEvents(matching: ["*"])
-        .defaultSize(width: 250, height: 250)
-        .windowResizability(.contentSize)
-        .commands {
-            CommandGroup(replacing: .newItem) { } // Hide "New Window" option
+        Settings {
+            EmptyView() // ✅ Prevents unwanted extra windows
         }
     }
 
@@ -32,8 +21,7 @@ struct MyApp: App {
         let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: bundleIdentifier)
 
         if runningApps.count > 1 {
-            // If another instance exists, terminate the current one
-            NSApplication.shared.terminate(nil)
+            NSApplication.shared.terminate(nil) // ✅ If another instance exists, close it
         }
     }
 }

@@ -3,15 +3,14 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     @Published var droppedFiles: [URL] = []
-    var processFile = ProcessFile() // ✅ Use a normal instance (NOT @StateObject)
-
+    var processFile = ProcessFile()
     var window: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         setupMainWindow()
     }
 
-    /// 🔹 Ensure only one main window exists and reuse it
+    /// 🔹 Ensure only one window exists
     func setupMainWindow() {
         if let existingWindow = self.window, existingWindow.isVisible {
             existingWindow.makeKeyAndOrderFront(nil)
@@ -19,10 +18,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             return
         }
 
-        // ✅ If no window exists, create a new one
-        let hostingController = NSHostingController(rootView: DropView()
-            .environmentObject(self) // ✅ Inject AppDelegate
-            .environmentObject(self.processFile)) // ✅ Inject ProcessFile
+        let contentView = PermissionsManager.checkFullDiskAccess() ? AnyView(DropView()) : AnyView(FDAView())
+
+        let hostingController = NSHostingController(rootView: contentView.environmentObject(self).environmentObject(self.processFile))
 
         let newWindow = NSWindow(
             contentRect: NSRect(x: 100, y: 100, width: 400, height: 300),
@@ -33,7 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         newWindow.title = "Drop To PDF"
         newWindow.contentView = hostingController.view
         newWindow.makeKeyAndOrderFront(nil)
-        newWindow.isReleasedWhenClosed = false // ✅ Prevent accidental window loss
+        newWindow.isReleasedWhenClosed = false
 
         self.window = newWindow
         NSApplication.shared.activate(ignoringOtherApps: true) // ✅ Bring to foreground
@@ -59,11 +57,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // ✅ Ensure only one window exists before processing files
         setupMainWindow()
 
-        // ✅ Bring app to the foreground
-        NSApplication.shared.activate(ignoringOtherApps: true)
-
         // ✅ Ensure first file drop correctly converts to PDF
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.async {
             Task {
                 await self.processFile.processDroppedFiles(urls, self)
             }
