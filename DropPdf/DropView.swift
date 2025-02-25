@@ -4,7 +4,6 @@ struct DropView: View {
     @EnvironmentObject var appDelegate: AppDelegate
     @EnvironmentObject var processFile: ProcessFile
 
-
     var body: some View {
         VStack(spacing: 5) {
             if appDelegate.droppedFiles.isEmpty {
@@ -17,7 +16,7 @@ struct DropView: View {
 
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color.blue, lineWidth: 2)
-                .frame(width: 160, height: 160)
+                .frame(width: 200, height: 200)
                 .onDrop(of: ["public.file-url"], isTargeted: nil) { providers in
                     // Collect multiple files
                     let dispatchGroup = DispatchGroup()

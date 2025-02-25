@@ -3,8 +3,8 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     @Published var droppedFiles: [URL] = []
-    @EnvironmentObject var processFile: ProcessFile
-    
+    var processFile = ProcessFile() // ✅ Use a normal instance (NOT @StateObject)
+
     var window: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -13,12 +13,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     /// 🔹 Ensure only one main window exists
     func setupMainWindow() {
-        if let existingWindow = window, existingWindow.isVisible {
-            // ✅ Window already exists → bring it to the front
+        if let existingWindow = self.window, existingWindow.isVisible {
+            // ✅ Reuse existing window
             existingWindow.makeKeyAndOrderFront(nil)
         } else {
-            // ❌ No existing window → create a new one
-            let hostingController = NSHostingController(rootView: DropView().environmentObject(self))
+            // ❌ No existing window → Create a new one
+            let hostingController = NSHostingController(rootView: DropView()
+                .environmentObject(self) // ✅ Inject AppDelegate
+                .environmentObject(self.processFile)) // ✅ Inject ProcessFile
 
             let newWindow = NSWindow(
                 contentRect: NSRect(x: 100, y: 100, width: 400, height: 300),
@@ -29,6 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             newWindow.title = "Drop To PDF"
             newWindow.contentView = hostingController.view
             newWindow.makeKeyAndOrderFront(nil)
+            newWindow.isReleasedWhenClosed = false // ✅ Prevent accidental window loss
 
             self.window = newWindow
         }
@@ -54,7 +57,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         // ✅ Bring app to the foreground
         NSApplication.shared.activate(ignoringOtherApps: true)
 
-        // ✅ Ensure only one window exists and reuse it
+        // ✅ Ensure only one window exists
         setupMainWindow()
 
         Task {

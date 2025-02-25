@@ -1,9 +1,7 @@
 import Cocoa
 import SwiftUI
 
-class ProcessFile: NSObject, NSApplicationDelegate, ObservableObject {
-    @EnvironmentObject var processFile: ProcessFile
-    /// 🔹 Process dropped files asynchronously
+class ProcessFile: ObservableObject {
     func processDroppedFiles(_ urls: [URL], _ appDelegate: AppDelegate) async {
         for url in urls {
             print("📂 Dropped file: \(url.path)")
