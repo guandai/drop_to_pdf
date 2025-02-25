@@ -1,0 +1,852 @@
+1
+00:00:00,000 --> 00:00:27,000
+I would like to talk with you about a medical disorder that is incredibly common and yet it gets often underestimated,
+
+2
+00:00:27,000 --> 00:00:36,000
+as one of our former presidents would have said, in its impact on our psychology of the patients.
+
+3
+00:00:36,000 --> 00:00:41,000
+The patients really suffer from it and it's very pervasive.
+
+4
+00:00:41,000 --> 00:00:44,000
+About 50 million Americans suffer from it.
+
+5
+00:00:44,000 --> 00:00:50,000
+I bet many of you in the audience will have friends or family that suffer from it.
+
+6
+00:00:50,000 --> 00:00:55,000
+What I'm talking about is tinnitus or tinnitus, the ringing in the ears.
+
+7
+00:00:55,000 --> 00:01:04,000
+It's often depicted in this painting by Edvard Munch, although we don't know for sure whether he actually had tinnitus himself.
+
+8
+00:01:04,000 --> 00:01:16,000
+But the person in the painting is sort of covering his or her ears and it doesn't help because the ringing is actually generated in the brain.
+
+9
+00:01:16,000 --> 00:01:20,000
+It's not a real sound that is there that the person hears. It's a phantom sound.
+
+10
+00:01:20,000 --> 00:01:25,000
+So we often talk about it as ringing in the brain rather than ringing in the ears.
+
+11
+00:01:25,000 --> 00:01:33,000
+And of those 50 million Americans that suffer from it, about 10 million of them really suffer very badly.
+
+12
+00:01:33,000 --> 00:01:39,000
+They go to the extent that they have depression and suicidal thoughts.
+
+13
+00:01:39,000 --> 00:01:45,000
+And I get emails every day from patients that are asking, is there not a cure?
+
+14
+00:01:45,000 --> 00:01:48,000
+And there is no cure, unfortunately, at this point.
+
+15
+00:01:48,000 --> 00:01:55,000
+And part of our research is aiming for that, of course, that we're trying to find ways to help these patients.
+
+16
+00:01:55,000 --> 00:02:02,000
+And I can play some examples for you of what this sounds like.
+
+17
+00:02:02,000 --> 00:02:05,000
+This is just a pure tone of single frequency. It's relatively rare.
+
+18
+00:02:05,000 --> 00:02:08,000
+Usually tinnitus sounds more like the next one.
+
+19
+00:02:08,000 --> 00:02:19,000
+You can imagine how annoying that is if you hear that all the time in one of your ears or both of your ears.
+
+20
+00:02:19,000 --> 00:02:23,000
+You can't turn it off. You can't run away from it. It's always there.
+
+21
+00:02:23,000 --> 00:02:29,000
+Sometimes you get this more sophisticated cricket sound that you hear.
+
+22
+00:02:29,000 --> 00:02:31,000
+So people suffer from it.
+
+23
+00:02:31,000 --> 00:02:36,000
+The groups that are more affected or at risk than others.
+
+24
+00:02:36,000 --> 00:02:42,000
+Musicians get it surprisingly often because they are exposed to louder sounds that they realize.
+
+25
+00:02:42,000 --> 00:02:46,000
+I once remember being at the Kennedy Center in Washington DC, where we live,
+
+26
+00:02:46,000 --> 00:02:54,000
+and went to a concert there, an orchestra symphony concert by the National Symphony.
+
+27
+00:02:54,000 --> 00:02:58,000
+They played Shostakovich's War Symphony, very loud, of course.
+
+28
+00:02:58,000 --> 00:03:05,000
+And one of the violinists in the first or second row was sitting right in front of the trombones behind her.
+
+29
+00:03:05,000 --> 00:03:09,000
+And the trombone was sort of blowing right into her ear.
+
+30
+00:03:09,000 --> 00:03:13,000
+And she was reflexively covering her ears to protect herself.
+
+31
+00:03:13,000 --> 00:03:15,000
+This is actually the right reaction.
+
+32
+00:03:15,000 --> 00:03:26,000
+You have to avoid loud noises in order to avoid getting hair cell damage and then hearing loss and ultimately tinnitus.
+
+33
+00:03:26,000 --> 00:03:30,000
+So loud noise exposure is certainly one of the biggest risks.
+
+34
+00:03:30,000 --> 00:03:32,000
+And then you take a group like construction workers.
+
+35
+00:03:32,000 --> 00:03:36,000
+If they don't wear hearing protection, that can be very risky.
+
+36
+00:03:36,000 --> 00:03:41,000
+And the group most at risk are our war veterans, of course.
+
+37
+00:03:41,000 --> 00:03:49,000
+They are constantly exposed to artillery fire, to bomb explosives, and so on.
+
+38
+00:03:49,000 --> 00:03:54,000
+In addition, this is a very important factor, which I want to stress in this presentation.
+
+39
+00:03:54,000 --> 00:03:57,000
+Stress is a very important factor.
+
+40
+00:03:57,000 --> 00:04:00,000
+So it's not just the loud noise exposure that can give you tinnitus.
+
+41
+00:04:00,000 --> 00:04:03,000
+It actually doesn't always do that.
+
+42
+00:04:03,000 --> 00:04:10,000
+But if it combines with a stressful situation, this is the most likely scenario where you end up getting tinnitus.
+
+43
+00:04:10,000 --> 00:04:18,000
+So our veterans are much more likely to come home from the battlefield with tinnitus.
+
+44
+00:04:18,000 --> 00:04:27,000
+In fact, the Veterans Administration, if you look up the statistics, they show that tinnitus is the most frequent cause for benefits paid to veterans.
+
+45
+00:04:27,000 --> 00:04:30,000
+Hearing loss is the second most frequent one.
+
+46
+00:04:30,000 --> 00:04:36,000
+Tinnitus has often been compared with other phantom sensations like phantom limb pain, which you might have heard about.
+
+47
+00:04:36,000 --> 00:04:46,000
+In this case, somebody misses a limb because of an accident or an explosion that damaged his arm or her leg.
+
+48
+00:04:46,000 --> 00:04:48,000
+And it's a very similar thing.
+
+49
+00:04:48,000 --> 00:04:51,000
+In this case, again, the brain is the cause for this.
+
+50
+00:04:51,000 --> 00:04:58,000
+Even though the leg may be missing, the neurons in the brain that represent the brain are still there and are firing along.
+
+51
+00:04:58,000 --> 00:05:05,000
+And on occasions, the person might get the impression that his leg is still there and you can actually feel pain in that leg.
+
+52
+00:05:05,000 --> 00:05:13,000
+And animal experiments have shown, that's shown on the right of that slide here, that this is in fact what's happening.
+
+53
+00:05:13,000 --> 00:05:24,000
+In monkeys that have lost a hand, for example, the hand representation gets filled in with input from the face representation, which is right next to it.
+
+54
+00:05:24,000 --> 00:05:40,000
+And Ramachandran, then a neuroscientist in California, did studies on amputees where he showed that if you touch the face of an amputee, they actually feel their phantom hand in this case more frequently than not.
+
+55
+00:05:40,000 --> 00:05:51,000
+So there's a profound reorganization going on in the brain, both in phantom limb and in tinnitus, which is the equivalent in the auditory domain.
+
+56
+00:05:51,000 --> 00:05:56,000
+And people have referred to this often as maladaptive plasticity.
+
+57
+00:05:56,000 --> 00:05:59,000
+Plasticity, by definition, should be something good, right?
+
+58
+00:05:59,000 --> 00:06:01,000
+We are learning, this is plasticity.
+
+59
+00:06:01,000 --> 00:06:04,000
+Memory is kind of a form of plasticity.
+
+60
+00:06:04,000 --> 00:06:07,000
+So we associate this with an adaptive function.
+
+61
+00:06:07,000 --> 00:06:10,000
+But in this case, is it really adaptive?
+
+62
+00:06:10,000 --> 00:06:11,000
+I would think so.
+
+63
+00:06:11,000 --> 00:06:18,000
+It's not necessarily maladaptive because the brain has set out a plan how to deal with these kinds of situations.
+
+64
+00:06:18,000 --> 00:06:25,000
+So if you have loud noise exposure, you lose, you kill some of your hair cells in the inner ear and they can't be replaced.
+
+65
+00:06:25,000 --> 00:06:26,000
+They don't grow back.
+
+66
+00:06:26,000 --> 00:06:30,000
+So what the brain does, it kind of fills in that gap.
+
+67
+00:06:30,000 --> 00:06:33,000
+Nature doesn't like gaps.
+
+68
+00:06:33,000 --> 00:06:44,000
+So the gap is filled in with neurons that normally respond to other frequencies, like on the left or right of that gap.
+
+69
+00:06:44,000 --> 00:06:46,000
+Another example is the blind spot in your eye.
+
+70
+00:06:46,000 --> 00:06:51,000
+You all know we have a blind spot in our retina where there are no photoreceptors.
+
+71
+00:06:51,000 --> 00:06:57,000
+So the blood vessels go in and out from there, the optic nerve goes in from there.
+
+72
+00:06:57,000 --> 00:07:03,000
+We don't see but we don't notice that hole because of the same mechanism, the brain fills in that hole.
+
+73
+00:07:03,000 --> 00:07:09,000
+And the same thing happens, we call this lesion-induced plasticity, the same thing happens in tinnitus.
+
+74
+00:07:09,000 --> 00:07:11,000
+So it is per se an adaptive mechanism.
+
+75
+00:07:11,000 --> 00:07:20,000
+But it has an unintended side effect, this hyperactivity that I've been talking about that we can actually visualize with fMRI, for example.
+
+76
+00:07:20,000 --> 00:07:25,000
+And then the next step is missing in tinnitus patients.
+
+77
+00:07:25,000 --> 00:07:27,000
+Normally the brain is even more clever.
+
+78
+00:07:27,000 --> 00:07:30,000
+It realizes there is this internal noise being generated.
+
+79
+00:07:30,000 --> 00:07:36,000
+So it puts its executive sentence in play and they suppress that noise.
+
+80
+00:07:36,000 --> 00:07:41,000
+So most people actually, even after extensive loud noise exposure, don't get tinnitus.
+
+81
+00:07:41,000 --> 00:07:44,000
+You might have hearing loss but you don't end up with tinnitus.
+
+82
+00:07:44,000 --> 00:07:49,000
+You go to a loud noise concert, for example, a loud rock concert, and you have tinnitus maybe the next day.
+
+83
+00:07:49,000 --> 00:07:51,000
+But then it goes away after a few days.
+
+84
+00:07:51,000 --> 00:07:55,000
+So many people have just temporary tinnitus which gets repaired by the brain.
+
+85
+00:07:55,000 --> 00:07:57,000
+There are mechanisms for that.
+
+86
+00:07:57,000 --> 00:08:04,000
+But in those unfortunate people where these mechanisms don't work, they are the ones that are becoming the chronic tinnitus patients.
+
+87
+00:08:04,000 --> 00:08:14,000
+So in the next few slides I'll show you the brain and how it is organized, how it reacts to these events and these situations.
+
+88
+00:08:14,000 --> 00:08:20,000
+Here is the brain as a whole and you see the auditory cortex somewhere in the middle there.
+
+89
+00:08:20,000 --> 00:08:22,000
+It's been exposed.
+
+90
+00:08:22,000 --> 00:08:24,000
+And this is just a drawing.
+
+91
+00:08:24,000 --> 00:08:30,000
+You see the tonotopic map, how the different frequencies are laid out along the auditory cortex.
+
+92
+00:08:30,000 --> 00:08:34,000
+And you see how normally this is pretty regular.
+
+93
+00:08:34,000 --> 00:08:36,000
+All the frequencies are equally spaced.
+
+94
+00:08:36,000 --> 00:08:42,000
+But after you lose that yellow region there, then the green and the orange region move in.
+
+95
+00:08:42,000 --> 00:08:49,000
+And they are the ones that are over-represented and give you the tinnitus noise, the tinnitus signal.
+
+96
+00:08:49,000 --> 00:08:51,000
+So now we have a real picture.
+
+97
+00:08:51,000 --> 00:08:59,000
+This is an old research scanner at NIH where some of these techniques have actually been established.
+
+98
+00:08:59,000 --> 00:09:06,000
+Now you can do this with any MRI scanner that you've probably seen and been in yourself.
+
+99
+00:09:06,000 --> 00:09:12,000
+And we can visualize the auditory cortex in normal controls without tinnitus.
+
+100
+00:09:12,000 --> 00:09:15,000
+You see a nice activation in the auditory cortex.
+
+101
+00:09:15,000 --> 00:09:20,000
+And in patients that constantly have tinnitus, this activation is doubled or tripled.
+
+102
+00:09:20,000 --> 00:09:22,000
+It's very significant to increase.
+
+103
+00:09:22,000 --> 00:09:26,000
+So this is the physical realization of what people actually perceive.
+
+104
+00:09:26,000 --> 00:09:30,000
+And, but this is not the whole story.
+
+105
+00:09:30,000 --> 00:09:38,000
+The rest of the talk will try to convince you that this is not, tinnitus is not just an auditory disorder.
+
+106
+00:09:38,000 --> 00:09:40,000
+It is more than that.
+
+107
+00:09:40,000 --> 00:09:45,000
+This has to do with the higher brain functions in the frontal cortex and the limbic system.
+
+108
+00:09:45,000 --> 00:09:52,000
+And if you think about it, there's good reason to assume that it's more than an auditory disorder.
+
+109
+00:09:52,000 --> 00:10:01,000
+Because not everyone, as I said, ends up getting tinnitus even if you have a hearing loss and have suffered from loud noise exposures many times.
+
+110
+00:10:01,000 --> 00:10:03,000
+A lot of people only have intermittent tinnitus.
+
+111
+00:10:03,000 --> 00:10:09,000
+If you're like me, you often have stressful situations like a deadline that you have to meet.
+
+112
+00:10:09,000 --> 00:10:10,000
+You're working very hard.
+
+113
+00:10:10,000 --> 00:10:13,000
+You get less sleep during that period.
+
+114
+00:10:13,000 --> 00:10:17,000
+And then your tinnitus suddenly appears.
+
+115
+00:10:17,000 --> 00:10:22,000
+You know, even if you don't have it normally, you might get tinnitus in a situation like this.
+
+116
+00:10:22,000 --> 00:10:26,000
+Then you submit the grant or the project that you've been working on.
+
+117
+00:10:26,000 --> 00:10:27,000
+You're finished.
+
+118
+00:10:27,000 --> 00:10:28,000
+You have a good feeling.
+
+119
+00:10:28,000 --> 00:10:29,000
+You get a good night's sleep.
+
+120
+00:10:29,000 --> 00:10:31,000
+Next day the tinnitus is gone.
+
+121
+00:10:31,000 --> 00:10:33,000
+So that shows you that it's not just auditory.
+
+122
+00:10:33,000 --> 00:10:40,000
+There's something regulatory higher up in the brain that can normally take care of this.
+
+123
+00:10:40,000 --> 00:10:45,000
+And there's also comorbidity with depression.
+
+124
+00:10:45,000 --> 00:10:48,000
+If you feel bad and you have sort of a...
+
+125
+00:10:48,000 --> 00:10:55,000
+If you're sad or if you're stressed out, then your tinnitus is much more likely to come up and get worse.
+
+126
+00:10:55,000 --> 00:11:02,000
+So there's clear comorbidity with these kinds of mechanisms, which we refer to often as the limbic system.
+
+127
+00:11:02,000 --> 00:11:07,000
+So on the left, the blue region is the auditory system.
+
+128
+00:11:07,000 --> 00:11:11,000
+Every sensory system has its representation in the brain.
+
+129
+00:11:11,000 --> 00:11:17,000
+And then in the frontal cortex, sort of in the front part of the brain, there's the screen system,
+
+130
+00:11:17,000 --> 00:11:22,000
+which we often refer to as the limbic system, regulates our emotions.
+
+131
+00:11:22,000 --> 00:11:27,000
+And it has some very well-defined building blocks in there, which I'll show you in a minute.
+
+132
+00:11:27,000 --> 00:11:31,000
+The ventromedial prefrontal cortex, the nucleus accumbens, they all play their role.
+
+133
+00:11:31,000 --> 00:11:39,000
+And they interact with the sensory systems and kind of are able like an operating system in a way in a computer
+
+134
+00:11:39,000 --> 00:11:50,000
+to emphasize or deemphasize what you hear, what you see, and sort of give you the actual percept, experience of your daily lives.
+
+135
+00:11:50,000 --> 00:11:58,000
+So the upshot of all that is that tinnitus as a phantom sensation depends on three things.
+
+136
+00:11:58,000 --> 00:12:03,000
+First of all, in most cases, there is a peripheral auditory lesion. There's no way around that.
+
+137
+00:12:03,000 --> 00:12:09,000
+Some people say there is tinnitus without hearing loss, but it's very, very rare.
+
+138
+00:12:09,000 --> 00:12:15,000
+It may happen sometimes with accidents. But in regular cases, there's a lesion there.
+
+139
+00:12:15,000 --> 00:12:20,000
+Then there is central auditory reorganization, as I've shown you with the fMRI.
+
+140
+00:12:20,000 --> 00:12:24,000
+And then there's this non-auditory gating system. And the rest of the talk is only about this.
+
+141
+00:12:24,000 --> 00:12:31,000
+So we found, about ten years ago, we had a crucial finding that was, again, a brain imaging study
+
+142
+00:12:31,000 --> 00:12:37,000
+that we did in collaboration with the German MIT, as you just said in the introduction in Munich.
+
+143
+00:12:37,000 --> 00:12:43,000
+And we found that in tinnitus patients, there's a very significant shrinkage in one region.
+
+144
+00:12:43,000 --> 00:12:51,000
+We call it a volume decrease because the MRIs determine the volume of a part of the brain, of the brain tissue.
+
+145
+00:12:51,000 --> 00:13:00,000
+And this was in the ventromedial prefrontal cortex, which normally is there for the perception of unpleasant sounds, say.
+
+146
+00:13:00,000 --> 00:13:06,000
+There was a study before that that showed if we hear unpleasant sounds, the same region lights up.
+
+147
+00:13:06,000 --> 00:13:13,000
+So it makes sense that this region was affected, but we didn't know at the time how crucial it was.
+
+148
+00:13:13,000 --> 00:13:21,000
+Another finding that helped us understand what was going on is that this region in the ventral striatum,
+
+149
+00:13:21,000 --> 00:13:24,000
+in the basal ganglia, right in the middle, you see this red spot there.
+
+150
+00:13:24,000 --> 00:13:32,000
+This is called the nucleus accumbens. It's a small center that regulates our emotions.
+
+151
+00:13:32,000 --> 00:13:38,000
+It's often been called the pleasure center. It's actually involved in giving you addictions.
+
+152
+00:13:38,000 --> 00:13:43,000
+It has all kinds of roles in terms of emotional regulation.
+
+153
+00:13:43,000 --> 00:13:47,000
+And surprisingly, this region was highly hyperactive.
+
+154
+00:13:47,000 --> 00:13:50,000
+This was increased in its activity in tinnitus patients.
+
+155
+00:13:50,000 --> 00:13:56,000
+A very, very significant effect, as you can see on the right, if you understand statistics.
+
+156
+00:13:56,000 --> 00:14:02,000
+So those two regions together form an internal noise cancellation system, is what we figured.
+
+157
+00:14:02,000 --> 00:14:07,000
+You've all had noise cancellation headphones on the airplane.
+
+158
+00:14:07,000 --> 00:14:11,000
+And what this does is it doesn't make the...
+
+159
+00:14:11,000 --> 00:14:15,000
+It can't make the noise really go away. The noise is still there.
+
+160
+00:14:15,000 --> 00:14:19,000
+But the system adds another form of noise to that signal.
+
+161
+00:14:19,000 --> 00:14:22,000
+And that's, you know, the negative form of the original noise.
+
+162
+00:14:22,000 --> 00:14:24,000
+And that cancels out the original noise.
+
+163
+00:14:24,000 --> 00:14:29,000
+And therefore you don't hear anything or you get sort of much milder effect.
+
+164
+00:14:29,000 --> 00:14:35,000
+And that system normally, with the red box there, inhibits the internal noise signal.
+
+165
+00:14:35,000 --> 00:14:37,000
+And you don't have tinnitus.
+
+166
+00:14:37,000 --> 00:14:40,000
+But if that system is broken, then you end up having tinnitus.
+
+167
+00:14:40,000 --> 00:14:47,000
+So here in the close-up, you see that the nucleus accumbens is part of that evaluation system.
+
+168
+00:14:47,000 --> 00:14:50,000
+And the medial prefrontal cortex does the volume control.
+
+169
+00:14:50,000 --> 00:14:54,000
+It turns down the gain when the nucleus accumbens tells it so.
+
+170
+00:14:54,000 --> 00:14:57,000
+And then together, this works or it doesn't work.
+
+171
+00:14:57,000 --> 00:14:59,000
+So where do we go from here?
+
+172
+00:14:59,000 --> 00:15:02,000
+We have hints from this last slide.
+
+173
+00:15:02,000 --> 00:15:05,000
+You see the boxes on the right. There's dopamine and serotonin.
+
+174
+00:15:05,000 --> 00:15:11,000
+In there, these are two transmitters. They have to be high for you to feel good and to feel happy.
+
+175
+00:15:11,000 --> 00:15:15,000
+If they're low, then you get depression, for example, and you get tinnitus.
+
+176
+00:15:15,000 --> 00:15:20,000
+So this may be opening an avenue for drug treatment in the long term.
+
+177
+00:15:20,000 --> 00:15:26,000
+But there's another form of treatment that we might be able to use in the future.
+
+178
+00:15:26,000 --> 00:15:28,000
+This is called deep brain stimulation.
+
+179
+00:15:28,000 --> 00:15:32,000
+And it's been established for Parkinson's disease and major depression.
+
+180
+00:15:32,000 --> 00:15:39,000
+And I'll show you in a brief video the patient that actually undergoes this treatment.
+
+181
+00:15:39,000 --> 00:15:41,000
+It may be shocking for you at first.
+
+182
+00:15:41,000 --> 00:15:46,000
+But it's become routine in many disorders.
+
+183
+00:15:46,000 --> 00:15:48,000
+And the patient actually lies there awake.
+
+184
+00:15:48,000 --> 00:15:50,000
+She's slightly sedated.
+
+185
+00:15:50,000 --> 00:15:54,000
+She's able to talk to the surgeon and report her feelings.
+
+186
+00:15:54,000 --> 00:15:58,000
+Does it have any mental qualities to it or is it still mostly physical?
+
+187
+00:15:58,000 --> 00:16:09,000
+Actually at that time it kind of was, there was a lighterness of my moods that went with the lighterness of my feeling.
+
+188
+00:16:13,000 --> 00:16:15,000
+The transformation was traumatic.
+
+189
+00:16:15,000 --> 00:16:22,000
+A sudden remission from despair in a person who has spent years in a nearly vegetative depression.
+
+190
+00:16:22,000 --> 00:16:26,000
+Happiness felt like a possibility again.
+
+191
+00:16:26,000 --> 00:16:32,000
+So I hope I've been able to tell you that we're getting closer to understanding what tinnitus is.
+
+192
+00:16:32,000 --> 00:16:40,000
+And with these considerations that I've just said, we may be able to ultimately find a cure.
+
+193
+00:16:40,000 --> 00:16:43,000
+And I may be able to respond to these emails that I'm getting and saying,
+
+194
+00:16:43,000 --> 00:16:45,000
+Well, help is on the way.
+
+195
+00:16:45,000 --> 00:16:47,000
+We're not there yet, but help is on the way.
+
+196
+00:16:47,000 --> 00:16:49,000
+We'll have something for you soon.
+
+197
+00:16:49,000 --> 00:16:50,000
+Thank you.
+
+198
+00:16:50,000 --> 00:16:51,000
+Thank you.
+
+199
+00:16:51,000 --> 00:16:52,000
+Thank you, Dr. Yusuf.
+
+200
+00:16:52,000 --> 00:16:53,000
+One quick question for you before you leave the stage.
+
+201
+00:16:53,000 --> 00:17:11,000
+So with the leaps and bounds of research in brain research, what do you see as the impact going forward for society?
+
+202
+00:17:11,000 --> 00:17:15,000
+Oh, I think it's immeasurable.
+
+203
+00:17:15,000 --> 00:17:18,000
+I think the impacts for society are incredible.
+
+204
+00:17:18,000 --> 00:17:20,000
+Because our brain is us.
+
+205
+00:17:20,000 --> 00:17:25,000
+You know, we have to realize that this is where we feel, where we dream, where we plan.
+
+206
+00:17:25,000 --> 00:17:30,000
+So the more we understand about the brain, we understand about human beings as such and about humanity.
+
+207
+00:17:30,000 --> 00:17:32,000
+And I think this is how I look at it.
+
+208
+00:17:32,000 --> 00:17:33,000
+Yeah.
+
+209
+00:17:33,000 --> 00:17:34,000
+Thank you.
+
+210
+00:17:34,000 --> 00:17:42,000
+And if we have disorders like this one, which seem so intractable, we first have to understand the brain and then we can maybe help people.
+
+211
+00:17:42,000 --> 00:17:47,000
+So I think it has a lot of deep impact for us as a society.
+
+212
+00:17:47,000 --> 00:17:51,000
+Well, thank you so much for sharing your knowledge with us today.
+
+213
+00:17:51,000 --> 00:17:52,000
+Thank you.
+
