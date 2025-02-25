@@ -1,92 +1,35 @@
 import Cocoa
-import AppKit
 
 import Foundation
 
 struct PermissionsManager {
-    static func hasFullDiskAccess() -> Bool {
-        let testPath = "/Library/Application Support"
-        return FileManager.default.isReadableFile(atPath: testPath)
-    }
-}
-
-
-
-class FolderManager {
-    private let bookmarkKey = "SavedFolderBookmark"
-
-    func hasFullDiskAccess() -> Bool {
-        let testPath = "/Library/Application Support"
-        return FileManager.default.isReadableFile(atPath: testPath)
-    }
-    
-    func saveFolderManager(_ folderURL: URL) {
-        do {
-            let bookmarkData = try folderURL.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
-            UserDefaults.standard.set(bookmarkData, forKey: bookmarkKey)
-            print("✅ Folder permission saved.")
-        } catch {
-            print("❌ ERROR: Failed to save folder permission: \(error)")
-        }
-    }
-    
-    
-    func getSavedFolderManager() -> URL? {
-        if let bookmarkData = UserDefaults.standard.data(forKey: bookmarkKey) {
-            var isStale = false
-            do {
-                let folderURL = try URL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, relativeTo: nil, bookmarkDataIsStale: &isStale)
-                if !isStale {
-                    _ = folderURL.startAccessingSecurityScopedResource()  // ✅ Request permission
-                    return folderURL
-                } else {
-                    print("⚠️ Stored folder permission is stale. Requesting again.")
-                }
-            } catch {
-                print("❌ ERROR: Failed to retrieve stored folder permission: \(error)")
-            }
-        }
-        return nil
-    }
-    
-    
-    func requestFolderManager() -> URL {
-        let openPanel = NSOpenPanel()
-        openPanel.message = "Choose a folder where PDFs will be saved automatically."
-        openPanel.prompt = "Allow"
-        openPanel.canChooseFiles = false
-        openPanel.canChooseDirectories = true
-        openPanel.allowsMultipleSelection = false
-
-        if openPanel.runModal() == .OK, let selectedFolder = openPanel.url {
-            _ = selectedFolder.startAccessingSecurityScopedResource()  // ✅ Request access
-            print("✅ User granted access to: \(selectedFolder.path)")
-            return selectedFolder
+    static func openFullDiskAccessSettings() {
+        // Attempt to open Full Disk Access pane
+        // - On macOS Ventura (13+), this URL may open System Settings at “Privacy & Security,”
+        //   but might not jump directly to “Full Disk Access.”
+        // - On older macOS (12 and below), it should open Security & Privacy at Full Disk Access.
+        
+        let urlString = "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"
+        
+        if let url = URL(string: urlString) {
+            NSWorkspace.shared.open(url)
         } else {
-            print("⚠️ No folder selected, defaulting to Downloads")
-            return FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Downloads")
+            // Fallback: just open main System Settings
+            NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Library/PreferencePanes/Security.prefPane"))
         }
     }
+
+
+    /// Attempt to detect Full Disk Access by testing a restricted path.
+    static func checkFullDiskAccess() -> Bool {
+        // `/Library/Application Support/com.apple.TCC` is typically restricted.
+        let restrictedPath = "/Library/Application Support/com.apple.TCC"
+        // If we can read it, we likely have FDA. This is a heuristic, not 100% guaranteed.
+        return FileManager.default.isReadableFile(atPath: restrictedPath)
+    }
+
+
+    
 }
 
 
-
-func askUserForSaveFolder() -> URL? {
-    var selectedURL: URL? = nil
-    
-    DispatchQueue.main.sync {  // ✅ Ensure UI runs on the main thread
-        let dialog = NSOpenPanel()
-        dialog.title = "Choose the OneDrive Folder to Save PDF"
-        dialog.showsResizeIndicator = true
-        dialog.showsHiddenFiles = false
-        dialog.canChooseDirectories = true
-        dialog.canChooseFiles = false
-        dialog.allowsMultipleSelection = false
-
-        if dialog.runModal() == .OK {
-            selectedURL = dialog.url
-        }
-    }
-    
-    return selectedURL
-}

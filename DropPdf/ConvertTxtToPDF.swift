@@ -2,7 +2,6 @@ import Cocoa
 import PDFKit
 
 func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool  {
-    let folderManager = FolderManager()
 
     return await withCheckedContinuation { continuation in
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
