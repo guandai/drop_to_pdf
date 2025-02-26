@@ -1,4 +1,6 @@
 import Foundation
 
-let service = AntiwordHelper()
-service.start()
+let helper = AntiwordHelper()
+helper.start()
+
+RunLoop.current.run()

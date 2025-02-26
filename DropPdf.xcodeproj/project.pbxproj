@@ -84,6 +84,20 @@
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		490418942D6F4A3200FE8834 /* Exceptions for "AntiwordHelper" folder in "Copy Files" phase from "DropPdf" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			attributesByRelativePath = {
+				antiword = (CodeSignOnCopy, );
+			};
+			buildPhase = 492A35922D6CF6FC004BDC75 /* CopyFiles */;
+			membershipExceptions = (
+				antiword,
+				antiword.dSYM,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		49235EBD2D6CA9D1002F1FB6 /* DropPdf */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -110,6 +124,9 @@
 		};
 		4935E4AE2D6F15A600E9AFBC /* AntiwordHelper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				490418942D6F4A3200FE8834 /* Exceptions for "AntiwordHelper" folder in "Copy Files" phase from "DropPdf" target */,
+			);
 			path = AntiwordHelper;
 			sourceTree = "<group>";
 			usesTabs = 0;
@@ -200,7 +217,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				49235EBD2D6CA9D1002F1FB6 /* DropPdf */,
-				4935E4AE2D6F15A600E9AFBC /* AntiwordHelper */,
 			);
 			name = DropPdf;
 			packageProductDependencies = (
@@ -424,7 +440,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DropPdf/Preview Content\"";
 				DEVELOPMENT_TEAM = 7A8P3NLUDW;
-				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/$(PRODUCT_NAME)/Info.plist";
@@ -459,7 +475,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DropPdf/Preview Content\"";
 				DEVELOPMENT_TEAM = 7A8P3NLUDW;
-				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/$(PRODUCT_NAME)/Info.plist";
@@ -574,7 +590,7 @@
 				INFOPLIST_FILE = AntiwordHelper/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AntiwordHelper;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = twindai.AntiwordHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -600,7 +616,7 @@
 				INFOPLIST_FILE = AntiwordHelper/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AntiwordHelper;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = twindai.AntiwordHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";

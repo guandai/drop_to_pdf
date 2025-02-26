@@ -1,7 +1,11 @@
 import Foundation
 
+@objc protocol AntiwordHelperProtocol {
+    func processDocFile(inputPath: String, withReply: @escaping (Bool, String) -> Void)
+}
+
 class AntiwordHelper: NSObject, NSXPCListenerDelegate, AntiwordHelperProtocol {
-    let listener = NSXPCListener.service()
+    private let listener = NSXPCListener.service()
 
     override init() {
         super.init()
@@ -20,31 +24,47 @@ class AntiwordHelper: NSObject, NSXPCListenerDelegate, AntiwordHelperProtocol {
         return true
     }
 
-    // MARK: - XPC Service Logic
-    func processDocFile(inputPath: String, outputPath: String, withReply: @escaping (Bool, String) -> Void) {
-        let task = Process()
-        task.launchPath = "/path/to/antiword" // Update this path
-        task.arguments = [inputPath]
-
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = pipe
-
-        task.terminationHandler = { process in
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: data, encoding: .utf8) ?? "❌ No output"
-
-            if process.terminationStatus == 0 {
-                withReply(true, output)
-            } else {
-                withReply(false, "❌ Failed: \(output)")
+    // MARK: - AntiwordHelperProtocol
+    func processDocFile(inputPath: String, withReply reply: @escaping (Bool, String) -> Void) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            // Locate `antiword` binary
+            guard let antiwordPath = Bundle.main.path(forResource: "antiword", ofType: "") else {
+                reply(false, "❌ antiword binary not found in bundle")
+                return
             }
-        }
 
-        do {
-            try task.run()
-        } catch {
-            withReply(false, "❌ Error running antiword: \(error.localizedDescription)")
+            // Ensure execute permissions
+            do {
+                let attributes = try FileManager.default.attributesOfItem(atPath: antiwordPath)
+                if let permissions = attributes[.posixPermissions] as? NSNumber, (permissions.uint16Value & 0o111) == 0 {
+                    try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: antiwordPath)
+                    print(true, "✅ Set executable permissions for antiword")
+                }
+            } catch {
+                reply(false, "❌ Failed to set execute permissions for antiword: \(error.localizedDescription)")
+                return
+            }
+
+            // Run `antiword`
+            let task = Process()
+            task.launchPath = antiwordPath
+            task.arguments = [inputPath]
+
+            let pipe = Pipe()
+            task.standardOutput = pipe
+            task.standardError = pipe
+
+            do {
+                try task.run()
+                task.waitUntilExit()
+
+                let outputData = pipe.fileHandleForReading.readDataToEndOfFile()
+                let outputText = String(data: outputData, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "❌ No output"
+
+                reply(true, outputText)  // ✅ Return the extracted text
+            } catch {
+                reply(false, "❌ Error running antiword: \(error.localizedDescription)")
+            }
         }
     }
 }

@@ -1,5 +1,12 @@
 import Foundation
 
+@objc protocol AntiwordHelperProtocol {
+    func processDocFile(inputPath: String, withReply: @escaping (Bool, String) -> Void)
+}
+
+
+import Foundation
+
 class AntiwordClient {
     private var connection: NSXPCConnection?
 
@@ -9,15 +16,15 @@ class AntiwordClient {
         connection?.resume()
     }
 
-    func convertDocToTxt(inputPath: String, outputPath: String, completion: @escaping (Bool, String) -> Void) {
+    func convertDocToTxt(inputPath: String, completion: @escaping (Bool, String) -> Void) {
         guard let service = connection?.remoteObjectProxy as? AntiwordHelperProtocol else {
             completion(false, "❌ XPC Connection Failed")
             return
         }
 
-        service.processDocFile(inputPath: inputPath, outputPath: outputPath) { success, message in
+        service.processDocFile(inputPath: inputPath) { (success, output) in
             DispatchQueue.main.async {
-                completion(success, message)
+                completion(success, output) // ✅ Return extracted text
             }
         }
     }

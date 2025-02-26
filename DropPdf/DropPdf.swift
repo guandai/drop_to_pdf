@@ -1,30 +1,32 @@
 import SwiftUI
 
-//@main
+@main
 struct DropPdf: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var hasFullDiskAccess = PermissionsManager().checkFullDiskAccess()
-    let antiwordClient = AntiwordClient()
+    let antiwordClient = AntiwordClient() // Ensure AntiwordHelper is running
 
     init() {
         ensureSingleInstance()
     }
 
     var body: some Scene {
-        Settings {
-            VStack {
-                Text("Drop a .doc file to convert to text")
-                Button("Convert DOC") {
-                    let inputPath = "/Users/zhengdai/test.doc"
-                    let outputPath = "/Users/zhengdai/test.txt"
-                    
-                    antiwordClient.convertDocToTxt(inputPath: inputPath, outputPath: outputPath) { success, message in
-                        print(message)
-                    }
-                }
+        WindowGroup("Drop To PDF", id: "MainWindow") {
+            if hasFullDiskAccess {
+                DropView() // ✅ Show drop area if FDA is granted
+            } else {
+                FDAView() // ❌ Show FDA request screen if FDA is missing
             }
         }
+        .environmentObject(appDelegate)
+        .handlesExternalEvents(matching: ["*"])
+        .defaultSize(width: 250, height: 250)
+        .windowResizability(.contentSize)
+        .commands {
+            CommandGroup(replacing: .newItem) { } // Hide "New Window" option
+        }
     }
+
 
     /// Ensures that only a single instance of the app runs
     private func ensureSingleInstance() {
