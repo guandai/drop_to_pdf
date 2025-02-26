@@ -3,7 +3,7 @@ import SwiftUI
 @main
 struct MyApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @State private var hasFullDiskAccess = PermissionsManager.checkFullDiskAccess()
+    @State private var hasFullDiskAccess = PermissionsManager().checkFullDiskAccess()
 
     init() {
         ensureSingleInstance()

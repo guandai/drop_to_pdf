@@ -10,20 +10,15 @@ func saveToPdf(pdfContext: CGContext, fileURL: URL, pdfData: Data) async -> Bool
         // 🔹 Generate timestamped name
         let originalName = fileURL.deletingPathExtension().lastPathComponent
         let newName = getTimeName(name: originalName) // e.g. "photo_20250224_1322.pdf"
-
-        // 🔹 Save temporary PDF in Documents folder
-        // let tempDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        // let tempPDF = tempDir.appendingPathComponent(newName) // ✅ Use full file path
-
+            
         do {
             let finalPath = fileURL.deletingLastPathComponent().appendingPathComponent(newName)
+            
+            if PermissionsManager().isAppSandboxed() {
+                _ = PermissionsManager().askUserToSavePDF(proposedFilename: finalPath.lastPathComponent, data: pdfData)
+            }
+            
             try pdfData.write(to: finalPath, options: .atomic)
-
-            // 🔹 Final destination in OneDrive
-            
-            
-            // try FileManager.default.copyItem(at: tempPDF, to: finalPath) // ✅ Correct copy method
-
             print("✅ Successfully copied PDF to OneDrive: \(finalPath.path)")
             continuation.resume(returning: true)
         } catch {
@@ -32,9 +27,6 @@ func saveToPdf(pdfContext: CGContext, fileURL: URL, pdfData: Data) async -> Bool
         }
     }
 }
-
-
-
 
 /// 🔹 Generates a timestamp string
 func getTime() -> String {

@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		492A35892D6CD0F5004BDC75 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 492A35882D6CD0F5004BDC75 /* ZIPFoundation */; };
+		49ADA6C62D6F040E0041DB5A /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 49ADA6C52D6F040E0041DB5A /* ZIPFoundation */; };
+		49ADA6ED2D6F06260041DB5A /* AntiwordHelper.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 49ADA6E12D6F06260041DB5A /* AntiwordHelper.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,6 +26,13 @@
 			remoteGlobalIDString = 49235EBB2D6CA9D1002F1FB6;
 			remoteInfo = DropPdf;
 		};
+		49ADA6EB2D6F06260041DB5A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49F4316E2D685CD000BFA997 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49ADA6E02D6F06260041DB5A;
+			remoteInfo = AntiwordHelper;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,19 +45,49 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		49ADA6DC2D6F05520041DB5A /* Embed XPC Services */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
+			dstSubfolderSpec = 16;
+			files = (
+				49ADA6ED2D6F06260041DB5A /* AntiwordHelper.xpc in Embed XPC Services */,
+			);
+			name = "Embed XPC Services";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		49235EBC2D6CA9D1002F1FB6 /* DropPdf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DropPdf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49235ECC2D6CA9D3002F1FB6 /* DropPdfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DropPdfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49235ED62D6CA9D3002F1FB6 /* DropPdfUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DropPdfUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		49ADA6E12D6F06260041DB5A /* AntiwordHelper.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = AntiwordHelper.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		49CC4F262D6E0DEE006809F4 /* Exceptions for "DropPdf" folder in "DropPdf" target */ = {
+		49ADA6AE2D6E772A0041DB5A /* Exceptions for "DropPdf" folder in "DropPdf" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+			);
+			target = 49235EBB2D6CA9D1002F1FB6 /* DropPdf */;
+		};
+		49ADA6F12D6F06260041DB5A /* Exceptions for "AntiwordHelper" folder in "AntiwordHelper" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				antiword,
+				Info.plist,
+				Makefile.RiscOS,
+				Makefile32.RiscOS,
+				riscos.c,
+			);
+			target = 49ADA6E02D6F06260041DB5A /* AntiwordHelper */;
+		};
+		49ADA6F22D6F06550041DB5A /* Exceptions for "AntiwordHelper" folder in "DropPdf" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				antiword,
 			);
 			target = 49235EBB2D6CA9D1002F1FB6 /* DropPdf */;
 		};
@@ -59,7 +97,7 @@
 		49235EBD2D6CA9D1002F1FB6 /* DropPdf */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				49CC4F262D6E0DEE006809F4 /* Exceptions for "DropPdf" folder in "DropPdf" target */,
+				49ADA6AE2D6E772A0041DB5A /* Exceptions for "DropPdf" folder in "DropPdf" target */,
 			);
 			path = DropPdf;
 			sourceTree = "<group>";
@@ -74,6 +112,15 @@
 			path = DropPdfUITests;
 			sourceTree = "<group>";
 		};
+		49ADA6E22D6F06260041DB5A /* AntiwordHelper */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				49ADA6F22D6F06550041DB5A /* Exceptions for "AntiwordHelper" folder in "DropPdf" target */,
+				49ADA6F12D6F06260041DB5A /* Exceptions for "AntiwordHelper" folder in "AntiwordHelper" target */,
+			);
+			path = AntiwordHelper;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,7 +128,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				492A35892D6CD0F5004BDC75 /* ZIPFoundation in Frameworks */,
+				49ADA6C62D6F040E0041DB5A /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +140,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		49235ED32D6CA9D3002F1FB6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49ADA6DE2D6F06260041DB5A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -115,6 +169,7 @@
 				49235EBD2D6CA9D1002F1FB6 /* DropPdf */,
 				49235ECF2D6CA9D3002F1FB6 /* DropPdfTests */,
 				49235ED92D6CA9D3002F1FB6 /* DropPdfUITests */,
+				49ADA6E22D6F06260041DB5A /* AntiwordHelper */,
 				491A9DAE2D69C190004B42F4 /* Frameworks */,
 				49F431772D685CD000BFA997 /* Products */,
 			);
@@ -126,6 +181,7 @@
 				49235EBC2D6CA9D1002F1FB6 /* DropPdf.app */,
 				49235ECC2D6CA9D3002F1FB6 /* DropPdfTests.xctest */,
 				49235ED62D6CA9D3002F1FB6 /* DropPdfUITests.xctest */,
+				49ADA6E12D6F06260041DB5A /* AntiwordHelper.xpc */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,17 +197,19 @@
 				49235EB92D6CA9D1002F1FB6 /* Frameworks */,
 				49235EBA2D6CA9D1002F1FB6 /* Resources */,
 				492A35922D6CF6FC004BDC75 /* CopyFiles */,
+				49ADA6DC2D6F05520041DB5A /* Embed XPC Services */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				49ADA6EC2D6F06260041DB5A /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				49235EBD2D6CA9D1002F1FB6 /* DropPdf */,
 			);
 			name = DropPdf;
 			packageProductDependencies = (
-				492A35882D6CD0F5004BDC75 /* ZIPFoundation */,
+				49ADA6C52D6F040E0041DB5A /* ZIPFoundation */,
 			);
 			productName = DropPdf;
 			productReference = 49235EBC2D6CA9D1002F1FB6 /* DropPdf.app */;
@@ -203,6 +261,28 @@
 			productReference = 49235ED62D6CA9D3002F1FB6 /* DropPdfUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		49ADA6E02D6F06260041DB5A /* AntiwordHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49ADA6EE2D6F06260041DB5A /* Build configuration list for PBXNativeTarget "AntiwordHelper" */;
+			buildPhases = (
+				49ADA6DD2D6F06260041DB5A /* Sources */,
+				49ADA6DE2D6F06260041DB5A /* Frameworks */,
+				49ADA6DF2D6F06260041DB5A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				49ADA6E22D6F06260041DB5A /* AntiwordHelper */,
+			);
+			name = AntiwordHelper;
+			packageProductDependencies = (
+			);
+			productName = AntiwordHelper;
+			productReference = 49ADA6E12D6F06260041DB5A /* AntiwordHelper.xpc */;
+			productType = "com.apple.product-type.xpc-service";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -224,6 +304,9 @@
 						CreatedOnToolsVersion = 16.2;
 						TestTargetID = 49235EBB2D6CA9D1002F1FB6;
 					};
+					49ADA6E02D6F06260041DB5A = {
+						CreatedOnToolsVersion = 16.2;
+					};
 				};
 			};
 			buildConfigurationList = 49F431712D685CD000BFA997 /* Build configuration list for PBXProject "DropPdf" */;
@@ -236,7 +319,7 @@
 			mainGroup = 49F4316D2D685CD000BFA997;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				492A35872D6CD0E8004BDC75 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				49ADA6C42D6F040E0041DB5A /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 49F431772D685CD000BFA997 /* Products */;
@@ -246,6 +329,7 @@
 				49235EBB2D6CA9D1002F1FB6 /* DropPdf */,
 				49235ECB2D6CA9D3002F1FB6 /* DropPdfTests */,
 				49235ED52D6CA9D3002F1FB6 /* DropPdfUITests */,
+				49ADA6E02D6F06260041DB5A /* AntiwordHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -266,6 +350,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		49235ED42D6CA9D3002F1FB6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49ADA6DF2D6F06260041DB5A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -296,6 +387,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		49ADA6DD2D6F06260041DB5A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -308,6 +406,11 @@
 			isa = PBXTargetDependency;
 			target = 49235EBB2D6CA9D1002F1FB6 /* DropPdf */;
 			targetProxy = 49235ED72D6CA9D3002F1FB6 /* PBXContainerItemProxy */;
+		};
+		49ADA6EC2D6F06260041DB5A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49ADA6E02D6F06260041DB5A /* AntiwordHelper */;
+			targetProxy = 49ADA6EB2D6F06260041DB5A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -329,7 +432,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/$(PRODUCT_NAME)/Info.plist";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_CFBundleDisplayName = DropPdf;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Zheng Dai. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -362,7 +467,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/$(PRODUCT_NAME)/Info.plist";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_CFBundleDisplayName = DropPdf;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Zheng Dai. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -449,6 +556,58 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = DropPdf;
+			};
+			name = Release;
+		};
+		49ADA6EF2D6F06260041DB5A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AntiwordHelper/AntiwordHelper.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7A8P3NLUDW;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AntiwordHelper/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AntiwordHelper;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = twindai.AntiwordHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		49ADA6F02D6F06260041DB5A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AntiwordHelper/AntiwordHelperRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7A8P3NLUDW;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AntiwordHelper/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AntiwordHelper;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = twindai.AntiwordHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -596,6 +755,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		49ADA6EE2D6F06260041DB5A /* Build configuration list for PBXNativeTarget "AntiwordHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49ADA6EF2D6F06260041DB5A /* Debug */,
+				49ADA6F02D6F06260041DB5A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		49F431712D685CD000BFA997 /* Build configuration list for PBXProject "DropPdf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -608,7 +776,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		492A35872D6CD0E8004BDC75 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+		49ADA6C42D6F040E0041DB5A /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
 			requirement = {
@@ -619,9 +787,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		492A35882D6CD0F5004BDC75 /* ZIPFoundation */ = {
+		49ADA6C52D6F040E0041DB5A /* ZIPFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 492A35872D6CD0E8004BDC75 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			package = 49ADA6C42D6F040E0041DB5A /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
 			productName = ZIPFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */

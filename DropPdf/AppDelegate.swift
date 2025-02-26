@@ -18,7 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             return
         }
 
-        let contentView = PermissionsManager.checkFullDiskAccess() ? AnyView(DropView()) : AnyView(FDAView())
+        let contentView = PermissionsManager().checkFullDiskAccess() ? AnyView(DropView()) : AnyView(FDAView())
 
         let hostingController = NSHostingController(rootView: contentView.environmentObject(self).environmentObject(self.processFile))
 

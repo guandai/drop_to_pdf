@@ -13,7 +13,7 @@ struct FDAView: View {
                 .frame(width: 300)
             
             Button("Open Full Disk Access Settings") {
-                PermissionsManager.openFullDiskAccessSettings()
+                PermissionsManager().openFullDiskAccessSettings()
             }
         }
         .padding()

@@ -2,28 +2,40 @@ import Cocoa
 import PDFKit
 
 func convertDocToPDF(fileURL: URL) async -> Bool {
-    // 1) catdoc in your bundle
     return await withCheckedContinuation { continuation in
         DispatchQueue.main.async {
-            guard let catdocBin = Bundle.main.path(forResource: "catdoc", ofType: "") else {
-                print("❌ catdoc not found in Resources")
+            // 1️⃣ Locate `antiword` in the app bundle
+            guard let docBin = Bundle.main.path(forResource: "antiword", ofType: "") else {
+                print("❌ antiword not found in Resources")
                 return continuation.resume(returning: false)
             }
-            // 2) codepage path in your bundle
-            let codepagePath = (Bundle.main.resourcePath! as NSString)
-                .appendingPathComponent("catdoc_data/mac-roman.txt")
             
+            // 2️⃣ Ensure execute permissions are set
+            do {
+                let attributes = try FileManager.default.attributesOfItem(atPath: docBin)
+                if let permissions = attributes[.posixPermissions] as? NSNumber {
+                    let permissionValue = permissions.uint16Value
+                    if (permissionValue & 0o111) == 0 {
+                        // No execute permissions, set them
+                        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: docBin)
+                        print("✅ Executable permissions set for antiword")
+                    }
+                }
+            } catch {
+                print("❌ Failed to check/set permissions for antiword: \(error)")
+                return continuation.resume(returning: false)
+            }
+
             let task = Process()
-            task.launchPath = catdocBin
-            // 3) Pass `-m codepagePath` so it never touches /usr/local/share
-            task.arguments = ["-m", codepagePath, fileURL.path]
+            task.launchPath = docBin
+            task.arguments = [fileURL.path]
             
             let pipe = Pipe()
             task.standardOutput = pipe
             task.standardError = pipe
             
             do {
-                // 4) Access the security-scoped resource if sandboxed
+                // 3️⃣ Access security-scoped resource if sandboxed
                 let didStart = fileURL.startAccessingSecurityScopedResource()
                 defer { if didStart { fileURL.stopAccessingSecurityScopedResource() } }
                 
@@ -31,16 +43,14 @@ func convertDocToPDF(fileURL: URL) async -> Bool {
                 task.waitUntilExit()
                 
                 let outputData = pipe.fileHandleForReading.readDataToEndOfFile()
-                let extractedText = String(data: outputData, encoding: .utf8)?
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                
-                
-                guard let text = extractedText, !text.isEmpty else {
+                guard let extractedText = String(data: outputData, encoding: .utf8)?
+                        .trimmingCharacters(in: .whitespacesAndNewlines),
+                      !extractedText.isEmpty else {
                     print("❌ Could not extract text from .doc")
                     return continuation.resume(returning: false)
                 }
                 
-                // Build PDF
+                // 4️⃣ Create PDF from extracted text
                 let pdfData = NSMutableData()
                 let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData)!
                 var mediaBox = CGRect(x: 0, y: 0, width: 595, height: 842)
@@ -60,18 +70,17 @@ func convertDocToPDF(fileURL: URL) async -> Bool {
                     }()
                 ]
                 let textRect = CGRect(x: 20, y: 20, width: 555, height: 800)
-                NSString(string: text).draw(in: textRect, withAttributes: attributes)
+                NSString(string: extractedText).draw(in: textRect, withAttributes: attributes)
                 NSGraphicsContext.restoreGraphicsState()
                 
                 Task {
-                    
-                    let immutablePdfData = pdfData as Data // ✅ Convert NSMutableData to immutable Data
+                    let immutablePdfData = pdfData as Data
                     let success = await saveToPdf(pdfContext: pdfContext, fileURL: fileURL, pdfData: immutablePdfData)
                     continuation.resume(returning: success)
                 }
                 
             } catch {
-                print("❌ ERROR executing catdoc: \(error)")
+                print("❌ Error running antiword: \(error)")
                 return continuation.resume(returning: false)
             }
         }
