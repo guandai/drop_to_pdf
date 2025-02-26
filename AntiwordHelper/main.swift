@@ -1,39 +1,45 @@
-//
-//  main.swift
-//  AntiwordHelper
-//
-//  Created by zheng dai on 2/26/25.
-//
-
 import Foundation
 
-class ServiceDelegate: NSObject, NSXPCListenerDelegate {
-    
-    /// This method is where the NSXPCListener configures, accepts, and resumes a new incoming NSXPCConnection.
-    func listener(_ listener: NSXPCListener, shouldAcceptNewConnection newConnection: NSXPCConnection) -> Bool {
-        
-        // Configure the connection.
-        // First, set the interface that the exported object implements.
-        newConnection.exportedInterface = NSXPCInterface(with: AntiwordHelperProtocol.self)
-        
-        // Next, set the object that the connection exports. All messages sent on the connection to this service will be sent to the exported object to handle. The connection retains the exported object.
-        let exportedObject = AntiwordHelper()
-        newConnection.exportedObject = exportedObject
-        
-        // Resuming the connection allows the system to deliver more incoming messages.
-        newConnection.resume()
-        
-        // Returning true from this method tells the system that you have accepted this connection. If you want to reject the connection for some reason, call invalidate() on the connection and return false.
-        return true
-    }
+// MARK: - Define XPC Protocol
+@objc protocol AntiwordHelperProtocol {
+    func processDocFile(inputPath: String, outputPath: String, withReply reply: @escaping (Bool, String) -> Void)
 }
 
-// Create the delegate for the service.
-let delegate = ServiceDelegate()
+// MARK: - XPC Service Implementation
+class AntiwordHelper: NSObject, AntiwordHelperProtocol, NSXPCListenerDelegate {
 
-// Set up the one NSXPCListener for this service. It will handle all incoming connections.
-let listener = NSXPCListener.service()
-listener.delegate = delegate
+    // Accept new XPC connections
+    func listener(_ listener: NSXPCListener, shouldAcceptNewConnection newConnection: NSXPCConnection) -> Bool {
+        newConnection.exportedInterface = NSXPCInterface(with: AntiwordHelperProtocol.self)
+        newConnection.exportedObject = self
+        newConnection.resume()
+        return true
+    }
 
-// Resuming the serviceListener starts this service. This method does not return.
-listener.resume()
+    // Process .doc files using antiword
+    func processDocFile(inputPath: String, outputPath: String, withReply reply: @escaping (Bool, String) -> Void) {
+        let antiwordPath = Bundle.main.path(forResource: "antiword", ofType: "") ?? "/usr/local/bin/antiword"
+        
+        let task = Process()
+        task.launchPath = antiwordPath
+        task.arguments = [inputPath]
+        
+        let outputPipe = Pipe()
+        task.standardOutput = outputPipe
+        task.standardError = Pipe()
+        
+        do {
+            try task.run()
+            task.waitUntilExit()
+            
+            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+            let outputText = String(data: outputData, encoding: .utf8) ?? ""
+            
+            try outputText.write(toFile: outputPath, atomically: true, encoding: .utf8)
+            
+            reply(true, "✅ Conversion Successful: \(outputPath)")
+        } catch {
+            reply(false, "❌ Error: \(error.localizedDescription)")
+        }
+    }
+}
