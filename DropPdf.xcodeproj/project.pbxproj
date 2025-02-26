@@ -44,6 +44,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		498E108B2D6FB058002A0D3E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49ADA6DC2D6F05520041DB5A /* Embed XPC Services */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -64,30 +73,36 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		490418A52D6F6A7900FE8834 /* Exceptions for "AntiwordHelper" folder in "AntiwordHelper" target */ = {
+		49ADA6AE2D6E772A0041DB5A /* Exceptions for "DropPdf" folder in "DropPdf" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				antiword,
 				antiword.dSYM,
-				AntiwordHelper.dSYM,
-				Info.plist,
-			);
-			target = 4935E4AC2D6F15A600E9AFBC /* AntiwordHelper */;
-		};
-		49ADA6AE2D6E772A0041DB5A /* Exceptions for "DropPdf" folder in "DropPdf" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
 				Info.plist,
 			);
 			target = 49235EBB2D6CA9D1002F1FB6 /* DropPdf */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		498E108D2D6FB065002A0D3E /* Exceptions for "DropPdf" folder in "Copy Files" phase from "DropPdf" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			attributesByRelativePath = {
+				antiword = (CodeSignOnCopy, );
+			};
+			buildPhase = 498E108B2D6FB058002A0D3E /* CopyFiles */;
+			membershipExceptions = (
+				antiword,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		49235EBD2D6CA9D1002F1FB6 /* DropPdf */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				49ADA6AE2D6E772A0041DB5A /* Exceptions for "DropPdf" folder in "DropPdf" target */,
+				498E108D2D6FB065002A0D3E /* Exceptions for "DropPdf" folder in "Copy Files" phase from "DropPdf" target */,
 			);
 			path = DropPdf;
 			sourceTree = "<group>";
@@ -101,15 +116,6 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = DropPdfUITests;
 			sourceTree = "<group>";
-		};
-		4935E4AE2D6F15A600E9AFBC /* AntiwordHelper */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				490418A52D6F6A7900FE8834 /* Exceptions for "AntiwordHelper" folder in "AntiwordHelper" target */,
-			);
-			path = AntiwordHelper;
-			sourceTree = "<group>";
-			usesTabs = 0;
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -159,7 +165,6 @@
 				49235EBD2D6CA9D1002F1FB6 /* DropPdf */,
 				49235ECF2D6CA9D3002F1FB6 /* DropPdfTests */,
 				49235ED92D6CA9D3002F1FB6 /* DropPdfUITests */,
-				4935E4AE2D6F15A600E9AFBC /* AntiwordHelper */,
 				491A9DAE2D69C190004B42F4 /* Frameworks */,
 				49F431772D685CD000BFA997 /* Products */,
 			);
@@ -187,6 +192,7 @@
 				49235EB92D6CA9D1002F1FB6 /* Frameworks */,
 				49235EBA2D6CA9D1002F1FB6 /* Resources */,
 				49ADA6DC2D6F05520041DB5A /* Embed XPC Services */,
+				498E108B2D6FB058002A0D3E /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -259,9 +265,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				4935E4AE2D6F15A600E9AFBC /* AntiwordHelper */,
 			);
 			name = AntiwordHelper;
 			packageProductDependencies = (
