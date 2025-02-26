@@ -77,7 +77,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "49235ECB2D6CA9D3002F1FB6"
+               BlueprintIdentifier = "4935E49F2D6F14BC00E9AFBC"
                BuildableName = "DropPdfTests.xctest"
                BlueprintName = "DropPdfTests"
                ReferencedContainer = "container:DropPdf.xcodeproj">

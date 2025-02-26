@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4935E4B92D6F15A600E9AFBC /* AntiwordHelper.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4935E4AD2D6F15A600E9AFBC /* AntiwordHelper.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		49ADA6C62D6F040E0041DB5A /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 49ADA6C52D6F040E0041DB5A /* ZIPFoundation */; };
+		49BFECCB2D6F30AD00B53ACB /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 49BFECCA2D6F30AD00B53ACB /* ZIPFoundation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +45,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4935E4C52D6F251C00E9AFBC /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49ADA6DC2D6F05520041DB5A /* Embed XPC Services */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -66,13 +75,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4935E4BD2D6F15A600E9AFBC /* Exceptions for "AntiwordHelper" folder in "AntiwordHelper" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 4935E4AC2D6F15A600E9AFBC /* AntiwordHelper */;
-		};
 		49ADA6AE2D6E772A0041DB5A /* Exceptions for "DropPdf" folder in "DropPdf" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -108,11 +110,9 @@
 		};
 		4935E4AE2D6F15A600E9AFBC /* AntiwordHelper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				4935E4BD2D6F15A600E9AFBC /* Exceptions for "AntiwordHelper" folder in "AntiwordHelper" target */,
-			);
 			path = AntiwordHelper;
 			sourceTree = "<group>";
+			usesTabs = 0;
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -121,7 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49ADA6C62D6F040E0041DB5A /* ZIPFoundation in Frameworks */,
+				49BFECCB2D6F30AD00B53ACB /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,10 +200,11 @@
 			);
 			fileSystemSynchronizedGroups = (
 				49235EBD2D6CA9D1002F1FB6 /* DropPdf */,
+				4935E4AE2D6F15A600E9AFBC /* AntiwordHelper */,
 			);
 			name = DropPdf;
 			packageProductDependencies = (
-				49ADA6C52D6F040E0041DB5A /* ZIPFoundation */,
+				49BFECCA2D6F30AD00B53ACB /* ZIPFoundation */,
 			);
 			productName = DropPdf;
 			productReference = 49235EBC2D6CA9D1002F1FB6 /* DropPdf.app */;
@@ -262,6 +263,7 @@
 				4935E4A92D6F15A600E9AFBC /* Sources */,
 				4935E4AA2D6F15A600E9AFBC /* Frameworks */,
 				4935E4AB2D6F15A600E9AFBC /* Resources */,
+				4935E4C52D6F251C00E9AFBC /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -313,7 +315,7 @@
 			mainGroup = 49F4316D2D685CD000BFA997;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				49ADA6C42D6F040E0041DB5A /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				49BFECC92D6F30AD00B53ACB /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 49F431772D685CD000BFA997 /* Products */;
@@ -774,7 +776,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		49ADA6C42D6F040E0041DB5A /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+		49BFECC92D6F30AD00B53ACB /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
 			requirement = {
@@ -785,9 +787,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		49ADA6C52D6F040E0041DB5A /* ZIPFoundation */ = {
+		49BFECCA2D6F30AD00B53ACB /* ZIPFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 49ADA6C42D6F040E0041DB5A /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			package = 49BFECC92D6F30AD00B53ACB /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
 			productName = ZIPFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */

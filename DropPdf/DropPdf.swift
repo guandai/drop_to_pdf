@@ -1,9 +1,10 @@
 import SwiftUI
 
-@main
-struct MyApp: App {
+//@main
+struct DropPdf: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var hasFullDiskAccess = PermissionsManager().checkFullDiskAccess()
+    let antiwordClient = AntiwordClient()
 
     init() {
         ensureSingleInstance()
@@ -11,7 +12,17 @@ struct MyApp: App {
 
     var body: some Scene {
         Settings {
-            EmptyView() // ✅ Prevents unwanted extra windows
+            VStack {
+                Text("Drop a .doc file to convert to text")
+                Button("Convert DOC") {
+                    let inputPath = "/Users/zhengdai/test.doc"
+                    let outputPath = "/Users/zhengdai/test.txt"
+                    
+                    antiwordClient.convertDocToTxt(inputPath: inputPath, outputPath: outputPath) { success, message in
+                        print(message)
+                    }
+                }
+            }
         }
     }
 
@@ -21,7 +32,7 @@ struct MyApp: App {
         let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: bundleIdentifier)
 
         if runningApps.count > 1 {
-            NSApplication.shared.terminate(nil) // ✅ If another instance exists, close it
+            NSApplication.shared.terminate(nil)
         }
     }
 }
