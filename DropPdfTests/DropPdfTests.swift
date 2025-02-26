@@ -2,11 +2,10 @@
 //  DropPdfTests.swift
 //  DropPdfTests
 //
-//  Created by zheng dai on 2/24/25.
+//  Created by zheng dai on 2/26/25.
 //
 
 import Testing
-@testable import DropPdf
 
 struct DropPdfTests {
 
