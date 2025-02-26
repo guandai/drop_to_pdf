@@ -4,7 +4,6 @@ import SwiftUI
 struct DropPdf: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var hasFullDiskAccess = PermissionsManager().checkFullDiskAccess()
-    let antiwordClient = AntiwordClient() // Ensure AntiwordHelper is running
 
     init() {
         ensureSingleInstance()
@@ -13,7 +12,7 @@ struct DropPdf: App {
     var body: some Scene {
         WindowGroup("Drop To PDF", id: "MainWindow") {
             if hasFullDiskAccess {
-                DropView() // ✅ Show drop area if FDA is granted
+                EmptyView() // ✅ Show drop area if FDA is granted
             } else {
                 FDAView() // ❌ Show FDA request screen if FDA is missing
             }

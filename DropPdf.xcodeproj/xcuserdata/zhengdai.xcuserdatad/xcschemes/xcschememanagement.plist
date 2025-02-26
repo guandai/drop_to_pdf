@@ -9,7 +9,7 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>DropPdf.xcscheme</key>
+		<key>DropPdf.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -22,6 +22,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>4935E4AC2D6F15A600E9AFBC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>49F431752D685CD000BFA997</key>
 		<dict>
 			<key>primary</key>

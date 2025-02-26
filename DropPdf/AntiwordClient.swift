@@ -22,8 +22,11 @@ class AntiwordClient {
             return
         }
 
+        print(">>>>>>> processDocFile1")
         service.processDocFile(inputPath: inputPath) { (success, output) in
+            print(">>>>>>> processDocFile!!2")
             DispatchQueue.main.async {
+                print(">>>>>>> processDocFile!!3")
                 completion(success, output) // ✅ Return extracted text
             }
         }

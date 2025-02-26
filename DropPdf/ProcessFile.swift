@@ -26,6 +26,8 @@ class ProcessFile: ObservableObject {
             return await convertDocxToPDF(fileURL: url)
         } else if url.pathExtension.lowercased() == "doc" {
             return await convertDocToPDF(fileURL: url)
+        } else if url.pathExtension.lowercased() == "rtf" {
+            return await convertDocToPDF(fileURL: url)
         } else {
             print("⚠️ Unsupported file type → \(url.lastPathComponent)")
             return false

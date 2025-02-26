@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4935E4B92D6F15A600E9AFBC /* AntiwordHelper.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4935E4AD2D6F15A600E9AFBC /* AntiwordHelper.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		490418AC2D6F6B5B00FE8834 /* AntiwordHelper.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4935E4AD2D6F15A600E9AFBC /* AntiwordHelper.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		49BFECCB2D6F30AD00B53ACB /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 49BFECCA2D6F30AD00B53ACB /* ZIPFoundation */; };
 /* End PBXBuildFile section */
 
@@ -36,20 +36,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		492A35922D6CF6FC004BDC75 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 7;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4935E4C52D6F251C00E9AFBC /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 7;
+			dstSubfolderSpec = 6;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -60,7 +51,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
 			dstSubfolderSpec = 16;
 			files = (
-				4935E4B92D6F15A600E9AFBC /* AntiwordHelper.xpc in Embed XPC Services */,
+				490418AC2D6F6B5B00FE8834 /* AntiwordHelper.xpc in Embed XPC Services */,
 			);
 			name = "Embed XPC Services";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -75,6 +66,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		490418A52D6F6A7900FE8834 /* Exceptions for "AntiwordHelper" folder in "AntiwordHelper" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				antiword,
+				antiword.dSYM,
+				AntiwordHelper.dSYM,
+				Info.plist,
+			);
+			target = 4935E4AC2D6F15A600E9AFBC /* AntiwordHelper */;
+		};
 		49ADA6AE2D6E772A0041DB5A /* Exceptions for "DropPdf" folder in "DropPdf" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -85,15 +86,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		490418942D6F4A3200FE8834 /* Exceptions for "AntiwordHelper" folder in "Copy Files" phase from "DropPdf" target */ = {
+		490418B42D6F7E8400FE8834 /* Exceptions for "AntiwordHelper" folder in "Copy Files" phase from "AntiwordHelper" target */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			attributesByRelativePath = {
 				antiword = (CodeSignOnCopy, );
 			};
-			buildPhase = 492A35922D6CF6FC004BDC75 /* CopyFiles */;
+			buildPhase = 4935E4C52D6F251C00E9AFBC /* CopyFiles */;
 			membershipExceptions = (
 				antiword,
-				antiword.dSYM,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
@@ -125,7 +125,8 @@
 		4935E4AE2D6F15A600E9AFBC /* AntiwordHelper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				490418942D6F4A3200FE8834 /* Exceptions for "AntiwordHelper" folder in "Copy Files" phase from "DropPdf" target */,
+				490418A52D6F6A7900FE8834 /* Exceptions for "AntiwordHelper" folder in "AntiwordHelper" target */,
+				490418B42D6F7E8400FE8834 /* Exceptions for "AntiwordHelper" folder in "Copy Files" phase from "AntiwordHelper" target */,
 			);
 			path = AntiwordHelper;
 			sourceTree = "<group>";
@@ -207,7 +208,6 @@
 				49235EB82D6CA9D1002F1FB6 /* Sources */,
 				49235EB92D6CA9D1002F1FB6 /* Frameworks */,
 				49235EBA2D6CA9D1002F1FB6 /* Resources */,
-				492A35922D6CF6FC004BDC75 /* CopyFiles */,
 				49ADA6DC2D6F05520041DB5A /* Embed XPC Services */,
 			);
 			buildRules = (
@@ -278,8 +278,8 @@
 			buildPhases = (
 				4935E4A92D6F15A600E9AFBC /* Sources */,
 				4935E4AA2D6F15A600E9AFBC /* Frameworks */,
-				4935E4AB2D6F15A600E9AFBC /* Resources */,
 				4935E4C52D6F251C00E9AFBC /* CopyFiles */,
+				490418A42D6F6A7900FE8834 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -347,6 +347,13 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		490418A42D6F6A7900FE8834 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		49235EBA2D6CA9D1002F1FB6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -362,13 +369,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4935E49E2D6F14BC00E9AFBC /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4935E4AB2D6F15A600E9AFBC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
