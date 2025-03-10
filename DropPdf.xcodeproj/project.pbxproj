@@ -68,7 +68,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		498E108D2D6FB065002A0D3E /* Exceptions for "DropPdf" folder in "Copy Files" phase from "DropPdf" target */ = {
+		49C0974E2D732D6D004355B6 /* Exceptions for "DropPdf" folder in "Copy Files" phase from "DropPdf" target */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			attributesByRelativePath = {
 				antiword = (CodeSignOnCopy, );
@@ -85,7 +85,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				49ADA6AE2D6E772A0041DB5A /* Exceptions for "DropPdf" folder in "DropPdf" target */,
-				498E108D2D6FB065002A0D3E /* Exceptions for "DropPdf" folder in "Copy Files" phase from "DropPdf" target */,
+				49C0974E2D732D6D004355B6 /* Exceptions for "DropPdf" folder in "Copy Files" phase from "DropPdf" target */,
 			);
 			path = DropPdf;
 			sourceTree = "<group>";
