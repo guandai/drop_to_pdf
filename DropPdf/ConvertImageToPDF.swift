@@ -39,11 +39,14 @@ func convertImageToPDF(fileURL: URL) async -> Bool {
             
             image.draw(in: mediaBox)
             NSGraphicsContext.restoreGraphicsState()
+
+            pdfContext.endPage()
+            pdfContext.closePDF()
             
             
             Task {
                 let immutablePdfData = pdfData as Data // ✅ Convert NSMutableData to immutable Data
-                let success = await saveToPdf(pdfContext: pdfContext, fileURL: fileURL, pdfData: immutablePdfData)
+                let success = await saveToPdf(fileURL: fileURL, pdfData: immutablePdfData)
                 continuation.resume(returning: success)
             }
             

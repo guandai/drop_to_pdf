@@ -2,66 +2,125 @@ import Cocoa
 import UniformTypeIdentifiers
 import Foundation
 
-class PermissionsManager {
-    func openFullDiskAccessSettings() {
-       let urlString = "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"
-       
-       if let url = URL(string: urlString) {
-           NSWorkspace.shared.open(url)
-       } else {
-           NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Library/PreferencePanes/Security.prefPane"))
-       }
-   }
-
-    /// Attempt to detect Full Disk Access by testing a restricted path.
-    func checkFullDiskAccess() -> Bool {
-        // `/Library/Application Support/com.apple.TCC` is typically restricted.
-        let restrictedPath = "/Library/Application Support/com.apple.TCC"
-        // If we can read it, we likely have FDA. This is a heuristic, not 100% guaranteed.
-        return FileManager.default.isReadableFile(atPath: restrictedPath)
-    }
+class PermissionsManager: ObservableObject  {
+    static let shared = PermissionsManager()
     
+    @Published var grantedFolderURLs: [URL] = []  // ✅ Store multiple folders
+
+    private let savedFoldersKey = "SavedFoldersBookmarks"
+
+    init() {
+        restoreFolderAccess()
+    }
+
+    /// Ask user to select a folder
+    func requestAccess() {
+        let panel = NSOpenPanel()
+        panel.title = "Select a folder to grant access"
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+
+        if panel.runModal() == .OK, let folderURL = panel.url {
+            print("Selected folder: \(folderURL.path)")
+            storeSecurityScopedBookmark(for: folderURL)
+        }
+        objectWillChange.send()
+    }
+
+    /// Store security-scoped bookmark for a selected folder
+    private func storeSecurityScopedBookmark(for url: URL) {
+        do {
+            let bookmarkData = try url.bookmarkData(options: .withSecurityScope)
+            // Retrieve stored bookmarks
+            var storedBookmarks = UserDefaults.standard.array(forKey: savedFoldersKey) as? [Data] ?? []
+            storedBookmarks.append(bookmarkData)  // ✅ Store multiple bookmarks
+            UserDefaults.standard.set(storedBookmarks, forKey: savedFoldersKey)
+
+            DispatchQueue.main.async {
+                if self.grantedFolderURLs.contains(url) {
+                     return
+                }
+                self.grantedFolderURLs.append(url)
+            }
+            objectWillChange.send()
+            print("✅ Folder access granted: \(url.path)")
+        } catch {
+            print("❌ Failed to store bookmark: \(error)")
+        }
+    }
+
+    /// Restore access to previously selected folders
+    func restoreFolderAccess() {
+        if let bookmarkDataArray = UserDefaults.standard.array(forKey: savedFoldersKey) as? [Data] {
+            grantedFolderURLs.removeAll()
+            for bookmarkData in bookmarkDataArray {
+                do {
+                    var isStale = false
+                    let url = try URL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, bookmarkDataIsStale: &isStale)
+
+                    if isStale {
+                        print("Bookmark data is stale, requesting permission again.")
+                        continue
+                    }
+
+                    if url.startAccessingSecurityScopedResource() {
+                        grantedFolderURLs.append(url)
+                        print("Restored access to: \(url.path)")
+                    } else {
+                        print("Failed to access security-scoped resource.")
+                    }
+                } catch {
+                    print("Failed to restore bookmark: \(error)")
+                }
+            }
+        }
+        objectWillChange.send()
+    }
+
+    /// Check if a given folder has been granted access
+    func isFolderGranted(_ folderURL: URL) -> Bool {
+        let isGranted = grantedFolderURLs.contains { $0.standardizedFileURL == folderURL.standardizedFileURL }
+        
+        if isGranted {
+            print("✅ Folder access granted: \(folderURL.path)")
+        } else {
+            print("❌ Folder access not granted: \(folderURL.path)")
+        }
+        
+        return isGranted
+    }
+
+    /// Check if a file's folder is allowed, request access if not
+    func ensureFolderAccess(for fileURL: URL, completion: @escaping (Bool) -> Void) {
+        let fileDirectory = fileURL.deletingLastPathComponent()
+
+        if grantedFolderURLs.contains(fileDirectory) {
+            print("✅ Folder is already allowed: \(fileDirectory.path)")
+            completion(true)
+        } else {
+            print("❌ Folder is not allowed: \(fileDirectory.path), requesting access...")
+            DispatchQueue.main.async {
+                self.requestAccess()
+                self.grantedFolderURLs.append(fileDirectory)
+                completion(true)
+            }
+        }
+    }
+
+    /// Clear all stored folder permissions
+    func clearSavedFolderBookmarks() {
+        UserDefaults.standard.removeObject(forKey: savedFoldersKey)
+        
+        DispatchQueue.main.async {
+            self.grantedFolderURLs.removeAll()
+        }
+        
+        objectWillChange.send()
+        print("🗑️ Cleared all saved folder bookmarks.")
+    }
     
     func isAppSandboxed() -> Bool {
         return ProcessInfo.processInfo.environment["APP_SANDBOX_CONTAINER_ID"] != nil
     }
-
-    func askUserToSavePDF(proposedFilename: String, data: Data) -> Bool {
-        var success = false
-        
-        DispatchQueue.main.sync {
-            let savePanel = NSSavePanel()
-            savePanel.title = "Save PDF File"
-            
-            if #available(macOS 11.0, *) {
-                savePanel.allowedContentTypes = [UTType.pdf]  // ✅ macOS 11+
-            } else {
-                savePanel.allowedFileTypes = ["pdf"]  // ✅ macOS 10.15 and earlier
-            }
-            
-            savePanel.nameFieldStringValue = proposedFilename
-            
-            if savePanel.runModal() == .OK, let url = savePanel.url {
-                success = savePDFToAllowedLocation(fileURL: url, data: data)
-            }
-        }
-        
-        return success
-    }
-
-    func savePDFToAllowedLocation(fileURL: URL, data: Data) -> Bool {
-        let didStart = fileURL.startAccessingSecurityScopedResource()
-        defer { if didStart { fileURL.stopAccessingSecurityScopedResource() } }
-
-        do {
-            try data.write(to: fileURL)
-            print("✅ Successfully saved PDF at \(fileURL.path)")
-            return true
-        } catch {
-            print("❌ ERROR: Failed to save PDF: \(error)")
-            return false
-        }
-    }
 }
-
-

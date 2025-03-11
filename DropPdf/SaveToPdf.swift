@@ -2,52 +2,35 @@ import Cocoa
 import PDFKit
 import UniformTypeIdentifiers
 
-func saveToPdf(pdfContext: CGContext, fileURL: URL, pdfData: Data) async -> Bool {
+func saveToPdf(fileURL: URL, pdfData: Data) async -> Bool {
     return await withCheckedContinuation { continuation in
 
-        pdfContext.endPage()
-        pdfContext.closePDF()
-
-        // 🔹 Generate timestamped name
         let originalName = fileURL.deletingPathExtension().lastPathComponent
         let newName = NameMod.getTimeName(name: originalName)  // e.g. "photo_20250311_1430.pdf"
 
         do {
-            // 🔹 Default save location (same directory as original file)
-            var finalPath = fileURL.deletingLastPathComponent().appendingPathComponent(newName)
+            let path = fileURL.deletingLastPathComponent()
+            let finalPath = path.appendingPathComponent(newName)
 
-            if PermissionsManager().isAppSandboxed() {
-                Task { @MainActor in  // ✅ Ensure this runs on the main thread
-                    let savePanel = NSSavePanel()
-                    savePanel.title = "Save PDF File"
-                    savePanel.allowedContentTypes = [UTType.pdf]  // ✅ Updated from deprecated allowedFileTypes
-                    savePanel.nameFieldStringValue = newName
-
-                    // ✅ Run on main thread
-                    let response = savePanel.runModal()
-                    if response == .OK, let selectedURL = savePanel.url {
-                        finalPath = selectedURL
-                    } else {
-                        print("❌ User canceled save operation")
-                        continuation.resume(returning: false)
-                        return
-                    }
-
+            if PermissionsManager().isAppSandboxed() && !PermissionsManager.shared.isFolderGranted(path) {
+                Task { @MainActor in
+                    PermissionsManager.shared.requestAccess()
                     do {
                         try pdfData.write(to: finalPath, options: .atomic)
-                        print("✅ Successfully saved PDF to: \(finalPath.path)")
-                        continuation.resume(returning: true)
+                        print("✅ PDF saved to: \(finalPath.path)")
+                        openFolder(finalPath.deletingLastPathComponent()) // Open the folder
+                        return
                     } catch {
                         print("❌ ERROR: Failed to save PDF, Error: \(error)")
-                        continuation.resume(returning: false)
                     }
                 }
-                return  // ✅ Prevents function from continuing execution before user interaction completes
+                return
             }
 
             // 🚀 Save normally if not sandboxed
             try pdfData.write(to: finalPath, options: .atomic)
             print("✅ Successfully saved PDF to: \(finalPath.path)")
+            openFolder(finalPath.deletingLastPathComponent()) // Open the folder
             continuation.resume(returning: true)
 
         } catch {
@@ -55,4 +38,8 @@ func saveToPdf(pdfContext: CGContext, fileURL: URL, pdfData: Data) async -> Bool
             continuation.resume(returning: false)
         }
     }
+}
+
+func openFolder(_ folderURL: URL) {
+    NSWorkspace.shared.open(folderURL)
 }

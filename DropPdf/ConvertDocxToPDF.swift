@@ -31,10 +31,13 @@ func convertDocxToPDF(fileURL: URL)  async -> Bool {
             let textRect = CGRect(x: 20, y: 20, width: 555, height: 800)
             NSString(string: extractedText).draw(in: textRect, withAttributes: attributes)
             NSGraphicsContext.restoreGraphicsState()
+
+            pdfContext.endPage()
+            pdfContext.closePDF()
             
             Task {
                 let immutablePdfData = pdfData as Data // ✅ Convert NSMutableData to immutable Data
-                let success = await saveToPdf(pdfContext: pdfContext, fileURL: fileURL, pdfData: immutablePdfData)
+                let success = await saveToPdf(fileURL: fileURL, pdfData: immutablePdfData)
                 continuation.resume(returning: success)
             }
         }
