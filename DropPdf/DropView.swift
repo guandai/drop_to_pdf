@@ -5,18 +5,34 @@ struct DropView: View {
     @EnvironmentObject var processFile: ProcessFile
     @State private var isDragging = false
     @State private var showCheckmark = false
+    @State private var showPanel = false
 
-    static let baseSize: CGFloat = 50  // ✅ Use `static let`
+    static let baseSize: CGFloat = 80  // ✅ Use `static let`
     static let dropAreaLength: CGFloat = 2.8 * DropView.baseSize
     static let iconLength: CGFloat = 1 * DropView.baseSize
     static let outerLength: CGFloat = 3 * DropView.baseSize
+    static let resultsLength: CGFloat = 6 * DropView.baseSize
+    static let historyLength: CGFloat = 4.5 * DropView.baseSize
     
     var body: some View {
         VStack(spacing: 12) {
-            Text("Drop files here")
-                .font(.headline)
-                .foregroundColor(isDragging ? .blue : .secondary)
-                .padding(.top, 10)
+            HStack {
+                Text("Drop files here")
+                    .font(.headline)
+                    .foregroundColor(isDragging ? .blue : .secondary)
+
+                Button(action: {
+                    showPanel = true
+                }) {
+                    Image(systemName: "info.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(.blue)
+                }
+                .buttonStyle(PlainButtonStyle()) // No extra styling
+            }
+            .padding(.top, 10)
 
             ZStack {
                 RoundedRectangle(cornerRadius: 20)
@@ -63,13 +79,16 @@ struct DropView: View {
             }
         }
         .frame(width: DropView.outerLength, height: DropView.outerLength)
-        .padding(20)
-        .padding(.bottom, 30)
+        .padding(10)
+        .padding(.bottom, 20)
         .background(
             RoundedRectangle(cornerRadius: 0)
                 .fill(getBackgroundColor())
                 .shadow(radius: 10)
         )
+        .sheet(isPresented: $showPanel) {
+            ProcessedFilesPanel(processedFiles: appDelegate.processResult, isPresented: $showPanel)
+        }
     }
 
     /// Determines the correct background color for iOS and macOS
@@ -109,5 +128,61 @@ struct DropView: View {
         }
 
         return true
+    }
+}
+
+
+struct ProcessedFilesPanel: View {
+    let processedFiles: [(URL, Bool)]
+    @Binding var isPresented: Bool
+
+    var body: some View {
+        VStack {
+            Text("Processed Files")
+                .font(.headline)
+                .padding(5)
+
+            ScrollView {
+                LazyVStack {
+                    ForEach(processedFiles, id: \.0.absoluteString) { (file, result) in
+                        HStack {
+                            Text(file.lastPathComponent)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+
+                            Spacer()
+                            
+                            if (result == true) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                            }  else {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.red)
+                            }
+                            
+                        }
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 10)
+                        .frame(width: DropView.historyLength)
+                    }
+                }
+                .id(UUID()) // Force refresh if necessary
+            }
+            .frame(height: DropView.historyLength)
+            .background(Color(NSColor.windowBackgroundColor)) // Light background for contrast (macOS)
+            .clipShape(RoundedRectangle(cornerRadius: 10)) // Rounded edges
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.gray.opacity(0.5), lineWidth: 1) // Subtle border
+            )
+            .padding(.horizontal, 10)
+        
+
+            Button("Close") {
+                isPresented = false
+            }
+            .padding(.top, 0)
+        }
+        .frame(width: DropView.resultsLength, height: DropView.resultsLength)
     }
 }

@@ -3,6 +3,7 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
   @Published var droppedFiles: [URL] = []
+  @Published var processResult: [(URL, Bool)] = []
   var processFile = ProcessFile()
   var window: NSWindow?
 
@@ -11,7 +12,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     self.setupMainWindow()
   }
 
-  /// ✅ Handle dock icon click → Reopen the drop area
   func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool
   {
     if flag {
@@ -55,28 +55,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         override init() {
             super.init()
         }
-    
-//        /// ✅ Handle folder access and switch view
-//        private func handleFolderAccess() {
-//            PermissionsManager().requestAccess()
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // Slight delay for UI update
-//                self.hasAccess = PermissionsManager().hasSavedFolderBookmark()
-//                self.setupMainWindow()  // ✅ Reopen window with updated state
-//            }
-//        }
 
-  /// ✅ Handle files dropped onto the app icon
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
     handleFileDrop(urls)
   }
 
-  /// ✅ Handle files opened via drag-and-drop or double-clicking
   func application(_ application: NSApplication, open urls: [URL]) {
     handleFileDrop(urls)
   }
 
-  /// ✅ Process dropped files
   private func handleFileDrop(_ urls: [URL]) {
     DispatchQueue.main.async {
       self.droppedFiles.append(contentsOf: urls)

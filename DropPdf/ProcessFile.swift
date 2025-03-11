@@ -5,8 +5,12 @@ class ProcessFile: ObservableObject {
     func processDroppedFiles(_ urls: [URL], _ appDelegate: AppDelegate) async {
         for url in urls {
             print("📂 Dropped file: \(url.path)")
-            
+
             let success = await processOneFile(url: url, appDelegate: appDelegate)
+
+            DispatchQueue.main.async {
+                appDelegate.processResult.append((url, success)) // ✅ Store result
+            }
 
             if !success {
                 print("❌ ERROR: Unsupported file type or failed conversion → \(url.lastPathComponent)")
