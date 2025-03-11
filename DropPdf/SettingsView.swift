@@ -8,53 +8,63 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(spacing: 15) {
-            Text("Settings")
-                .font(.title)
-                .padding()
-
-            Divider()
-            
             // Show allowed folders list
             Text("Allowed Folders:")
                 .font(.headline)
+
             if permissionsManager.grantedFolderURLs.isEmpty {
                 Text("No folders selected.")
                     .foregroundColor(.red)
             } else {
-                ForEach(permissionsManager.grantedFolderURLs, id: \.self) { folder in
-                    Text(folder.path)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .lineLimit(1)
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        ForEach(Array(permissionsManager.grantedFolderURLs), id: \.self) { folder in
+                            Text(folder.path)
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                                .lineLimit(1)
+                                .padding(.vertical, 2)
+                        }
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
                 }
+                .frame(height: 120)
+                .background(Color(NSColor.windowBackgroundColor)) // Light background for contrast (macOS)
+                .clipShape(RoundedRectangle(cornerRadius: 10)) // Rounded edges
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.gray.opacity(0.5), lineWidth: 1) // Subtle border
+                )
             }
-
-            // Button to select a new folder
-            Button(action: {
-                permissionsManager.requestAccess()
-            }) {
-                Text("Choose Folder")
-                    .frame(width: 200)
+            
+            HStack(spacing: 15) {
+                // Button to select a new folder
+                Button(action: {
+                    permissionsManager.requestAccess()
+                }) {
+                    Text("Choose Folder")
+                        .frame(width: 130)
+                }
+                .buttonStyle(.borderedProminent)
+                
+                // Button to clear permissions
+                Button(action: {
+                    permissionsManager.clearSavedFolderBookmarks()
+                }) {
+                    Text("Clear Permissions")
+                        .frame(width: 130)
+                }
+                .buttonStyle(.bordered)
+                .foregroundColor(.red)
             }
-            .buttonStyle(.borderedProminent)
-
-            // Button to clear permissions
-            Button(action: {
-                permissionsManager.clearSavedFolderBookmarks()
-            }) {
-                Text("Clear Permissions")
-                    .frame(width: 200)
-            }
-            .buttonStyle(.bordered)
-            .foregroundColor(.red)
-
 
             Button("Close") {
                 closeSettingsWindow()
             }
-            .padding(.bottom)
+            .padding(.top, 20)
         }
-        .frame(width: 350, height: 350)
+        .frame(width: 350, height: 250)
         .padding()
     }
 

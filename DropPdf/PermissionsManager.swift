@@ -5,7 +5,7 @@ import Foundation
 class PermissionsManager: ObservableObject  {
     static let shared = PermissionsManager()
     
-    @Published var grantedFolderURLs: [URL] = []  // ✅ Store multiple folders
+    @Published var grantedFolderURLs: Set<URL> = Set([])  // ✅ Store multiple folders
 
     private let savedFoldersKey = "SavedFoldersBookmarks"
 
@@ -38,10 +38,14 @@ class PermissionsManager: ObservableObject  {
             UserDefaults.standard.set(storedBookmarks, forKey: savedFoldersKey)
 
             DispatchQueue.main.async {
+                print(url)
+                print(self.grantedFolderURLs)
                 if self.grantedFolderURLs.contains(url) {
                      return
+                } else {
+                    self.grantedFolderURLs.insert(url)
                 }
-                self.grantedFolderURLs.append(url)
+                
             }
             objectWillChange.send()
             print("✅ Folder access granted: \(url.path)")
@@ -65,7 +69,7 @@ class PermissionsManager: ObservableObject  {
                     }
 
                     if url.startAccessingSecurityScopedResource() {
-                        grantedFolderURLs.append(url)
+                        grantedFolderURLs.insert(url)
                         print("Restored access to: \(url.path)")
                     } else {
                         print("Failed to access security-scoped resource.")
@@ -102,7 +106,7 @@ class PermissionsManager: ObservableObject  {
             print("❌ Folder is not allowed: \(fileDirectory.path), requesting access...")
             DispatchQueue.main.async {
                 self.requestAccess()
-                self.grantedFolderURLs.append(fileDirectory)
+                self.grantedFolderURLs.insert(fileDirectory)
                 completion(true)
             }
         }

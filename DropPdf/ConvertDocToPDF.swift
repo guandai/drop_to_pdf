@@ -38,18 +38,22 @@ func convertDocToPDF(fileURL: URL) async -> Bool {
             do {
                 let didStart = fileURL.startAccessingSecurityScopedResource()
                 defer { if didStart { fileURL.stopAccessingSecurityScopedResource() } }
-
+                print("pdf0")
                 try task.run()
                 task.waitUntilExit()
 
+                print("pdf2")
                 let outputData = pipe.fileHandleForReading.readDataToEndOfFile()
+                
+                print("pdf3")
+                print(outputData)
                 guard let extractedText = String(data: outputData, encoding: .utf8)?
                         .trimmingCharacters(in: .whitespacesAndNewlines),
                       !extractedText.isEmpty else {
                     print("❌ Could not extract text from .doc")
                     return continuation.resume(returning: false)
                 }
-
+                print("pdf111")
                 // ✅ Create PDF properly
                 let pdfData = NSMutableData()
                 let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData)!
@@ -72,7 +76,8 @@ func convertDocToPDF(fileURL: URL) async -> Bool {
                 // ✅ Ensure the page is finalized before closing the PDF
                 pdfContext.endPage()
                 pdfContext.closePDF()
-
+                
+                print("pdf")
                 // ✅ Ensure PDF data is saved correctly
                 Task {
                     let success = await saveToPdf(fileURL: fileURL, pdfData: pdfData as Data)
