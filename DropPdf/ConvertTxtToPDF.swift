@@ -10,7 +10,9 @@ func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool  {
                 
                 // 📌 Define A4 Page Size
                 let pdfData = NSMutableData()
-                let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData)!
+                let pdfConsumer = CGDataConsumer(
+                    data: pdfData as CFMutableData
+                )!
                 var mediaBox = CGRect(x: 0, y: 0, width: 595, height: 842)
                 let pdfContext = CGContext(consumer: pdfConsumer, mediaBox: &mediaBox, nil)!
                 
@@ -33,7 +35,9 @@ func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool  {
                 NSGraphicsContext.restoreGraphicsState()
 
                 Task {
-                    let immutablePdfData = pdfData as Data // ✅ Convert NSMutableData to immutable Data
+                    pdfContext.endPage()
+                    pdfContext.closePDF() // Make sure to close before converting to Data
+                    let immutablePdfData = pdfData as Data
                     let success = await saveToPdf(pdfContext: pdfContext, fileURL: fileURL, pdfData: immutablePdfData)
                     continuation.resume(returning: success)
                 }

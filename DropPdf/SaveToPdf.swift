@@ -1,41 +1,58 @@
 import Cocoa
 import PDFKit
+import UniformTypeIdentifiers
 
 func saveToPdf(pdfContext: CGContext, fileURL: URL, pdfData: Data) async -> Bool {
     return await withCheckedContinuation { continuation in
-        
+
         pdfContext.endPage()
         pdfContext.closePDF()
 
         // 🔹 Generate timestamped name
         let originalName = fileURL.deletingPathExtension().lastPathComponent
-        let newName = getTimeName(name: originalName) // e.g. "photo_20250224_1322.pdf"
-            
+        let newName = NameMod.getTimeName(name: originalName)  // e.g. "photo_20250311_1430.pdf"
+
         do {
-            let finalPath = fileURL.deletingLastPathComponent().appendingPathComponent(newName)
-            
+            // 🔹 Default save location (same directory as original file)
+            var finalPath = fileURL.deletingLastPathComponent().appendingPathComponent(newName)
+
             if PermissionsManager().isAppSandboxed() {
-                _ = PermissionsManager().askUserToSavePDF(proposedFilename: finalPath.lastPathComponent, data: pdfData)
+                Task { @MainActor in  // ✅ Ensure this runs on the main thread
+                    let savePanel = NSSavePanel()
+                    savePanel.title = "Save PDF File"
+                    savePanel.allowedContentTypes = [UTType.pdf]  // ✅ Updated from deprecated allowedFileTypes
+                    savePanel.nameFieldStringValue = newName
+
+                    // ✅ Run on main thread
+                    let response = savePanel.runModal()
+                    if response == .OK, let selectedURL = savePanel.url {
+                        finalPath = selectedURL
+                    } else {
+                        print("❌ User canceled save operation")
+                        continuation.resume(returning: false)
+                        return
+                    }
+
+                    do {
+                        try pdfData.write(to: finalPath, options: .atomic)
+                        print("✅ Successfully saved PDF to: \(finalPath.path)")
+                        continuation.resume(returning: true)
+                    } catch {
+                        print("❌ ERROR: Failed to save PDF, Error: \(error)")
+                        continuation.resume(returning: false)
+                    }
+                }
+                return  // ✅ Prevents function from continuing execution before user interaction completes
             }
-            
+
+            // 🚀 Save normally if not sandboxed
             try pdfData.write(to: finalPath, options: .atomic)
-            print("✅ Successfully copied PDF to OneDrive: \(finalPath.path)")
+            print("✅ Successfully saved PDF to: \(finalPath.path)")
             continuation.resume(returning: true)
+
         } catch {
-            print("❌ ERROR: Failed to copy PDF, Error: \(error)")
+            print("❌ ERROR: Failed to save PDF, Error: \(error)")
             continuation.resume(returning: false)
         }
     }
-}
-
-/// 🔹 Generates a timestamp string
-func getTime() -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyyMMdd_HHmm" // Format: YYYYMMDD_HHMM
-    return dateFormatter.string(from: Date())
-}
-
-/// 🔹 Generates a timestamped file name
-func getTimeName(name: String) -> String {
-    return "\(name)_\(getTime()).pdf"
 }

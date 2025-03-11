@@ -1,3 +1,4 @@
+import Cocoa
 
 struct NameMod {
     /// 🔹 Generates a timestamp string
