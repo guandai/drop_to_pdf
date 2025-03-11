@@ -1,8 +1,7 @@
 import Cocoa
 import PDFKit
 
-func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool  {
-
+func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool {
     return await withCheckedContinuation { continuation in
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             do {
@@ -10,9 +9,7 @@ func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool  {
                 
                 // 📌 Define A4 Page Size
                 let pdfData = NSMutableData()
-                let pdfConsumer = CGDataConsumer(
-                    data: pdfData as CFMutableData
-                )!
+                let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData)!
                 var mediaBox = CGRect(x: 0, y: 0, width: 595, height: 842)
                 let pdfContext = CGContext(consumer: pdfConsumer, mediaBox: &mediaBox, nil)!
                 
@@ -21,24 +18,27 @@ func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool  {
                 let graphicsContext = NSGraphicsContext(cgContext: pdfContext, flipped: false)
                 NSGraphicsContext.current = graphicsContext
                 
-                // 🔥 Draw text manually
+                // 🔥 Ensure Text is Drawn
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.alignment = .left
-                
+
                 let attributes: [NSAttributedString.Key: Any] = [
                     .font: NSFont.systemFont(ofSize: 12),
                     .paragraphStyle: paragraphStyle
                 ]
-                
+
                 let textRect = CGRect(x: 20, y: 20, width: 555, height: 800)
                 NSString(string: text).draw(in: textRect, withAttributes: attributes)
+                
+                // ✅ Restore Graphics Context
                 NSGraphicsContext.restoreGraphicsState()
 
+                // ✅ Make sure the page is ended before closing the PDF
+                pdfContext.endPage()
+                pdfContext.closePDF() // Ensure this is called **after** drawing text
+                
                 Task {
-                    pdfContext.endPage()
-                    pdfContext.closePDF() // Make sure to close before converting to Data
-                    let immutablePdfData = pdfData as Data
-                    let success = await saveToPdf(pdfContext: pdfContext, fileURL: fileURL, pdfData: immutablePdfData)
+                    let success = await saveToPdf(pdfContext: pdfContext, fileURL: fileURL, pdfData: pdfData as Data)
                     continuation.resume(returning: success)
                 }
             } catch {
