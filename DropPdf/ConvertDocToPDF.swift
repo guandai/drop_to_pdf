@@ -9,8 +9,7 @@ func convertDocToPDF(fileURL: URL) async -> Bool {
                 print("❌ Security-scoped resource access failed: \(fileURL.path)")
                 return continuation.resume(returning: false)
             }
-            
-            
+
             let docBin = Bundle.main.bundlePath + "/Contents/MacOS/catdoc"
             guard FileManager.default.fileExists(atPath: docBin) else {
                 print("❌ bin not found at \(docBin)")
