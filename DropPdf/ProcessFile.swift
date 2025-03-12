@@ -1,5 +1,8 @@
 import Cocoa
 import SwiftUI
+import AppKit
+import UniformTypeIdentifiers // for UTType, available in macOS 11+
+import Foundation
 
 class ProcessFile: ObservableObject {
     func processDroppedFiles(_ urls: [URL], _ appDelegate: AppDelegate) async -> [URL: Bool] {
@@ -19,41 +22,75 @@ class ProcessFile: ObservableObject {
 
     @MainActor
     private func updateProcessResult(url: URL, success: Bool, appDelegate: AppDelegate) {
-        appDelegate.processResult.append((url, success)) // ✅ Store result safely on main thread
+        let newKey = (appDelegate.processResult.keys.max() ?? 0) + 1
+        appDelegate.processResult[newKey] = (url, success)
     }
 
     /// 🔹 Process a single file and determines the correct conversion method
     func processOneFile(url: URL, appDelegate: AppDelegate) async -> Bool {
         print("📂 Processing file: \(url.path)")
         
-        if isImageFile(url: url) {
+        if isImageFile(at: url) {
             return await convertImageToPDF(fileURL: url)
-        } else if isTextFile(url: url) {
-            return await convertTxtToPDF(fileURL: url, appDelegate: appDelegate)
-        } else if isDocx(url: url) {
+        } else if isDocxFile(at: url) {
             return await convertDocxToPDF(fileURL: url)
-        } else if url.pathExtension.lowercased() == "doc" {
-            return await convertDocToPDF(fileURL: url)
-        } else if url.pathExtension.lowercased() == "rtf" {
+        } else if isRTFFile(at: url) {
+            return await convertDocxToPDF(fileURL: url)
+        } else if isTextFile(at: url) {
+            return await convertTxtToPDF(fileURL: url, appDelegate: appDelegate)
+        } else if isDocFile(at: url) {
             return await convertDocToPDF(fileURL: url)
         } else {
             print("⚠️ Unsupported file type → \(url.lastPathComponent)")
             return false
         }
     }
+   
 
-    /// 🔹 Check if the file is a valid text file
-    func isTextFile(url: URL) -> Bool {
-        return (try? String(contentsOf: url, encoding: .utf8)) != nil
+    func isTextFile(at fileURL: URL) -> Bool {
+        do {
+            let resourceValues = try fileURL.resourceValues(forKeys: [.contentTypeKey])
+            // `contentType` is a UTType? in Swift 5.5+
+            return resourceValues.contentType != nil
+        } catch {
+            print("❌ Error retrieving contentType for: \(fileURL.path), \(error)")
+            return false
+        }
     }
 
     /// 🔹 Check if the file is an image
-    func isImageFile(url: URL) -> Bool {
-        return NSImage(contentsOf: url) != nil
+    func isImageFile(at fileURL: URL) -> Bool {
+        return NSImage(contentsOf: fileURL) != nil
     }
 
     /// 🔹 Check if the file is a DOCX
-    func isDocx(url: URL) -> Bool {
-        return url.pathExtension.lowercased() == "docx"
+    func isDocxFile(at fileURL: URL) -> Bool {
+        do {
+            let data = try Data(contentsOf: fileURL, options: .mappedIfSafe)
+            // ZIP archives typically start with: 0x50 0x4B 0x03 0x04
+            return data.prefix(4) == Data([0x50, 0x4B, 0x03, 0x04])
+        } catch {
+            return false
+        }
+    }
+    
+    func isDocFile(at fileURL: URL) -> Bool {
+        do {
+            let data = try Data(contentsOf: fileURL, options: .mappedIfSafe)
+            // OLE2 magic bytes: D0 CF 11 E0
+            let ole2Magic = Data([0xD0, 0xCF, 0x11, 0xE0])
+            return data.prefix(4) == ole2Magic
+        } catch {
+            return false
+        }
+    }
+    
+    func isRTFFile(at fileURL: URL) -> Bool {
+        // Attempt to read a small chunk from the file
+        guard let data = try? Data(contentsOf: fileURL, options: .mappedIfSafe),
+              let textSample = String(data: data.prefix(8), encoding: .utf8) else {
+            return false
+        }
+        return textSample.hasPrefix("{\\rtf")
     }
 }

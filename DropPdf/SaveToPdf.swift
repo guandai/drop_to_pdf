@@ -32,10 +32,12 @@ func saveToPdf(fileURL: URL, pdfData: Data) async -> Bool {
             print("✅ Successfully saved PDF to: \(finalPath.path)")
             openFolder(finalPath.deletingLastPathComponent()) // Open the folder
             continuation.resume(returning: true)
+            return
 
         } catch {
             print("❌ ERROR: Failed to save PDF, Error: \(error)")
             continuation.resume(returning: false)
+            return
         }
     }
 }
@@ -43,3 +45,4 @@ func saveToPdf(fileURL: URL, pdfData: Data) async -> Bool {
 func openFolder(_ folderURL: URL) {
     NSWorkspace.shared.open(folderURL)
 }
+

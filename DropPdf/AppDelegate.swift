@@ -3,7 +3,7 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
   @Published var droppedFiles: [URL] = []
-  @Published var processResult: [(URL, Bool)] = []
+  @Published var processResult: [Int: (URL, Bool)] = [:]
   var processFile = ProcessFile()
   var window: NSWindow?
 

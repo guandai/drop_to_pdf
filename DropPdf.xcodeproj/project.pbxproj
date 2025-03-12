@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		495E88062D81D430000F2B26 /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 495E88052D81D430000F2B26 /* XMLCoder */; };
 		49BFECCB2D6F30AD00B53ACB /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 49BFECCA2D6F30AD00B53ACB /* ZIPFoundation */; };
 /* End PBXBuildFile section */
 
@@ -70,10 +71,6 @@
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 		49C0974E2D732D6D004355B6 /* Exceptions for "DropPdf" folder in "Copy Files" phase from "DropPdf" target */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			attributesByRelativePath = {
-				antiword = (CodeSignOnCopy, );
-				catdoc = (CodeSignOnCopy, );
-			};
 			buildPhase = 498E108B2D6FB058002A0D3E /* CopyFiles */;
 			membershipExceptions = (
 				antiword,
@@ -109,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				495E88062D81D430000F2B26 /* XMLCoder in Frameworks */,
 				49BFECCB2D6F30AD00B53ACB /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,6 +179,7 @@
 			name = DropPdf;
 			packageProductDependencies = (
 				49BFECCA2D6F30AD00B53ACB /* ZIPFoundation */,
+				495E88052D81D430000F2B26 /* XMLCoder */,
 			);
 			productName = DropPdf;
 			productReference = 49235EBC2D6CA9D1002F1FB6 /* DropPdf.app */;
@@ -263,6 +262,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				49BFECC92D6F30AD00B53ACB /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				495E88042D81D417000F2B26 /* XCRemoteSwiftPackageReference "XMLCoder" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 49F431772D685CD000BFA997 /* Products */;
@@ -642,6 +642,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		495E88042D81D417000F2B26 /* XCRemoteSwiftPackageReference "XMLCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MaxDesiatov/XMLCoder";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.17.1;
+			};
+		};
 		49BFECC92D6F30AD00B53ACB /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
@@ -653,6 +661,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		495E88052D81D430000F2B26 /* XMLCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 495E88042D81D417000F2B26 /* XCRemoteSwiftPackageReference "XMLCoder" */;
+			productName = XMLCoder;
+		};
 		49BFECCA2D6F30AD00B53ACB /* ZIPFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 49BFECC92D6F30AD00B53ACB /* XCRemoteSwiftPackageReference "ZIPFoundation" */;

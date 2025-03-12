@@ -4,22 +4,36 @@ import PDFKit
 func convertDocxToPDF(fileURL: URL) async -> Bool {
     return await withCheckedContinuation { continuation in
         DispatchQueue.main.async {
-            guard StringToPdf().getDidStart(fileURL: fileURL) else {
+            guard StringImgToPDF().getDidStart(fileURL: fileURL) else {
                 print("❌ Security-scoped resource access failed: \(fileURL.path)")
-                return continuation.resume(returning: false)
+                continuation.resume(returning: false)
+                return
             }
             
-            guard let string = extractTextFromDocx(docxFileURL: fileURL) else {
-                print("❌ ERROR: No text found in .docx")
-                return continuation.resume(returning: false)
-            }
+//            Task {
+//                let result = await StringImgToPDF().toPdf(
+//                    string: extractTextFromDocx(docxFileURL: fileURL),
+//                    fileURL: fileURL
+//                );
+//                continuation.resume(returning: result)
+//                return
+//            }
+            
+            let docxTo = DocxToPDF()
+            let unzipPath = FileManager.default.temporaryDirectory.appendingPathComponent("ExtractedDocx")
+            docxTo.extractDocx(docxURL: fileURL, destinationURL: unzipPath)
             
             Task {
-                let result = await StringToPdf().toPdf(string: string, fileURL: fileURL);
-                return continuation.resume(returning: result)
+                let success  = await StringImgToPDF().createPDF(
+                    docText: docxTo.parseDocxText(docPath: unzipPath.appendingPathComponent("word/document.xml")),
+                    images: docxTo.extractImages(docxPath: unzipPath),
+                    fileURL: fileURL)
+                continuation.resume(returning: success)
+                return
+
             }
+                
         }
     }
+    
 }
-
-

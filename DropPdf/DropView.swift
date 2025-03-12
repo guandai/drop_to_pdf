@@ -138,7 +138,7 @@ struct DropView: View {
 
 
 struct ProcessedFilesPanel: View {
-    let processedFiles: [(URL, Bool)]
+    let processedFiles: [Int: (URL, Bool)]
     @Binding var isPresented: Bool
 
     var body: some View {
@@ -149,39 +149,32 @@ struct ProcessedFilesPanel: View {
 
             ScrollView {
                 LazyVStack {
-                    ForEach(processedFiles, id: \.0.absoluteString) { (file, result) in
-                        HStack {
-                            Text(file.lastPathComponent)
-                                .lineLimit(1)
-                                .truncationMode(.middle)
-
-                            Spacer()
-                            
-                            if (result == true) {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.green)
-                            }  else {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.red)
+                    // 1) Sort the dictionary keys so we have a stable order
+                    ForEach(processedFiles.keys.sorted(), id: \.self) { index in
+                        if let (a, b) = processedFiles[index] {
+                            HStack {
+                                Text(a.lastPathComponent)
+                                    .font(.headline)
+                                Spacer()
+                                Text(b ? "Success" : "Failed")
+                                    .foregroundColor(b ? .green : .red)
                             }
-                            
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 2)
+                            .background(index % 2 == 1 ? Color.gray.opacity(0.2) : Color.clear) // Light grey for odd indices
                         }
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 10)
-                        .frame(width: DropView.historyLength)
                     }
                 }
-                .id(UUID()) // Force refresh if necessary
+                .id(UUID())
             }
             .frame(height: DropView.historyLength)
-            .background(Color(NSColor.windowBackgroundColor)) // Light background for contrast (macOS)
-            .clipShape(RoundedRectangle(cornerRadius: 10)) // Rounded edges
+            .background(Color(NSColor.windowBackgroundColor))
+            .clipShape(RoundedRectangle(cornerRadius: 5))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.gray.opacity(0.5), lineWidth: 1) // Subtle border
+                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
             )
             .padding(.horizontal, 10)
-        
 
             Button("Close") {
                 isPresented = false

@@ -5,9 +5,10 @@ func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool  {
 
     return await withCheckedContinuation { continuation in
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            guard StringToPdf().getDidStart(fileURL: fileURL) else {
+            guard StringImgToPDF().getDidStart(fileURL: fileURL) else {
                 print("❌ Security-scoped resource access failed: \(fileURL.path)")
-                return continuation.resume(returning: false)
+                continuation.resume(returning: false)
+                return
             }
             
             var string = "";
@@ -16,11 +17,13 @@ func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool  {
             } catch {
                 print("❌ ERROR: Failed to read text file, Error: \(error)")
                 continuation.resume(returning: false)
+                return
             }
             
             Task {
-                let result = await StringToPdf().toPdf(string: string, fileURL: fileURL);
-                return continuation.resume(returning: result)
+                let result = await StringImgToPDF().toPdf(string: string, fileURL: fileURL);
+                continuation.resume(returning: result)
+                return
             }
         }
     }
