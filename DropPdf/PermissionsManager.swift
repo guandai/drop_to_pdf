@@ -13,13 +13,19 @@ class PermissionsManager: ObservableObject  {
         restoreFolderAccess()
     }
 
-    /// Ask user to select a folder
-    func requestAccess() {
+    /// Ask user to select a folder, opening the dialog at a specified path if provided
+    func requestAccess(_ initialPath: String? = nil) {
         let panel = NSOpenPanel()
         panel.title = "Select a folder to grant access"
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
+
+        // Set the initial directory safely
+        if let initialPath = initialPath {
+            let initialURL = URL(fileURLWithPath: initialPath, isDirectory: true)
+            panel.directoryURL = initialURL
+        }
 
         if panel.runModal() == .OK, let folderURL = panel.url {
             print("Selected folder: \(folderURL.path)")

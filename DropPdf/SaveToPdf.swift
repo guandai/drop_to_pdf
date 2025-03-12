@@ -14,7 +14,7 @@ func saveToPdf(fileURL: URL, pdfData: Data) async -> Bool {
 
             if PermissionsManager().isAppSandboxed() && !PermissionsManager.shared.isFolderGranted(path) {
                 Task { @MainActor in
-                    PermissionsManager.shared.requestAccess()
+                    PermissionsManager.shared.requestAccess(path.path())
                     do {
                         try pdfData.write(to: finalPath, options: .atomic)
                         print("✅ PDF saved to: \(finalPath.path)")

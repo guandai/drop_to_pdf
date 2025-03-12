@@ -4,7 +4,9 @@ struct DropView: View {
     @EnvironmentObject var appDelegate: AppDelegate
     @EnvironmentObject var processFile: ProcessFile
     @State private var isDragging = false
-    @State private var showCheckmark = false
+    @State private var showMark = false
+    @State private var systemName = "checkmark.circle.fill"
+    @State private var systemColor: Color = .green
     @State private var showPanel = false
 
     static let baseSize: CGFloat = 80  // ✅ Use `static let`
@@ -45,18 +47,18 @@ struct DropView: View {
                     .frame(width: DropView.dropAreaLength, height: DropView.dropAreaLength)
 
 
-                if showCheckmark {
-                    Image(systemName: "checkmark.circle.fill")
+                if showMark {
+                    Image(systemName: systemName)
                         .resizable()
                         .scaledToFit()
                         .frame(width: DropView.iconLength, height: DropView.iconLength)
-                        .foregroundColor(.green)
-                        .opacity(showCheckmark ? 1.0 : 0.75)
-                        .animation(.easeIn(duration: 0.2), value: showCheckmark)
+                        .foregroundColor(systemColor)
+                        .opacity(showMark ? 1.0 : 0.75)
+                        .animation(.easeIn(duration: 0.2), value: showMark)
                         .onAppear {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                                 withAnimation(.easeOut(duration: 0.2)) {
-                                    showCheckmark = false
+                                    showMark = false
                                 }
                             }
                         }
@@ -120,9 +122,12 @@ struct DropView: View {
         dispatchGroup.notify(queue: .main) {
             appDelegate.droppedFiles.append(contentsOf: newFiles)
             Task {
-                await processFile.processDroppedFiles(newFiles, appDelegate)
+                let result = await processFile.processDroppedFiles(newFiles, appDelegate)
                 DispatchQueue.main.async {
-                    showCheckmark = true
+                    showMark = true
+                    systemName = result.values.contains(false) ?  "xmark.circle.fill" : "checkmark.circle.fill";
+                    systemColor = result.values.contains(false) ?  .red : .green;
+                    
                 }
             }
         }

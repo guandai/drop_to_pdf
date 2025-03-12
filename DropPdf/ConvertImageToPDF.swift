@@ -3,15 +3,13 @@ import PDFKit
 
 func convertImageToPDF(fileURL: URL) async -> Bool {
     return await withCheckedContinuation { continuation in
-        DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.async {
             // 🔹 1. Request security-scoped resource access
-            let didStart = fileURL.startAccessingSecurityScopedResource()
-            defer {
-                if didStart {
-                    fileURL.stopAccessingSecurityScopedResource()
-                }
+            guard StringToPdf().getDidStart(fileURL: fileURL) else {
+                print("❌ Security-scoped resource access failed: \(fileURL.path)")
+                return continuation.resume(returning: false)
             }
-            
+                
             // 🔹 2. Load the image
             guard let image = NSImage(contentsOf: fileURL) else {
                 print("❌ ERROR: Could not load image from \(fileURL.path)")

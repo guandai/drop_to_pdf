@@ -72,10 +72,12 @@
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			attributesByRelativePath = {
 				antiword = (CodeSignOnCopy, );
+				catdoc = (CodeSignOnCopy, );
 			};
 			buildPhase = 498E108B2D6FB058002A0D3E /* CopyFiles */;
 			membershipExceptions = (
 				antiword,
+				catdoc,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
