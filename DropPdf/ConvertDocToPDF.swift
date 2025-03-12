@@ -13,7 +13,7 @@ func convertDocToPDF(fileURL: URL) async -> Bool {
             
             let docBin = Bundle.main.bundlePath + "/Contents/MacOS/catdoc"
             guard FileManager.default.fileExists(atPath: docBin) else {
-                print("❌ antiword not found at \(docBin)")
+                print("❌ bin not found at \(docBin)")
                 return continuation.resume(returning: false)
             }
 
@@ -54,14 +54,14 @@ class RunTask: @unchecked Sendable {
                 }
            
                 task.terminationHandler = { _ in
-                        let (outputString, errorString) = self.getOutString(outputPipe, errorPipe)
-                        if task.terminationStatus != 0 {
-                            print("❌ antiword failed with exit code \(task.terminationStatus), File: \(fileURL.path)")
-                            continuation.resume(returning: (false, errorString))
-                        } else {
-                            print("✅ Process completed successfully for file: \(fileURL.path)")
-                            continuation.resume(returning: (true, outputString))
-                        }
+                    let (outputString, errorString) = self.getOutString(outputPipe, errorPipe)
+                    if task.terminationStatus != 0 {
+                        print("❌ bin failed with exit code \(task.terminationStatus), File: \(fileURL.path)")
+                        continuation.resume(returning: (false, errorString))
+                    } else {
+                        print("✅ Process completed successfully for file: \(fileURL.path)")
+                        continuation.resume(returning: (true, outputString))
+                    }
                 }
             }
         }
