@@ -4,7 +4,6 @@ import UniformTypeIdentifiers
 
 func saveToPdf(fileURL: URL, pdfData: Data) async -> Bool {
     return await withCheckedContinuation { continuation in
-
         let originalName = fileURL.deletingPathExtension().lastPathComponent
         let newName = NameMod.getTimeName(name: originalName)  // e.g. "photo_20250311_1430.pdf"
 

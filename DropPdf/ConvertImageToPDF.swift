@@ -5,7 +5,7 @@ func convertImageToPDF(fileURL: URL) async -> Bool {
     return await withCheckedContinuation { continuation in
         DispatchQueue.main.async {
             // 🔹 1. Request security-scoped resource access
-            guard StringImgToPDF().getDidStart(fileURL: fileURL) else {
+            guard getDidStart(fileURL: fileURL) else {
                 print("❌ Security-scoped resource access failed: \(fileURL.path)")
                  continuation.resume(returning: false)
                 return

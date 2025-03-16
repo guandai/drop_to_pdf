@@ -5,7 +5,7 @@ func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool  {
 
     return await withCheckedContinuation { continuation in
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            guard StringImgToPDF().getDidStart(fileURL: fileURL) else {
+            guard getDidStart(fileURL: fileURL) else {
                 print("❌ Security-scoped resource access failed: \(fileURL.path)")
                 continuation.resume(returning: false)
                 return
@@ -21,7 +21,7 @@ func convertTxtToPDF(fileURL: URL, appDelegate: AppDelegate) async -> Bool  {
             }
             
             Task {
-                let result = await StringImgToPDF().toPdf(string: string, fileURL: fileURL);
+                let result = await StringImgToPDF().toPdf(string: string, images:[], fileURL: fileURL);
                 continuation.resume(returning: result)
                 return
             }

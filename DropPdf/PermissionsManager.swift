@@ -134,3 +134,13 @@ class PermissionsManager: ObservableObject  {
         return ProcessInfo.processInfo.environment["APP_SANDBOX_CONTAINER_ID"] != nil
     }
 }
+
+func getDidStart (fileURL: URL) -> Bool {
+    return true;
+    //        let didStart = fileURL.startAccessingSecurityScopedResource()
+    //        if didStart {
+    //            fileURL.stopAccessingSecurityScopedResource()
+    //            return true
+    //        }
+    //        return false
+}

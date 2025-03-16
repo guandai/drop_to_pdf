@@ -32,14 +32,14 @@ class ProcessFile: ObservableObject {
         
         if isImageFile(at: url) {
             return await convertImageToPDF(fileURL: url)
+        } else if isDocFile(at: url) {
+            return await convertDocToPDF(fileURL: url)
         } else if isDocxFile(at: url) {
             return await convertDocxToPDF(fileURL: url)
         } else if isRTFFile(at: url) {
             return await convertDocxToPDF(fileURL: url)
         } else if isTextFile(at: url) {
             return await convertTxtToPDF(fileURL: url, appDelegate: appDelegate)
-        } else if isDocFile(at: url) {
-            return await convertDocToPDF(fileURL: url)
         } else {
             print("⚠️ Unsupported file type → \(url.lastPathComponent)")
             return false
