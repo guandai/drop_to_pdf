@@ -29,6 +29,7 @@ func extractTextFromDoc(filePath: String) -> String? {
 
 
 func convertDocToPDF(fileURL: URL) async -> Bool {
+    print(">>convertDocToPDF")
     return await withCheckedContinuation { continuation in
         DispatchQueue.main.async {
             Task {
@@ -41,6 +42,7 @@ func convertDocToPDF(fileURL: URL) async -> Bool {
                     continuation.resume(returning: false)
                     return
                 }
+                
 
                 let result = await StringImgToPDF().toPdf(string: string!, images:[], fileURL: fileURL)
                 continuation.resume(returning: result)
@@ -49,3 +51,4 @@ func convertDocToPDF(fileURL: URL) async -> Bool {
         }
     }
 }
+

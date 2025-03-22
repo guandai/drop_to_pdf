@@ -30,14 +30,16 @@ class ProcessFile: ObservableObject {
     func processOneFile(url: URL, appDelegate: AppDelegate) async -> Bool {
         print("📂 Processing file: \(url.path)")
         
-        if isImageFile(at: url) {
-            return await ImageToPDF().convertImageToPDF(fileURL: url)
+        if false {
+            print("pass")
         } else if isDocFile(at: url) {
             return await convertDocToPDF(fileURL: url)
         } else if isDocxFile(at: url) {
-            return await convertDocxToPDF(fileURL: url)
+            return await DocxToPDF().convertDocxToPDF(fileURL: url)
         } else if isRTFFile(at: url) {
-            return await convertDocxToPDF(fileURL: url)
+            return await DocxToPDF().convertDocxToPDF(fileURL: url)
+        } else if isImageFile(at: url) {
+            return await ImageToPDF().convertImageToPDF(fileURL: url)
         } else if isTextFile(at: url) {
             return await TxtToPDF().convertTxtToPDF(fileURL: url)
         } else {

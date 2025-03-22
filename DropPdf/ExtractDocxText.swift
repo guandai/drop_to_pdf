@@ -7,7 +7,7 @@ import XMLCoder
 import UniformTypeIdentifiers
 
 
-class DocxToPDF {
+class ExtractDocxText {
     func extractDocx(docxURL: URL, destinationURL: URL) {
         do {
             let fileManager = FileManager.default

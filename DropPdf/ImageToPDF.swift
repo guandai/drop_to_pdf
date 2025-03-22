@@ -21,10 +21,11 @@ class ImageToPDF {
     }
 
     func convertImageToPDF(fileURL: URL) async -> Bool {
+        print(">> convertImageToPDF")
         let renderContent = self.getContent
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
-                let toPdf = SaveToPdf()
+                let saveToPdfIns = SaveToPdf()
                 guard getDidStart(fileURL: fileURL) else {
                     print("❌ Security-scoped resource access failed: \(fileURL.path)")
                     continuation.resume(returning: false)
@@ -37,7 +38,7 @@ class ImageToPDF {
                     return
                 }
                 
-                guard let (pdfData, pdfContext, mediaBox) = toPdf.getPdfContext(
+                guard let (pdfData, pdfContext, mediaBox) = saveToPdfIns.getPdfContext(
                     cgWidth:Int(image.size.width), cgHeight:Int(image.size.height)) else {
                     print("❌ ERROR: Could not load image from \(fileURL.path)")
                     continuation.resume(returning: false)
@@ -49,11 +50,11 @@ class ImageToPDF {
                     return
                 }
 
-                toPdf.endContext(pdfContext)
+                saveToPdfIns.endContext(pdfContext)
                 
                 Task {
                     let immutablePdfData = pdfData as Data // ✅ Convert NSMutableData to immutable Data
-                    let success = await toPdf.saveToPdf(fileURL: fileURL, pdfData: immutablePdfData)
+                    let success = await saveToPdfIns.saveToPdf(fileURL: fileURL, pdfData: immutablePdfData)
                     continuation.resume(returning: success)
                     return
                 }

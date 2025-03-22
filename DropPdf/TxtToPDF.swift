@@ -4,14 +4,19 @@ import PDFKit
 class TxtToPDF {
     func getContent(_ pdfContext: CGContext, url: URL, box: CGRect)  -> Bool {
         pdfContext.beginPDFPage(nil)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .left
+        
         let textAttributes: [NSAttributedString.Key: Any] = [
             .font: NSFont.systemFont(ofSize: 12),
-            .foregroundColor: NSColor.black
+            .foregroundColor: NSColor.black,
+            .paragraphStyle: paragraphStyle
         ]
         guard let string = try? String(contentsOf: url, encoding: .utf8) else {
             print("❌ ERROR: Failed to read text file at \(url.path)")
             return false
         }
+        
         let attributedText = NSAttributedString(string: string, attributes: textAttributes)
         let framesetter = CTFramesetterCreateWithAttributedString(attributedText)
         let framePath = CGPath(rect: box.insetBy(dx: 20, dy: 20), transform: nil)
@@ -21,10 +26,11 @@ class TxtToPDF {
     }
     
     func convertTxtToPDF(fileURL: URL) async -> Bool {
+        print(">> convertTxtToPDF")
         let renderContent = self.getContent
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                let toPdf = SaveToPdf()
+                let saveToPdfIns = SaveToPdf()
                 
                 guard getDidStart(fileURL: fileURL) else {
                     print("❌ Security-scoped resource access failed: \(fileURL.path)")
@@ -32,7 +38,7 @@ class TxtToPDF {
                     return
                 }
                 
-                guard let (pdfData, pdfContext, mediaBox) = toPdf.getPdfContext(cgWidth:595, cgHeight:842) else {
+                guard let (pdfData, pdfContext, mediaBox) = saveToPdfIns.getPdfContext(cgWidth:595, cgHeight:842) else {
                     print("❌ ERROR: Could not load image from \(fileURL.path)")
                     continuation.resume(returning: false)
                     return
@@ -43,7 +49,7 @@ class TxtToPDF {
                     return
                 }
                 
-                toPdf.endContext(pdfContext)
+                saveToPdfIns.endContext(pdfContext)
                 
                 Task {
                     let immutablePdfData = pdfData as Data

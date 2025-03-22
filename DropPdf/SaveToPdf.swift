@@ -4,13 +4,14 @@ import UniformTypeIdentifiers
 
 
 class SaveToPdf {
-    func getPdfContext(cgWidth: Int, cgHeight: Int) -> (NSMutableData, CGContext, CGRect)? {
+    func getPdfContext(cgWidth: Int, cgHeight: Int, margin: Int = 10) -> (NSMutableData, CGContext, CGRect)? {
         let pdfData = NSMutableData()
         guard let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData) else {
             print("❌ ERROR: Could not create PDF consumer")
             return nil
         }
-        var mediaBox = CGRect(x: 0, y: 0, width: cgWidth, height: cgHeight)
+
+        var mediaBox = CGRect(x: margin, y: margin, width: cgWidth, height: cgHeight)
         guard let pdfContext = CGContext(consumer: pdfConsumer, mediaBox: &mediaBox, nil) else {
             print("❌ Failed to create PDF pdfContext")
             return nil
@@ -24,14 +25,19 @@ class SaveToPdf {
         pdfContext.closePDF()
     }
     
+    func getPathes(_ fileURL: URL) -> (URL, URL) {
+        let originalName = fileURL.deletingPathExtension().lastPathComponent
+        let newName = NameMod.getTimeName(name: originalName)  // e.g. "photo_20250311_1430.pdf"
+        let path = fileURL.deletingLastPathComponent()
+        let finalPath = path.appendingPathComponent(newName)
+        return (path, finalPath)
+    }
+
     func saveToPdf(fileURL: URL, pdfData: Data) async -> Bool {
         return await withCheckedContinuation { continuation in
-            let originalName = fileURL.deletingPathExtension().lastPathComponent
-            let newName = NameMod.getTimeName(name: originalName)  // e.g. "photo_20250311_1430.pdf"
-
+            let (path, finalPath) = getPathes(fileURL)
             do {
-                let path = fileURL.deletingLastPathComponent()
-                let finalPath = path.appendingPathComponent(newName)
+                
 
                 if PermissionsManager().isAppSandboxed() && !PermissionsManager.shared.isFolderGranted(path) {
                     Task { @MainActor in
