@@ -9,31 +9,27 @@ func convertDocxToPDF(fileURL: URL) async -> Bool {
                 continuation.resume(returning: false)
                 return
             }
-            
-//            Task {
-//                let result = await StringImgToPDF().toPdf(
-//                    string: extractTextFromDocx(docxFileURL: fileURL),
-//                    fileURL: fileURL
-//                );
-//                continuation.resume(returning: result)
-//                return
-//            }
-            
-            let docxTo = DocxToPDF()
-            let unzipPath = FileManager.default.temporaryDirectory.appendingPathComponent("ExtractedDocx")
-            docxTo.extractDocx(docxURL: fileURL, destinationURL: unzipPath)
-            
-            Task {
-                let success  = await StringImgToPDF().toPdf(
-                    string: docxTo.parseDocxText(docPath: unzipPath.appendingPathComponent("word/document.xml")),
-                    images: docxTo.extractImages(docxPath: unzipPath),
-                    fileURL: fileURL)
-                continuation.resume(returning: success)
-                return
 
+            let docxToPDF = DocxToPDF()
+            let docxToPdfImage = DocxToPdfImage()
+            let unzipPath = FileManager.default.temporaryDirectory.appendingPathComponent("ExtractedDocx")
+            docxToPDF.extractDocx(docxURL: fileURL, destinationURL: unzipPath)
+
+            Task {
+                let extractedText = docxToPDF.parseDocxText(docPath: unzipPath.appendingPathComponent("word/document.xml"))
+                let extractedImages = docxToPdfImage.extractImages(docxPath: unzipPath)
+
+                print("📄 Final Extracted Text:\n\(extractedText.count)")
+                print("🖼 Total Images Extracted: \(extractedImages.count)") 
+
+                let success = await StringImgToPDF().toPdf(
+                    string: extractedText,
+                    images: extractedImages,
+                    fileURL: fileURL
+                )
+
+                continuation.resume(returning: success)
             }
-                
         }
     }
-    
 }

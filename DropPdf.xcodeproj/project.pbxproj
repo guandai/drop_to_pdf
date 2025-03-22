@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		495E88062D81D430000F2B26 /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 495E88052D81D430000F2B26 /* XMLCoder */; };
+		49AF18F02D8E735D00DDE1BD /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 49AF18EF2D8E735D00DDE1BD /* ZIPFoundation */; };
 		49BFECCB2D6F30AD00B53ACB /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 49BFECCA2D6F30AD00B53ACB /* ZIPFoundation */; };
 /* End PBXBuildFile section */
 
@@ -94,6 +95,7 @@
 			files = (
 				495E88062D81D430000F2B26 /* XMLCoder in Frameworks */,
 				49BFECCB2D6F30AD00B53ACB /* ZIPFoundation in Frameworks */,
+				49AF18F02D8E735D00DDE1BD /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +168,7 @@
 			packageProductDependencies = (
 				49BFECCA2D6F30AD00B53ACB /* ZIPFoundation */,
 				495E88052D81D430000F2B26 /* XMLCoder */,
+				49AF18EF2D8E735D00DDE1BD /* ZIPFoundation */,
 			);
 			productName = DropPdf;
 			productReference = 49235EBC2D6CA9D1002F1FB6 /* DropPdf.app */;
@@ -251,8 +254,8 @@
 			mainGroup = 49F4316D2D685CD000BFA997;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				49BFECC92D6F30AD00B53ACB /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
-				495E88042D81D417000F2B26 /* XCRemoteSwiftPackageReference "XMLCoder" */,
+				49AF18ED2D8E734B00DDE1BD /* XCRemoteSwiftPackageReference "XMLCoder" */,
+				49AF18EE2D8E735D00DDE1BD /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 49F431772D685CD000BFA997 /* Products */;
@@ -349,7 +352,7 @@
 					"$(PROJECT_DIR)/DropPdf/bin/urelibs",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = /Applications/LibreOffice25.2_SDK/include;
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/$(PRODUCT_NAME)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = DropPdf;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
@@ -367,12 +370,6 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = (
-					"-L/Applications/LibreOffice25.2_SDK/lib\n-luno_cppuhelpergcc3\n-luno_cppu\n-luno_sal",
-					"-luno_cppuhelpergcc3",
-					"-luno_cppu",
-					"-luno_sal",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.twindai.DropPdf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -403,7 +400,7 @@
 					"$(PROJECT_DIR)/DropPdf/bin/urelibs",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = /Applications/LibreOffice25.2_SDK/include;
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/$(PRODUCT_NAME)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = DropPdf;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
@@ -421,12 +418,6 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = (
-					"-L/Applications/LibreOffice25.2_SDK/lib\n-luno_cppuhelpergcc3\n-luno_cppu\n-luno_sal",
-					"-luno_cppuhelpergcc3",
-					"-luno_cppu",
-					"-luno_sal",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.twindai.DropPdf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -670,7 +661,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		495E88042D81D417000F2B26 /* XCRemoteSwiftPackageReference "XMLCoder" */ = {
+		49AF18ED2D8E734B00DDE1BD /* XCRemoteSwiftPackageReference "XMLCoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MaxDesiatov/XMLCoder";
 			requirement = {
@@ -678,7 +669,7 @@
 				minimumVersion = 0.17.1;
 			};
 		};
-		49BFECC92D6F30AD00B53ACB /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+		49AF18EE2D8E735D00DDE1BD /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
 			requirement = {
@@ -691,12 +682,15 @@
 /* Begin XCSwiftPackageProductDependency section */
 		495E88052D81D430000F2B26 /* XMLCoder */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 495E88042D81D417000F2B26 /* XCRemoteSwiftPackageReference "XMLCoder" */;
 			productName = XMLCoder;
+		};
+		49AF18EF2D8E735D00DDE1BD /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 49AF18EE2D8E735D00DDE1BD /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
 		};
 		49BFECCA2D6F30AD00B53ACB /* ZIPFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 49BFECC92D6F30AD00B53ACB /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
 			productName = ZIPFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */

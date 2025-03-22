@@ -31,7 +31,7 @@ class ProcessFile: ObservableObject {
         print("📂 Processing file: \(url.path)")
         
         if isImageFile(at: url) {
-            return await convertImageToPDF(fileURL: url)
+            return await ImageToPDF().convertImageToPDF(fileURL: url)
         } else if isDocFile(at: url) {
             return await convertDocToPDF(fileURL: url)
         } else if isDocxFile(at: url) {
@@ -39,7 +39,7 @@ class ProcessFile: ObservableObject {
         } else if isRTFFile(at: url) {
             return await convertDocxToPDF(fileURL: url)
         } else if isTextFile(at: url) {
-            return await convertTxtToPDF(fileURL: url, appDelegate: appDelegate)
+            return await TxtToPDF().convertTxtToPDF(fileURL: url)
         } else {
             print("⚠️ Unsupported file type → \(url.lastPathComponent)")
             return false

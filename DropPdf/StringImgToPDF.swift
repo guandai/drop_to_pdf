@@ -9,108 +9,82 @@ extension PDFDocument {
 }
 
 class StringImgToPDF {
-    func toPdf(string: String, fileURL: URL) async -> Bool  {
-        return await withCheckedContinuation { continuation in
-            DispatchQueue.main.async {
-                let pdfData = NSMutableData()
-                let pdfConsumer = CGDataConsumer(
-                    data: pdfData as CFMutableData
-                )!
-                var mediaBox = CGRect(x: 0, y: 0, width: 595, height: 842)
-                let pdfContext = CGContext(
-                    consumer: pdfConsumer,
-                    mediaBox: &mediaBox,
-                    nil
-                )!
-                
-                pdfContext.beginPage(mediaBox: &mediaBox)
-                NSGraphicsContext.saveGraphicsState()
-                let graphicsContext = NSGraphicsContext(
-                    cgContext: pdfContext,
-                    flipped: false
-                )
-                NSGraphicsContext.current = graphicsContext
-                
-                // 🔥 Draw text inside PDF
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.alignment = .left
-                
-                let attributes: [NSAttributedString.Key: Any] = [
-                    .font: NSFont.systemFont(ofSize: 12),
-                    .paragraphStyle: paragraphStyle
-                ]
-                
-                let textRect = CGRect(x: 20, y: 20, width: 555, height: 800)
-                NSString(string: string)
-                    .draw(in: textRect, withAttributes: attributes)
-                NSGraphicsContext.restoreGraphicsState()
-
-                pdfContext.endPage()
-                pdfContext.closePDF()
-                
-                Task {
-                    let immutablePdfData = pdfData as Data // ✅ Convert NSMutableData to immutable Data
-                    let success = await saveToPdf(
-                        fileURL: fileURL,
-                        pdfData: immutablePdfData
-                    )
-                    continuation.resume(returning: success)
-                    return
-                }
-            }
-        }
-    }
-    
     func getDidStart (fileURL: URL) -> Bool {
         return true;
-//        let didStart = fileURL.startAccessingSecurityScopedResource()
-//        if didStart {
-//            fileURL.stopAccessingSecurityScopedResource()
-//            return true
-//        }
-//        return false
     }
 
-    func createPDF(docText: String, images: [Data], fileURL: URL) async -> Bool {
+    @Sendable static func drawString (_ string: String, inRect rect: CGRect) {
+        // Draw text
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .left
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: NSFont.systemFont(ofSize: 14),
+            .paragraphStyle: paragraphStyle
+        ]
+        string.draw(in: rect, withAttributes: attributes)
+    }
+
+    func toPdf(string: String, images: [Data], fileURL: URL) async -> Bool {
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
+                print(">>> StringImgToPDF toPdf")
                 let pdfDocument = PDFDocument()
-                let pdfBounds = CGRect(x: 0, y: 0, width: 612, height: 792)
+                var pdfBounds = CGRect(x: 0, y: 0, width: 472, height: 0)
 
                 // Create an image representation of the PDF page
-                let pdfImage = NSImage(size: pdfBounds.size)
-                pdfImage.lockFocus()
+//                let pdfImage = NSImage(size: pdfBounds.size)
+//                pdfImage.lockFocus()
 
                 // Create drawing context
-                let context = NSGraphicsContext.current!.cgContext
-                context.setFillColor(NSColor.white.cgColor)
-                context.fill(pdfBounds)
+//                let context = NSGraphicsContext.current!.cgContext
+//                context.setFillColor(NSColor.white.cgColor)
 
-                // Draw text
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.alignment = .left
-                let attributes: [NSAttributedString.Key: Any] = [
-                    .font: NSFont.systemFont(ofSize: 14),
-                    .paragraphStyle: paragraphStyle
-                ]
-                docText.draw(in: CGRect(x: 20, y: 20, width: 572, height: 752), withAttributes: attributes)
+                let textHeight: CGFloat = 20 // Initial height for the text
+//                var imageY: CGFloat = textHeight + 20 // Start below the text
 
+                // Calculate the width for the text drawing
+                let textRect = CGRect(x: 20, y: 20, width: 472 - 40, height: CGFloat.greatestFiniteMagnitude)
+                let textSize = (string as NSString).boundingRect(with: textRect.size, options: .usesLineFragmentOrigin, attributes: [.font: NSFont.systemFont(ofSize: 14)])
+                pdfBounds.size.height += textSize.height + 40
+                
+                // Draw the string
+                StringImgToPDF.drawString(string, inRect: textRect)
+                
                 // ✅ Correctly Convert Each Data Object to NSImage
-                var imageY: CGFloat = 100
-                for imageData in images {
-                    if let image = NSImage(data: imageData) {  // ✅ Convert each Data item separately
-                        let imgRect = CGRect(x: 20, y: imageY, width: 200, height: 200)
-                        image.draw(in: imgRect)
-                        imageY += 220
-                    }
-                }
+//                for imageData in images {
+//                    guard let image = NSImage(data: imageData), image.size.width > 0, image.size.height > 0 else {
+//                        print("⚠️ Warning: Invalid image data, skipping.")
+//                        continue
+//                    }
+//                    let maxWidth: CGFloat = 472 - 40 // Max width for the image
+//                    let maxHeight: CGFloat = CGFloat.greatestFiniteMagnitude // Max height for the image
+//                    let imgAspectRatio = image.size.width / image.size.height
+//                    var imgWidth = image.size.width
+//                    var imgHeight = image.size.height
+//
+//                    // Adjust dimensions to fit within the PDF bounds
+//                    if imgWidth > maxWidth {
+//                        imgHeight = imgWidth > 0 ? (maxWidth / imgWidth) * imgHeight : imgHeight
+//                        imgWidth = maxWidth
+//                    }
+//                    if imgHeight + imageY > maxHeight {
+//                        imgHeight = maxHeight - imageY                     }
+//
+//                    let imgRect = CGRect(x: 20, y: imageY, width: imgWidth, height: imgHeight)
+//                    image.draw(in: imgRect)
+//                    imageY += imgHeight + 20 // Update Y position for the next image
+//                    pdfBounds.size.height += imgHeight + 20 // Adjust pdfBounds height
+//                }
 
-                pdfImage.unlockFocus()
+//                pdfImage.unlockFocus()
+
+                // Update pdfBounds size
+//                pdfImage.size = pdfBounds.size
 
                 // Convert NSImage to PDFPage
-                if let pdfPage = PDFPage(image: pdfImage) {
-                    pdfDocument.insert(pdfPage, at: 0)
-                }
+//                if let pdfPage = PDFPage(image: pdfImage) {
+//                    pdfDocument.insert(pdfPage, at: 0)
+//                }
 
                 guard let pdfData = pdfDocument.dataRepresentation() else {
                     print("❌ ERROR: Failed to convert PDFDocument to Data")
@@ -119,7 +93,7 @@ class StringImgToPDF {
                 }
 
                 Task {
-                    let success = await saveToPdf(fileURL: fileURL, pdfData: pdfData)
+                    let success = await SaveToPdf().saveToPdf(fileURL: fileURL, pdfData: pdfData)
                     continuation.resume(returning: success)
                 }
             }
