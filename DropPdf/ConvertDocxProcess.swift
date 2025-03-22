@@ -2,25 +2,28 @@ import Cocoa
 import PDFKit
 
 
-class DocxToPDF {
-    let pageSize = NSSize(width: 595, height: 842) // A4
-    let margin: CGFloat = 40
+class ConvertDocxProcess {
     let blockHeight: CGFloat = 20
-
+    
+    var pageSize = NSSize(width: 595, height: 842) // A4
     var pages: [NSView] = []
     var currentView = NSView()
     var yOffset: CGFloat = 0
+    var margin: CGFloat = 40
+    
+    init(pages: [NSView], currentView: NSView = NSView(), yOffset: CGFloat, margin: CGFloat, pageSize: NSSize) {
+        self.pages = pages
+        self.currentView = currentView
+        self.yOffset = yOffset
+        self.margin = margin
+        self.pageSize = pageSize
+    }
     
     func unzipDocxFile(docxURL: URL, to destinationURL: URL) throws {
         try FileManager.default.createDirectory(at: destinationURL, withIntermediateDirectories: true)
         try FileManager.default.unzipItem(at: docxURL, to: destinationURL)
     }
     
-    func initPage() {
-        self.pages = []
-        createView()
-    }
-
     func newPage() {
         self.pages.append(self.currentView)
         createView()
@@ -121,65 +124,6 @@ class DocxToPDF {
             }
         }
         return pdfDocument
-    }
-    
-    
-    func convertDocxToPDF(fileURL: URL) async -> Bool {
-        print(">> convertDocxToPDF")
-
-        guard getDidStart(fileURL: fileURL) else {
-            print("❌ Security-scoped resource access failed: \(fileURL.path)")
-            return false
-        }
-
-        return await withCheckedContinuation { continuation in
-            let unzipDocxFileIns = DocxToPDF().unzipDocxFile
-            let unzipURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-            
-            DispatchQueue.global(qos: .userInitiated).async {
-                do {
-                    try unzipDocxFileIns(fileURL, unzipURL)
-
-                    DispatchQueue.main.async {
-                        self.initPage()
-                        
-                        // parse data
-                        let docParser = DocxParser()
-                        docParser.parseDocument(at: unzipURL.appendingPathComponent("word/document.xml"))
-                        for block in docParser.contentBlocks {
-                            switch block {
-                            case .paragraph(let runs):
-                                self.processText(runs)
-                            case .image(let rId, let w, let h):
-                                self.processImage(unzipURL: unzipURL, rId: rId, w: w , h: h)
-                            }
-                        }
-                        
-                        // insert pages
-                        let doc = self.insertPages()
-                        
-                        // Generate PDF
-                        let (_, outputPath) = SaveToPdf().getPathes(fileURL)
-                        if doc.write(to: outputPath) {
-//                            fileURL.stopAccessingSecurityScopedResource()
-                            continuation.resume(returning:  true)
-                            return
-                        }
-                        
-                        // close folder
-                        fileURL.stopAccessingSecurityScopedResource()
-                        continuation.resume(returning: false)
-                    }
-
-                } catch {
-                    DispatchQueue.main.async {
-                        print("❌ Error: \(error)")
-                        continuation.resume(returning: false)
-                        fileURL.stopAccessingSecurityScopedResource()
-                    }
-                }
-            }
-        }
     }
 }
 

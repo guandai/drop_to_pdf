@@ -3,9 +3,111 @@ import PDFKit
 
 
 class DocxToPDF {
+    let pageSize = NSSize(width: 595, height: 842) // A4
+    let margin: CGFloat = 40
+    let blockHeight: CGFloat = 20
+
+    var pages: [NSView] = []
+    var currentView = NSView()
+    var yOffset: CGFloat = 0
+    
     func unzipDocxFile(docxURL: URL, to destinationURL: URL) throws {
         try FileManager.default.createDirectory(at: destinationURL, withIntermediateDirectories: true)
         try FileManager.default.unzipItem(at: docxURL, to: destinationURL)
+    }
+    
+    func initPage() {
+        self.pages = []
+        createView()
+    }
+
+    func newPage() {
+        self.pages.append(self.currentView)
+        createView()
+    }
+    
+    func createView() {
+        self.currentView = NSView(frame: NSRect(origin: .zero, size: self.pageSize))
+        self.yOffset = self.pageSize.height - self.margin
+    }
+    
+    func processImage(unzipURL: URL, rId: String, w: CGFloat?, h:CGFloat?) {
+        let relParser = RelationshipParser()
+        relParser.parseRels(at: unzipURL.appendingPathComponent("word/_rels/document.xml.rels"))
+        if let imageFile = relParser.imageRelMap[rId] {
+            let imageURL = unzipURL.appendingPathComponent("word").appendingPathComponent(imageFile)
+            if let image = NSImage(contentsOf: imageURL) {
+                let displayWidth = w ?? image.size.width
+                let displayHeight = h ?? image.size.height
+                
+                if self.yOffset - displayHeight < self.margin {
+                    self.newPage()
+                }
+
+                let imageView = NSImageView(frame: NSRect(x: 40, y: self.yOffset - displayHeight, width: displayWidth, height: displayHeight))
+                imageView.image = image
+                self.currentView.addSubview(imageView)
+
+                self.yOffset -= (displayHeight + self.blockHeight)
+            }
+        }
+    }
+    
+    func processText(_ runs: [StyledText]) {
+        let maxWidth: CGFloat = 500
+        let textStorage = NSTextStorage()
+        let textContainer = NSTextContainer(size: NSSize(width: maxWidth, height: .greatestFiniteMagnitude))
+        let layoutManager = NSLayoutManager()
+
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+
+        for run in runs {
+            let fontSize = run.fontSize ?? 14
+            let font: NSFont
+            if let fontName = run.fontName, let customFont = NSFont(name: fontName, size: fontSize) {
+                font = customFont
+            } else {
+                font = NSFont.systemFont(ofSize: fontSize)
+            }
+            let attributes: [NSAttributedString.Key: Any] = [.font: font]
+            let attributed = NSAttributedString(string: run.text, attributes: attributes)
+            textStorage.append(attributed)
+        }
+
+        layoutManager.glyphRange(for: textContainer)
+        let usedRect = layoutManager.usedRect(for: textContainer)
+        let textHeight = ceil(usedRect.height)
+
+        if self.yOffset - textHeight < self.margin {
+            self.newPage()
+        }
+
+        let textView = NSTextView(frame: NSRect(x: 40, y: self.yOffset - textHeight, width: maxWidth, height: textHeight))
+        textView.textContainer?.containerSize = NSSize(width: maxWidth, height: textHeight)
+        textView.textContainer?.widthTracksTextView = true
+        textView.isEditable = false
+        textView.isSelectable = false
+        textView.drawsBackground = false
+        textView.textStorage?.setAttributedString(textStorage)
+
+        self.currentView.addSubview(textView)
+        self.yOffset -= (textHeight + self.blockHeight)
+    }
+    
+    
+    func parseData(unzipURL: URL) {
+        // parse data
+        let docParser = DocxParser()
+        docParser.parseDocument(at: unzipURL.appendingPathComponent("word/document.xml"))
+        for block in docParser.contentBlocks {
+            switch block {
+            case .paragraph(let runs):
+                self.processText(runs)
+            case .image(let rId, let w, let h):
+                self.processImage(unzipURL: unzipURL, rId: rId, w: w , h: h)
+            }
+        }
     }
     
     func convertDocxToPDF(fileURL: URL) async -> Bool {
@@ -24,104 +126,16 @@ class DocxToPDF {
                 do {
                     try unzipDocxFileIns(fileURL, unzipURL)
 
-                    // Parse XMLs (non-UI work)
-                    let relParser = RelationshipParser()
-                    relParser.parseRels(at: unzipURL.appendingPathComponent("word/_rels/document.xml.rels"))
-                    let docParser = DocxParser()
-                    docParser.parseDocument(at: unzipURL.appendingPathComponent("word/document.xml"))
-
                     // ⚠️ Now switch to main thread for UI
                     DispatchQueue.main.async {
-                        let pageSize = NSSize(width: 595, height: 842) // A4
-                        let margin: CGFloat = 40
-
-                        var pages: [NSView] = []
-                        var currentView = NSView(frame: NSRect(origin: .zero, size: pageSize))
-                        var yOffset: CGFloat = pageSize.height - margin
-
-                        func newPage() {
-                            pages.append(currentView)
-                            currentView = NSView(frame: NSRect(origin: .zero, size: pageSize))
-                            yOffset = pageSize.height - margin
-                        }
-                        
-
-                        for block in docParser.contentBlocks {
-                            switch block {
-                            case .paragraph(let runs):
-                                for run in runs {
-                                    let maxWidth: CGFloat = 500
-                                    print(run.fontSize)
-                                    let fontSize = run.fontSize ?? 14
-                                    let font: NSFont
-                                    if let fontName = run.fontName, let customFont = NSFont(name: fontName, size: fontSize) {
-                                        font = customFont
-                                    } else {
-                                        font = NSFont.systemFont(ofSize: fontSize)
-                                    }
-                                    
-//                                    let font = NSFont.systemFont(ofSize: fontSize)
-                                    let attributes: [NSAttributedString.Key: Any] = [.font: font]
-
-                                    let boundingRect = (run.text as NSString).boundingRect(
-                                        with: NSSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude),
-                                        options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                        attributes: attributes
-                                    )
-                                    let textHeight = ceil(boundingRect.height)
-
-                                    if yOffset - textHeight < margin {
-                                        newPage()
-                                    }
-
-                                    let label = NSTextField(labelWithString: run.text)
-                                    label.font = font
-                                    label.lineBreakMode = .byWordWrapping
-                                    label.maximumNumberOfLines = 0
-                                    label.frame = NSRect(x: 40, y: yOffset - textHeight, width: maxWidth, height: textHeight)
-                                    currentView.addSubview(label)
-
-                                    yOffset -= (textHeight + 10)
-                                }
-                                
-
-                            case .image(let rId):
-                                let maxWidth: CGFloat = 500
-                                let maxHeight: CGFloat = 600
-
-                                
-                                if let imageFile = relParser.imageRelMap[rId] {
-                                    let imageURL = unzipURL.appendingPathComponent("word").appendingPathComponent(imageFile)
-                                    if let image = NSImage(contentsOf: imageURL) {
-//                                        let imageHeight: CGFloat = 150
-                                        let originalSize = image.size
-                                        let widthScale = maxWidth / originalSize.width
-                                        let heightScale = maxHeight / originalSize.height
-                                        let scaleFactor = min(widthScale, heightScale, 1.0) // Never upscale
-
-                                        let displayWidth = originalSize.width * scaleFactor
-                                        let displayHeight = originalSize.height * scaleFactor
-                                        
-                                        if yOffset - displayHeight < margin {
-                                            newPage()
-                                        }
-
-                                        let imageView = NSImageView(frame: NSRect(x: 40, y: yOffset - displayHeight, width: displayWidth, height: displayHeight))
-                                        imageView.image = image
-                                        currentView.addSubview(imageView)
-
-                                        yOffset -= (displayHeight + 10)
-                                    }
-                                }
-                            }
-                        }
+                        self.initPage()
                         
                         
-                        pages.append(currentView) // Don't forget to add the last page!
-
+                        
+                        // insert pages
+                        self.pages.append(self.currentView) // Don't forget to add the last page!
                         let pdfDocument = PDFDocument()
-
-                        for (index, pageView) in pages.enumerated() {
+                        for (index, pageView) in self.pages.enumerated() {
                             let data = pageView.dataWithPDF(inside: pageView.bounds)
                             if let pdfDoc = PDFDocument(data: data),
                                let pdfPage = pdfDoc.page(at: 0) {
@@ -129,16 +143,16 @@ class DocxToPDF {
                             }
                         }
                         
-
                         // Generate PDF
-                        
                         let (_, outputPath) = SaveToPdf().getPathes(fileURL)
                         let success = pdfDocument.write(to: outputPath)
                         if !success {
+                            print("❌ !Fail to save PDF file!")
                             continuation.resume(returning: false)
                             return
                         }
                         
+                        // close folder
                         fileURL.stopAccessingSecurityScopedResource()
                         continuation.resume(returning: true)
                     }
@@ -152,127 +166,6 @@ class DocxToPDF {
                 }
             }
         }
-    }
-}
-
-
-class RelationshipParser: NSObject, XMLParserDelegate {
-    var imageRelMap = [String: String]()
-    
-    func parseRels(at url: URL) {
-        let parser = XMLParser(contentsOf: url)
-        parser?.delegate = self
-        parser?.parse()
-    }
-
-    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?,
-                qualifiedName qName: String?, attributes attributeDict: [String : String]) {
-        if elementName == "Relationship",
-           let id = attributeDict["Id"],
-           let target = attributeDict["Target"],
-           let type = attributeDict["Type"],
-           type.contains("/image") {
-            imageRelMap[id] = target // e.g. rId5 -> media/image1.png
-        }
-    }
-}
-
-struct StyledText {
-    let text: String
-    let fontSize: CGFloat?
-    let fontName: String?  // 👈 NEW
-}
-
-enum DocxContentBlock {
-    case paragraph([StyledText])
-    case image(String)
-}
-
-
-class DocxParser: NSObject, XMLParserDelegate {
-    var contentBlocks: [DocxContentBlock] = []
-    private var currentElement = ""
-    private var currentParagraph: [StyledText] = []
-    private var currentFontSize: CGFloat?
-    private var currentText: String = ""
-    private var insideRunProperties = false
-    private var currentFontName: String? = nil
-    
-
-    func parseDocument(at xmlURL: URL) {
-        let parser = XMLParser(contentsOf: xmlURL)
-        parser?.delegate = self
-        parser?.parse()
-    }
-
-    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?,
-                qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-
-        currentElement = elementName
-
-        if elementName == "w:rFonts", insideRunProperties,
-           let fontName = attributeDict["w:ascii"] {
-            currentFontName = fontName
-        }
-        
-        if elementName == "w:r" {
-            currentFontSize = nil // reset for this run
-        }
-
-        if elementName == "w:rPr" {
-            insideRunProperties = true
-        }
-
-        if elementName == "w:sz", insideRunProperties,
-           let val = attributeDict["w:val"], let halfPoints = Double(val) {
-            currentFontSize = CGFloat(halfPoints) / 2.0
-        }
-
-        if elementName == "w:t" {
-            currentText = ""
-        }
-
-        if elementName == "w:p" {
-            currentParagraph = []
-        }
-
-        if elementName == "a:blip", let rId = attributeDict["r:embed"] {
-            contentBlocks.append(.image(rId))
-        }
-    }
-
-    func parser(_ parser: XMLParser, foundCharacters string: String) {
-        if currentElement == "w:t" {
-            currentText += string
-        }
-    }
-
-    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-
-        if elementName == "w:rPr" {
-            insideRunProperties = false
-        }
-
-        if elementName == "w:t", !currentText.isEmpty {
-            let styled = StyledText(
-                text: currentText.trimmingCharacters(in: .whitespacesAndNewlines),
-                fontSize: currentFontSize,
-                fontName: currentFontName
-            )
-            currentParagraph.append(styled)
-            currentText = ""
-        }
-
-        if elementName == "w:p", !currentParagraph.isEmpty {
-            contentBlocks.append(.paragraph(currentParagraph))
-            currentParagraph = []
-        }
-
-        if elementName == "w:r" {
-            currentFontSize = nil
-            currentFontName = nil
-        }
-        
     }
 }
 
