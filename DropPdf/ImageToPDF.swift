@@ -39,7 +39,7 @@ class ImageToPDF {
                 }
                 
                 guard let (pdfData, pdfContext, mediaBox) = saveToPdfIns.getPdfContext(
-                    cgWidth:Int(image.size.width), cgHeight:Int(image.size.height)) else {
+                    image.size.width, image.size.height) else {
                     print("❌ ERROR: Could not load image from \(fileURL.path)")
                     continuation.resume(returning: false)
                     return

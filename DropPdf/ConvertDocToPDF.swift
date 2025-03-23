@@ -36,17 +36,31 @@ func convertDocToPDF(fileURL: URL) async -> Bool {
                 // let (success, string) = await RunTask().binTask(
                 //     fileURL: fileURL, docBin: docBin)
 
-                let string = extractTextFromDoc(filePath: fileURL.path())
-                guard string == nil else {
-                    print("❌ Could not extract text from .doc")
-                    continuation.resume(returning: false)
+//                let string = extractTextFromDoc(filePath: fileURL.path())
+//                guard string == nil else {
+//                    print("❌ Could not extract text from .doc")
+//                    continuation.resume(returning: false)
+//                    return
+//                }
+                
+                let docData = try Data(contentsOf: URL(fileURLWithPath: fileURL.path()))
+                print(docData)
+                
+                if let docData = try? Data(contentsOf: URL(fileURLWithPath: fileURL.path())),
+                   let attributedString = try? NSAttributedString(data: docData,
+                       options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.docFormat],
+                       documentAttributes: nil)
+                {
+                    let plainText = attributedString.string
+                    print(plainText)
+                    
+                    let result = await StringToPDF().toPdf(string: plainText, fileURL: fileURL)
+                    continuation.resume(returning: result)
                     return
                 }
+                print("fail")
+                continuation.resume(returning: false)
                 
-
-                let result = await StringImgToPDF().toPdf(string: string!, images:[], fileURL: fileURL)
-                continuation.resume(returning: result)
-                return
             }
         }
     }

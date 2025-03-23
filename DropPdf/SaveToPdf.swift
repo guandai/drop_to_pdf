@@ -4,7 +4,7 @@ import UniformTypeIdentifiers
 
 
 class SaveToPdf {
-    func getPdfContext(cgWidth: Int, cgHeight: Int, margin: Int = 10) -> (NSMutableData, CGContext, CGRect)? {
+    func getPdfContext(_ cgWidth: CGFloat, _ cgHeight: CGFloat, _ margin: CGFloat = 10) -> (NSMutableData, CGContext, CGRect)? {
         let pdfData = NSMutableData()
         guard let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData) else {
             print("❌ ERROR: Could not create PDF consumer")
