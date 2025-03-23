@@ -92,11 +92,11 @@ class SaveToPdf {
 //        return await permissionWrapper(finalPath)(callback)
 //    }
 //    
-//    func saveDocxToPdf(finalPath: URL, fileURL: URL) async -> Bool {
-//        let (_, finalPath) = getPathes(fileURL)
-//        func callback() -> Bool { return PrintToPDF().printRtfToPDF(finalPath: finalPath, fileURL: fileURL) }
-//        return await permissionWrapper(finalPath)(callback)
-//    }
+    func savePdfDocToPdf(fileURL: URL, data: PDFDocument) async -> Bool {
+        let (_, finalPath) = getPathes(fileURL)
+        func callback() -> Bool { return data.write(to: finalPath) }
+        return await permissionWrapper(finalPath)(callback)
+    }
 //    
 //    func saveHtmlToPdf(finalPath: URL, fileURL: URL) async -> Bool {
 //        let (_, finalPath) = getPathes(fileURL)

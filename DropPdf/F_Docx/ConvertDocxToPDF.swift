@@ -75,18 +75,10 @@ class DocxToPDF {
             docxPro.initPage()
             self.parseData(unzipURL, docxProcess: docxPro)
             // insert pages
-            let doc = await docxPro.insertPages()
-
-            // Generate PDF
-            let (_, outputPath) = SaveToPdf().getPathes(fileURL)
-            if doc.write(to: outputPath) {
-                //  fileURL.stopAccessingSecurityScopedResource()
-                return true
-            }
-
-            // close folder
-            fileURL.stopAccessingSecurityScopedResource()
-            return false
+            let pdfDoc = await docxPro.insertPages()
+            
+            let saveToPdfIns = SaveToPdf()
+            return await saveToPdfIns.savePdfDocToPdf(fileURL: fileURL, data: pdfDoc)
 
         } catch {
             
