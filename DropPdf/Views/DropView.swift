@@ -176,10 +176,17 @@ struct ProcessedFilesPanel: View {
             )
             .padding(.horizontal, 10)
 
-            Button("Close") {
+            Button("CLOSE") {
                 isPresented = false
             }
             .padding(.top, 0)
+            .font(.system(size: 14))
+            .frame(width: 80, height: 30)
+            .background(Color.blue)
+            .cornerRadius(6)
+            .padding(.top, 0)
+            .buttonStyle(.plain)
+            
         }
         .frame(width: DropView.resultsLength, height: DropView.resultsLength)
     }
