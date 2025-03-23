@@ -47,10 +47,10 @@ class DocToPDF {
             print("❌ create NSAttributedString failed: \(fileURL.path)")
             return false
         }
-
         
-        let result = await SaveToPdf().saveStringToPdf(fileURL: fileURL, text: attributed.string)
-        return result
+        let text = attributed.string
+        let saveToPdfIns = SaveToPdf()
+        return await saveToPdfIns.saveStringToPdf(fileURL: fileURL, data: text)
     }
 
 }

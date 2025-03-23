@@ -87,16 +87,6 @@ class ProcessFile: ObservableObject {
         }
         return false
     }
-
-//    func isRTFFile(at fileURL: URL) -> Bool {
-//        // Attempt to read a small chunk from the file
-//        guard let data = try? Data(contentsOf: fileURL, options: .mappedIfSafe),
-//            let textSample = String(data: data.prefix(8), encoding: .utf8)
-//        else {
-//            return false
-//        }
-//        return textSample.hasPrefix("{\\rtf")
-//    }
     
     func isRTFFile(_ fileURL: URL) -> Bool {
         do {

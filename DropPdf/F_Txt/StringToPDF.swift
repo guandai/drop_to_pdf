@@ -20,7 +20,7 @@ class StringToPDF {
             return content
         }
 
-    func getContent(ctx: CGContext, url: URL, box: CGRect, str: String? = nil)  -> Bool {
+    func drawInContent(ctx: CGContext, url: URL, box: CGRect, str: String? = nil)  -> Bool {
             ctx.beginPDFPage(nil)
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.alignment = .left
@@ -43,7 +43,7 @@ class StringToPDF {
         }
     
     func toPdf(string: String, fileURL: URL) async -> Bool {
-        let getContentIns = StringToPDF().getContent
+        let drawInContentIns = StringToPDF().drawInContent
         let saveToPdfIns = SaveToPdf()
 
         print(">>> StringToPDF toPdf")
@@ -51,13 +51,10 @@ class StringToPDF {
             print("❌ ERROR: Could not load image from \(fileURL.path)")
             return false
         }
-        if getContentIns(pdfContext, fileURL, mediaBox, string) == false {
+        if drawInContentIns(pdfContext, fileURL, mediaBox, string) == false {
             return false
         }
         saveToPdfIns.endContext(pdfContext)
-        
-        let immutablePdfData = pdfData as Data
-        let success = await SaveToPdf().saveDataToPdf(fileURL: fileURL, pdfData: immutablePdfData)
-        return success
+        return await saveToPdfIns.saveDataToPdf(fileURL: fileURL, data: pdfData as Data)
     }
 }

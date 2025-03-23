@@ -64,17 +64,45 @@ class SaveToPdf {
         return fn
     }
     
-    func saveDataToPdf(fileURL: URL, pdfData: Data) async -> Bool {
+    
+    func CallbackToPdf(_ finalPath: URL, _ callback: @escaping () -> Bool ) async -> Bool {
+        return await permissionWrapper(finalPath)(callback)
+    }
+        
+    func saveDataToPdf(fileURL: URL, data: Data) async -> Bool {
         let (_, finalPath) = getPathes(fileURL)
-        func callback() -> Bool { return tryWriteData(url: finalPath, data: pdfData) }
+        func callback() -> Bool {
+            return tryWriteData(url: finalPath, data: data)
+        }
+        return await CallbackToPdf(finalPath, callback)
+    }
+
+    func saveStringToPdf(fileURL: URL, data: String) async -> Bool {
+        let (_, finalPath) = getPathes(fileURL)
+        func callback() -> Bool {
+            return PrintToPDF().printTextToPDF(finalPath: finalPath, text: data)
+        }
         return await permissionWrapper(finalPath)(callback)
     }
     
-    func saveStringToPdf(fileURL: URL, text: String) async -> Bool {
-        let (_, finalPath) = getPathes(fileURL)
-        func callback() -> Bool { return PrintToPDF().printTextToPDF(finalPath: finalPath, text: text) }
-        return await permissionWrapper(finalPath)(callback)
-    }
+//
+//    func saveRtfToPdf(finalPath: URL, fileURL: URL) async -> Bool {
+//        let (_, finalPath) = getPathes(fileURL)
+//        func callback() -> Bool { return PrintToPDF().printRtfToPDF(finalPath: finalPath, fileURL: fileURL) }
+//        return await permissionWrapper(finalPath)(callback)
+//    }
+//    
+//    func saveDocxToPdf(finalPath: URL, fileURL: URL) async -> Bool {
+//        let (_, finalPath) = getPathes(fileURL)
+//        func callback() -> Bool { return PrintToPDF().printRtfToPDF(finalPath: finalPath, fileURL: fileURL) }
+//        return await permissionWrapper(finalPath)(callback)
+//    }
+//    
+//    func saveHtmlToPdf(finalPath: URL, fileURL: URL) async -> Bool {
+//        let (_, finalPath) = getPathes(fileURL)
+//        func callback() -> Bool { return PrintToPDF().printRtfToPDF(finalPath: finalPath, fileURL: fileURL) }
+//        return await permissionWrapper(finalPath)(callback)
+//    }
 
     func tryWriteData(url: URL, data: Data) -> Bool {
         do {

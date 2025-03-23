@@ -30,13 +30,22 @@ class ConvertDocxProcess {
     }
     
     func newPage() {
-        var pages = getPages()
-        pages.append(getCurrentView())
-        setPages(pages)
+        let current = getCurrentView()
+        if !current.subviews.isEmpty {
+            var pages = getPages()
+            pages.append(current)
+            setPages(pages)
+        }
         createView()
     }
     
     func createView() {
+        let current = getCurrentView()
+        if !current.subviews.isEmpty {
+            var pages = getPages()
+            pages.append(current)
+            setPages(pages)
+        }
         setCurrentView(NSView(frame: NSRect(origin: .zero, size: pageSize)))
         setYOffset(self.pageSize.height - margin)
     }
@@ -131,9 +140,15 @@ class ConvertDocxProcess {
         let pdfDocument = PDFDocument()
 
         await MainActor.run {
-            setPages(getPages() + [getCurrentView()])
+            let current = getCurrentView()
+            if !current.subviews.isEmpty {
+                var pages = getPages()
+                pages.append(current)
+                setPages(pages)
+            }
 
-            for (index, pageView) in getPages().enumerated() {
+            let pages = getPages().filter { !$0.subviews.isEmpty }
+            for (index, pageView) in pages.enumerated() {
                 let data = pageView.dataWithPDF(inside: pageView.bounds)
                 if let pdfDoc = PDFDocument(data: data),
                    let pdfPage = pdfDoc.page(at: 0) {

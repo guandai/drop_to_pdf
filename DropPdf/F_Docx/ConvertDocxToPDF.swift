@@ -57,6 +57,7 @@ class DocxToPDF {
             .appendingPathComponent(
                 UUID().uuidString
             )
+
         do {
             try await MainActor.run {
                 try self.unzipDocxFile(docxURL: fileURL, to: unzipURL)
@@ -88,10 +89,12 @@ class DocxToPDF {
             return false
 
         } catch {
-            print("❌ Error: \(error)")
-            fileURL.stopAccessingSecurityScopedResource()
-            return false
-        
+            
+                print("❌ Error: \(error)")
+                fileURL.stopAccessingSecurityScopedResource()
+                return false
+            
         }
+
     }
 }

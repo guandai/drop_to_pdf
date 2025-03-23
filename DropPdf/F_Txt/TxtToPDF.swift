@@ -11,12 +11,11 @@ class TxtToPDF {
             return false
         }
 
-        let myText = getStr(fileURL, nil)
-
-        if let text = myText {
-            let result = await SaveToPdf().saveStringToPdf(fileURL: fileURL, text: text)
-            return result
+        guard let text = getStr(fileURL, nil) else {
+            print( "❌ getString can not get text in TxtToPDF \(fileURL.path)")
+            return false
         }
-        return false
+        let saveToPdfIns = SaveToPdf()
+        return await saveToPdfIns.saveStringToPdf(fileURL: fileURL, data: text)
     }
 }

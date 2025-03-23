@@ -2,7 +2,7 @@ import Cocoa
 import PDFKit
 
 class ImageToPDF {
-    func getContent(_ pdfContext: CGContext, url: URL, box: CGRect) -> Bool {
+    func drawInContent(_ pdfContext: CGContext, url: URL, box: CGRect) -> Bool {
         guard let image = NSImage(contentsOf: url) else {
             print("❌ ERROR: Could not load image from \(url.path)")
             return false
@@ -22,9 +22,8 @@ class ImageToPDF {
 
     func convertImageToPDF(fileURL: URL) async -> Bool {
         print(">> convertImageToPDF")
-        let renderContent = self.getContent
+        let drawInContentIns = self.drawInContent
 
-        let saveToPdfIns = SaveToPdf()
         guard getDidStart(fileURL: fileURL) else {
             print("❌ Security-scoped resource access failed: \(fileURL.path)")
             return false
@@ -35,6 +34,7 @@ class ImageToPDF {
             return false
         }
 
+        let saveToPdfIns = SaveToPdf()
         guard
             let (pdfData, pdfContext, mediaBox) = saveToPdfIns.getPdfContext(
                 image.size.width, image.size.height)
@@ -43,15 +43,12 @@ class ImageToPDF {
             return false
         }
 
-        if renderContent(pdfContext, fileURL, mediaBox) == false {
+        if drawInContentIns(pdfContext, fileURL, mediaBox) == false {
             return false
         }
 
         saveToPdfIns.endContext(pdfContext)
-
-        let immutablePdfData = pdfData as Data
-        let success = await saveToPdfIns.saveDataToPdf(
-            fileURL: fileURL, pdfData: immutablePdfData)
-        return success
+        
+        return await saveToPdfIns.saveDataToPdf(fileURL: fileURL, data: pdfData as Data)
     }
 }

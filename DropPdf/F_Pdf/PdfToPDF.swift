@@ -13,11 +13,7 @@ class PdfToPDF {
 
         do {
             let pdfData = try Data(contentsOf: fileURL)
-            let immutablePdfData = pdfData as Data
-            let success = await saveToPdfIns.saveDataToPdf(
-                fileURL: fileURL, pdfData: immutablePdfData)
-            return success
-
+            return await saveToPdfIns.saveDataToPdf(fileURL: fileURL, data: pdfData as Data)
         } catch {
             print("❌ Error: \(error)")
             return false

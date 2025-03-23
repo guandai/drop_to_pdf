@@ -28,7 +28,7 @@ class PrintToPDF {
         return result
     }
     
-    func exportRTFToPDF(fileURL: URL, finalPath: URL) -> Bool {
+    func printRtfToPDF(finalPath: URL, fileURL: URL) -> Bool {
         guard let data = try? Data(contentsOf: fileURL),
               let attributedText = try? NSAttributedString(data: data, options: [
                 .documentType: NSAttributedString.DocumentType.rtf
