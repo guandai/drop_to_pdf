@@ -1,6 +1,6 @@
-import ZIPFoundation
 import Cocoa
 import PDFKit
+import ZIPFoundation
 
 final class Box<T>: @unchecked Sendable {
     var value: T
@@ -12,7 +12,7 @@ class DocxToPDF {
     var pages: [NSView] = []
     var currentView: NSView!
     var yOffset: CGFloat = 0
-    
+
     func unzipDocxFile(docxURL: URL, to destinationURL: URL) throws {
         try FileManager.default
             .createDirectory(
@@ -21,7 +21,7 @@ class DocxToPDF {
             )
         try FileManager.default.unzipItem(at: docxURL, to: destinationURL)
     }
-    
+
     func parseData(_ unzipURL: URL, docxProcess: ConvertDocxProcess) {
         let docParser = DocxParser()
         docParser
@@ -34,12 +34,11 @@ class DocxToPDF {
                 docxProcess.processText(runs)
             case .image(let rId, let w, let h):
                 docxProcess
-                    .processImage(unzipURL: unzipURL, rId: rId, w: w , h: h)
+                    .processImage(unzipURL: unzipURL, rId: rId, w: w, h: h)
             }
         }
     }
-    
-    
+
     func convertDocxToPDF(fileURL: URL) async -> Bool {
         print(">> convertDocxToPDF")
         guard getDidStart(fileURL: fileURL) else {
@@ -49,60 +48,50 @@ class DocxToPDF {
 
         let currentViewCopy = self.currentView ?? NSView()
         let yOffsetCopy = self.yOffset
-        
-        
+
         let pagesBox = Box(self.pages)
         let currentViewBox = Box(currentViewCopy)
         let yOffsetBox = Box(yOffsetCopy)
 
-        return await withCheckedContinuation { continuation in
-            DispatchQueue.global(qos: .userInitiated).async {
-                Task {
-                    let unzipURL = FileManager.default.temporaryDirectory.appendingPathComponent(
-                        UUID().uuidString
-                    )
-
-                    do {
-                        try await MainActor.run {
-                            try self.unzipDocxFile(docxURL: fileURL, to: unzipURL)
-                        }
-                        
-                        let docxPro = ConvertDocxProcess(
-                            pages: { pagesBox.value },
-                            setPages: { pagesBox.value = $0 },
-                            currentView: { currentViewBox.value },
-                            setCurrentView: { currentViewBox.value = $0 },
-                            yOffset: { yOffsetBox.value },
-                            setYOffset: { yOffsetBox.value = $0 }
-                        )
-                        
-                        docxPro.initPage()
-                        await self.parseData(unzipURL, docxProcess: docxPro)
-                        // insert pages
-                        let doc = await docxPro.insertPages()
-                        
-                        // Generate PDF
-                        let (_, outputPath) = SaveToPdf().getPathes(fileURL)
-                        if doc.write(to: outputPath) {
-                            //  fileURL.stopAccessingSecurityScopedResource()
-                            continuation.resume(returning:  true)
-                            return
-                        }
-                        
-                        // close folder
-                        fileURL.stopAccessingSecurityScopedResource()
-                        continuation.resume(returning: false)
-                    
-
-                    } catch {
-                        DispatchQueue.main.async {
-                            print("❌ Error: \(error)")
-                            continuation.resume(returning: false)
-                            fileURL.stopAccessingSecurityScopedResource()
-                        }
-                    }
-                }
+        let unzipURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                UUID().uuidString
+            )
+        do {
+            try await MainActor.run {
+                try self.unzipDocxFile(docxURL: fileURL, to: unzipURL)
             }
+
+            let docxPro = ConvertDocxProcess(
+                pages: { pagesBox.value },
+                setPages: { pagesBox.value = $0 },
+                currentView: { currentViewBox.value },
+                setCurrentView: { currentViewBox.value = $0 },
+                yOffset: { yOffsetBox.value },
+                setYOffset: { yOffsetBox.value = $0 }
+            )
+
+            docxPro.initPage()
+            self.parseData(unzipURL, docxProcess: docxPro)
+            // insert pages
+            let doc = await docxPro.insertPages()
+
+            // Generate PDF
+            let (_, outputPath) = SaveToPdf().getPathes(fileURL)
+            if doc.write(to: outputPath) {
+                //  fileURL.stopAccessingSecurityScopedResource()
+                return true
+            }
+
+            // close folder
+            fileURL.stopAccessingSecurityScopedResource()
+            return false
+
+        } catch {
+            print("❌ Error: \(error)")
+            fileURL.stopAccessingSecurityScopedResource()
+            return false
+        
         }
     }
 }

@@ -1,7 +1,7 @@
 import Cocoa
-import UniformTypeIdentifiers
 import CoreText
 import PDFKit
+import UniformTypeIdentifiers
 
 class DocToPDF {
     func extractTextFromDoc(filePath: String) -> String? {
@@ -9,7 +9,8 @@ class DocToPDF {
 
         // Verify if it's a supported document type
         guard let documentType = UTType(filenameExtension: url.pathExtension),
-              documentType.conforms(to: .data) else {
+            documentType.conforms(to: .data)
+        else {
             print("❌ Unsupported file format")
             return nil
         }
@@ -19,7 +20,8 @@ class DocToPDF {
             let textContent = try String(contentsOf: url, encoding: .isoLatin1)
 
             // Remove non-readable characters (if needed)
-            let cleanedText = textContent.replacingOccurrences(of: "[^\\w\\s]", with: "", options: .regularExpression)
+            let cleanedText = textContent.replacingOccurrences(
+                of: "[^\\w\\s]", with: "", options: .regularExpression)
 
             return cleanedText
         } catch {
@@ -28,34 +30,27 @@ class DocToPDF {
         }
     }
 
-
     func convertDocToPDF(fileURL: URL) async -> Bool {
         print(">>convertDocToPDF")
-        return await withCheckedContinuation { continuation in
-            DispatchQueue.main.async {
-                Task {
-                    if let docData = try? Data(contentsOf: URL(fileURLWithPath: fileURL.path())),
-                       let attributedString = try? NSAttributedString(data: docData,
-                           options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.docFormat],
-                           documentAttributes: nil)
-                    {
-                        let text = attributedString.string
-                        let (_, finalPath) = SaveToPdf().getPathes(fileURL)
-                        
-                        let result = PrintToPDF().exportTextToPDF(text: text, to: finalPath)
-                        continuation.resume(returning: result)
-                        return
-                        
-//                        let result = await StringToPDF().toPdf(string: plainText, fileURL: fileURL)
-//                        continuation.resume(returning: result)
-//                        return
-                    }
-                    print("fail")
-                    continuation.resume(returning: false)
-                    
-                }
-            }
+        
+        let nsOption = [ NSAttributedString.DocumentReadingOptionKey
+                .documentType: NSAttributedString.DocumentType
+                .docFormat
+        ]
+        
+        guard let docData = try? Data( contentsOf: URL(fileURLWithPath: fileURL.path())) else {
+            print("❌ fail to get docData : \(fileURL.path)")
+            return false
         }
+        
+        guard let attributed = try? NSAttributedString( data: docData, options: nsOption, documentAttributes: nil) else {
+            print("❌ create NSAttributedString failed: \(fileURL.path)")
+            return false
+        }
+
+        
+        let result = await SaveToPdf().saveStringToPdf(fileURL: fileURL, text: attributed.string)
+        return result
     }
 
 }

@@ -65,8 +65,14 @@ class SaveToPdf {
     }
     
     func saveDataToPdf(fileURL: URL, pdfData: Data) async -> Bool {
-        let (path, finalPath) = getPathes(fileURL)
+        let (_, finalPath) = getPathes(fileURL)
         func callback() -> Bool { return tryWriteData(url: finalPath, data: pdfData) }
+        return await permissionWrapper(finalPath)(callback)
+    }
+    
+    func saveStringToPdf(fileURL: URL, text: String) async -> Bool {
+        let (_, finalPath) = getPathes(fileURL)
+        func callback() -> Bool { return PrintToPDF().printTextToPDF(finalPath: finalPath, text: text) }
         return await permissionWrapper(finalPath)(callback)
     }
 

@@ -1,7 +1,7 @@
 import Cocoa
 
 class PrintToPDF {
-    func exportTextToPDF(text: String, to fileURL: URL) -> Bool {
+    func printTextToPDF(finalPath: URL, text: String) -> Bool {
         UserDefaults.standard.set(true, forKey: "NSPrintSpoolerLogToConsole")
         let printView = TextPrintView(frame: NSRect(x: 0, y: 0, width: 595, height: 842), text: text)
         let printInfo = NSPrintInfo()
@@ -17,7 +17,7 @@ class PrintToPDF {
         printInfo.isHorizontallyCentered = true
         printInfo.isVerticallyCentered = false
         printInfo.jobDisposition = .save
-        printInfo.dictionary()[NSPrintInfo.AttributeKey(rawValue: NSPrintInfo.AttributeKey.jobSavingURL.rawValue)] = fileURL
+        printInfo.dictionary()[NSPrintInfo.AttributeKey(rawValue: NSPrintInfo.AttributeKey.jobSavingURL.rawValue)] = finalPath
 
         let operation = NSPrintOperation(view: printView, printInfo: printInfo)
         operation.showsPrintPanel = false
@@ -28,8 +28,8 @@ class PrintToPDF {
         return result
     }
     
-    func exportRTFToPDF(url: URL, to fileURL: URL) -> Bool {
-        guard let data = try? Data(contentsOf: url),
+    func exportRTFToPDF(fileURL: URL, finalPath: URL) -> Bool {
+        guard let data = try? Data(contentsOf: fileURL),
               let attributedText = try? NSAttributedString(data: data, options: [
                 .documentType: NSAttributedString.DocumentType.rtf
               ], documentAttributes: nil)
@@ -51,7 +51,7 @@ class PrintToPDF {
         printInfo.isHorizontallyCentered = true
         printInfo.isVerticallyCentered = false
         printInfo.jobDisposition = .save
-        printInfo.dictionary()[NSPrintInfo.AttributeKey(rawValue: NSPrintInfo.AttributeKey.jobSavingURL.rawValue)] = fileURL
+        printInfo.dictionary()[NSPrintInfo.AttributeKey(rawValue: NSPrintInfo.AttributeKey.jobSavingURL.rawValue)] = finalPath
 
         let operation = NSPrintOperation(view: printView, printInfo: printInfo)
         operation.showsPrintPanel = false
