@@ -346,11 +346,6 @@
 				DEVELOPMENT_TEAM = 7A8P3NLUDW;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/DropPdf/Frameworks",
-					"$(PROJECT_DIR)/DropPdf/bin/urelibs",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/$(PRODUCT_NAME)/Info.plist";
@@ -360,13 +355,6 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/DropPdf/Frameworks/intl",
-					"$(PROJECT_DIR)/DropPdf/Frameworks",
-					"$(PROJECT_DIR)/DropPdf/bin/urelibs/intl",
-					"$(PROJECT_DIR)/DropPdf/bin/urelibs",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
@@ -394,11 +382,6 @@
 				DEVELOPMENT_TEAM = 7A8P3NLUDW;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/DropPdf/Frameworks",
-					"$(PROJECT_DIR)/DropPdf/bin/urelibs",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/$(PRODUCT_NAME)/Info.plist";
@@ -408,13 +391,6 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/DropPdf/Frameworks/intl",
-					"$(PROJECT_DIR)/DropPdf/Frameworks",
-					"$(PROJECT_DIR)/DropPdf/bin/urelibs/intl",
-					"$(PROJECT_DIR)/DropPdf/bin/urelibs",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
