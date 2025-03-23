@@ -1,3 +1,4 @@
+import ZIPFoundation
 import Cocoa
 import PDFKit
 

@@ -33,7 +33,7 @@ class ProcessFile: ObservableObject {
         if false {
             print("pass")
         } else if isDocFile(at: url) {
-            return await convertDocToPDF(fileURL: url)
+            return await DocToPDF().convertDocToPDF(fileURL: url)
         } else if isDocxFile(at: url) {
             return await DocxToPDF().convertDocxToPDF(fileURL: url)
         } else if isRTFFile(at: url) {
