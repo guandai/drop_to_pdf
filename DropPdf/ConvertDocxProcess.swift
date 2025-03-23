@@ -3,20 +3,25 @@ import PDFKit
 
 
 class ConvertDocxProcess {
+    private var getPages: () -> [NSView]
+    private var setPages: ([NSView]) -> Void
+    private var getCurrentView: () -> NSView
+    private var setCurrentView: (NSView) -> Void
+    private var getYOffset: () -> CGFloat
+    private var setYOffset: (CGFloat) -> Void
+    private let margin: CGFloat = 40
+    private let pageSize: NSSize = NSSize(width: 595, height: 842)
     let blockHeight: CGFloat = 20
-    
-    var pageSize = NSSize(width: 595, height: 842) // A4
-    var pages: [NSView] = []
-    var currentView = NSView()
-    var yOffset: CGFloat = 0
-    var margin: CGFloat = 40
-    
-    init(pages: [NSView], currentView: NSView = NSView(), yOffset: CGFloat, margin: CGFloat, pageSize: NSSize) {
-        self.pages = pages
-        self.currentView = currentView
-        self.yOffset = yOffset
-        self.margin = margin
-        self.pageSize = pageSize
+
+    init(pages: @escaping () -> [NSView], setPages: @escaping ([NSView]) -> Void,
+         currentView: @escaping () -> NSView, setCurrentView: @escaping (NSView) -> Void,
+         yOffset: @escaping () -> CGFloat, setYOffset: @escaping (CGFloat) -> Void) {
+        getPages = pages
+        self.setPages = setPages
+        getCurrentView = currentView
+        self.setCurrentView = setCurrentView
+        getYOffset = yOffset
+        self.setYOffset = setYOffset
     }
     
     func unzipDocxFile(docxURL: URL, to destinationURL: URL) throws {
@@ -25,13 +30,22 @@ class ConvertDocxProcess {
     }
     
     func newPage() {
-        self.pages.append(self.currentView)
+        var pages = getPages()
+        pages.append(getCurrentView())
+        setPages(pages)
         createView()
     }
     
     func createView() {
-        self.currentView = NSView(frame: NSRect(origin: .zero, size: self.pageSize))
-        self.yOffset = self.pageSize.height - self.margin
+        setCurrentView(NSView(frame: NSRect(origin: .zero, size: pageSize)))
+        setYOffset(self.pageSize.height - margin)
+    }
+    
+    func initPage() {
+        setPages([])
+        Task { @MainActor in
+            createView()
+        }
     }
     
     func processImage(unzipURL: URL, rId: String, w: CGFloat?, h:CGFloat?) {
@@ -43,15 +57,15 @@ class ConvertDocxProcess {
                 let displayWidth = w ?? image.size.width
                 let displayHeight = h ?? image.size.height
                 
-                if self.yOffset - displayHeight < self.margin {
-                    self.newPage()
+                if getYOffset() - displayHeight < margin {
+                    newPage()
                 }
 
-                let imageView = NSImageView(frame: NSRect(x: 40, y: self.yOffset - displayHeight, width: displayWidth, height: displayHeight))
+                let imageView = NSImageView(frame: NSRect(x: 40, y: getYOffset() - displayHeight, width: displayWidth, height: displayHeight))
                 imageView.image = image
-                self.currentView.addSubview(imageView)
+                getCurrentView().addSubview(imageView)
 
-                self.yOffset -= (displayHeight + self.blockHeight)
+                setYOffset(getYOffset() - (displayHeight + blockHeight))
             }
         }
     }
@@ -82,11 +96,11 @@ class ConvertDocxProcess {
         let usedRect = layoutManager.usedRect(for: textContainer)
         let textHeight = ceil(usedRect.height)
 
-        if self.yOffset - textHeight < self.margin {
-            self.newPage()
+        if getYOffset() - textHeight < margin {
+            newPage()
         }
 
-        let textView = NSTextView(frame: NSRect(x: 40, y: self.yOffset - textHeight, width: maxWidth, height: textHeight))
+        let textView = NSTextView(frame: NSRect(x: 40, y: getYOffset() - textHeight, width: maxWidth, height: textHeight))
         textView.textContainer?.containerSize = NSSize(width: maxWidth, height: textHeight)
         textView.textContainer?.widthTracksTextView = true
         textView.isEditable = false
@@ -94,8 +108,8 @@ class ConvertDocxProcess {
         textView.drawsBackground = false
         textView.textStorage?.setAttributedString(textStorage)
 
-        self.currentView.addSubview(textView)
-        self.yOffset -= (textHeight + self.blockHeight)
+        getCurrentView().addSubview(textView)
+        setYOffset(getYOffset() - (textHeight + blockHeight))
     }
     
     
@@ -106,24 +120,28 @@ class ConvertDocxProcess {
         for block in docParser.contentBlocks {
             switch block {
             case .paragraph(let runs):
-                self.processText(runs)
+                processText(runs)
             case .image(let rId, let w, let h):
-                self.processImage(unzipURL: unzipURL, rId: rId, w: w , h: h)
+                processImage(unzipURL: unzipURL, rId: rId, w: w , h: h)
             }
         }
     }
     
-    func insertPages() -> PDFDocument {
-        self.pages.append(self.currentView) // Don't forget to add the last page!
+    func insertPages() async -> PDFDocument {
         let pdfDocument = PDFDocument()
-        for (index, pageView) in self.pages.enumerated() {
-            let data = pageView.dataWithPDF(inside: pageView.bounds)
-            if let pdfDoc = PDFDocument(data: data),
-               let pdfPage = pdfDoc.page(at: 0) {
-                pdfDocument.insert(pdfPage, at: index)
+
+        await MainActor.run {
+            setPages(getPages() + [getCurrentView()])
+
+            for (index, pageView) in getPages().enumerated() {
+                let data = pageView.dataWithPDF(inside: pageView.bounds)
+                if let pdfDoc = PDFDocument(data: data),
+                   let pdfPage = pdfDoc.page(at: 0) {
+                    pdfDocument.insert(pdfPage, at: index)
+                }
             }
         }
+
         return pdfDocument
     }
 }
-
