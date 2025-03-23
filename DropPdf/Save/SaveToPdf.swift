@@ -2,29 +2,33 @@ import Cocoa
 import PDFKit
 import UniformTypeIdentifiers
 
-
 class SaveToPdf {
-    func getPdfContext(_ cgWidth: CGFloat, _ cgHeight: CGFloat, _ margin: CGFloat = 10) -> (NSMutableData, CGContext, CGRect)? {
+    func getPdfContext(
+        _ cgWidth: CGFloat, _ cgHeight: CGFloat, _ margin: CGFloat = 10
+    ) -> (NSMutableData, CGContext, CGRect)? {
         let pdfData = NSMutableData()
-        guard let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData) else {
+        guard let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData)
+        else {
             print("❌ ERROR: Could not create PDF consumer")
             return nil
         }
-
-        var mediaBox = CGRect(x: margin, y: margin, width: cgWidth, height: cgHeight)
-        guard let pdfContext = CGContext(consumer: pdfConsumer, mediaBox: &mediaBox, nil) else {
+        var mediaBox = CGRect(
+            x: margin, y: margin, width: cgWidth, height: cgHeight)
+        guard
+            let pdfContext = CGContext(
+                consumer: pdfConsumer, mediaBox: &mediaBox, nil)
+        else {
             print("❌ Failed to create PDF pdfContext")
             return nil
         }
-
         return (pdfData, pdfContext, mediaBox)
     }
-    
+
     func endContext(_ pdfContext: CGContext) {
         pdfContext.endPage()
         pdfContext.closePDF()
     }
-    
+
     func getPathes(_ fileURL: URL) -> (URL, URL) {
         let originalName = fileURL.deletingPathExtension().lastPathComponent
         let newName = NameMod.getTimeName(name: originalName)  // e.g. "photo_20250311_1430.pdf"
@@ -33,39 +37,48 @@ class SaveToPdf {
         return (path, finalPath)
     }
 
-    func saveToPdf(fileURL: URL, pdfData: Data) async -> Bool {
-        return await withCheckedContinuation { continuation in
-            let (path, finalPath) = getPathes(fileURL)
-            do {
-                
-
-                if PermissionsManager().isAppSandboxed() && !PermissionsManager.shared.isFolderGranted(path) {
-                    Task { @MainActor in
-                        PermissionsManager.shared.requestAccess(path.path())
-                        do {
-                            try pdfData.write(to: finalPath, options: .atomic)
-                            print("✅ PDF saved to: \(finalPath.path)")
-                            openFolder(finalPath.deletingLastPathComponent()) // Open the folder
-                            return
-                        } catch {
-                            print("❌ ERROR: Failed to save PDF, Error: \(error)")
-                        }
-                    }
-                    return
-                }
-
-                // 🚀 Save normally if not sandboxed
-                try pdfData.write(to: finalPath, options: .atomic)
-                print("✅ Successfully saved PDF to: \(finalPath.path)")
-                openFolder(finalPath.deletingLastPathComponent()) // Open the folder
-                continuation.resume(returning: true)
-                return
-
-            } catch {
-                print("❌ ERROR: Failed to save PDF, Error: \(error)")
-                continuation.resume(returning: false)
-                return
+    
+    func getPermission(_ finalPath: URL) async -> Bool {
+        let permissionM = PermissionsManager.shared
+        let path = finalPath.deletingLastPathComponent()
+        if permissionM.isAppSandboxed() && !permissionM.isFolderGranted(path) {
+            await MainActor.run {
+                permissionM.requestAccess(path.path())
             }
+
+            if !PermissionsManager().isFolderGranted(path) {
+                return false
+            }
+        }
+        return true
+    }
+
+    func permissionWrapper(_ finalPath: URL) -> (@escaping () -> Bool) async -> Bool {
+        func fn(_ callback: @escaping () -> Bool) async -> Bool {
+            let granted = await self.getPermission(finalPath)
+            if !granted {
+                return false
+            }
+            return callback()
+        }
+        return fn
+    }
+    
+    func saveDataToPdf(fileURL: URL, pdfData: Data) async -> Bool {
+        let (path, finalPath) = getPathes(fileURL)
+        func callback() -> Bool { return tryWriteData(url: finalPath, data: pdfData) }
+        return await permissionWrapper(finalPath)(callback)
+    }
+
+    func tryWriteData(url: URL, data: Data) -> Bool {
+        do {
+            try data.write(to: url, options: .atomic)
+            print("✅ PDF saved to: \(url.path)")
+            openFolder(url.deletingLastPathComponent())  // Open the folder
+            return true
+        } catch {
+            print("❌ ERROR: Failed to save PDF, Error: \(error)")
+            return false
         }
     }
 
@@ -73,5 +86,3 @@ class SaveToPdf {
         NSWorkspace.shared.open(folderURL)
     }
 }
-
-

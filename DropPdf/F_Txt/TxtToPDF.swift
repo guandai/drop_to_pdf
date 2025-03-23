@@ -40,7 +40,7 @@ class TxtToPDF {
     
     func convertTxtToPDF(fileURL: URL) async -> Bool {
         print(">> convertTxtToPDF")
-        let renderContent = self.getContent
+        let getStr = self.getString
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 let saveToPdfIns = SaveToPdf()
@@ -51,24 +51,16 @@ class TxtToPDF {
                     return
                 }
                 
-                guard let (pdfData, pdfContext, mediaBox) = saveToPdfIns.getPdfContext(595, 842) else {
-                    print("❌ ERROR: Could not load image from \(fileURL.path)")
-                    continuation.resume(returning: false)
+                let (_, finalPath) = saveToPdfIns.getPathes(fileURL)
+                let myText = getStr(fileURL, nil)
+
+                if let text = myText {
+                    let result = PrintToPDF().exportTextToPDF(text: text, to: finalPath)
+                    continuation.resume(returning: result)
                     return
                 }
                 
-                if renderContent(pdfContext, fileURL, mediaBox, nil) == false {
-                    continuation.resume(returning: false)
-                    return
-                }
-                
-                saveToPdfIns.endContext(pdfContext)
-                
-                Task {
-                    let immutablePdfData = pdfData as Data
-                    let success = await SaveToPdf().saveToPdf(fileURL: fileURL, pdfData: immutablePdfData)
-                    continuation.resume(returning: success)
-                }
+                continuation.resume(returning: false)
             }
         }
     }

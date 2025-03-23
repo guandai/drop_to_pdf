@@ -27,7 +27,7 @@ class StringToPDF {
                 
                 Task {
                     let immutablePdfData = pdfData as Data
-                    let success = await SaveToPdf().saveToPdf(fileURL: fileURL, pdfData: immutablePdfData)
+                    let success = await SaveToPdf().saveDataToPdf(fileURL: fileURL, pdfData: immutablePdfData)
                     continuation.resume(returning: success)
                 }
             }

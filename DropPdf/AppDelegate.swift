@@ -9,6 +9,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
 
   func applicationDidFinishLaunching(_ notification: Notification) {
+    UserDefaults.standard.set(false, forKey: "NSPrintSpoolerLogToConsole")
     self.setupMainWindow()
   }
 

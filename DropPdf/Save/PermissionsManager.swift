@@ -44,8 +44,8 @@ class PermissionsManager: ObservableObject  {
             UserDefaults.standard.set(storedBookmarks, forKey: savedFoldersKey)
 
             DispatchQueue.main.async {
-                print(url)
-                print(self.grantedFolderURLs)
+                print("store security url: \(url) , ")
+                print("self.grantedFolderURLs: \(self.grantedFolderURLs)")
                 if self.grantedFolderURLs.contains(url) {
                      return
                 } else {
@@ -91,7 +91,7 @@ class PermissionsManager: ObservableObject  {
     /// Check if a given folder has been granted access
     func isFolderGranted(_ folderURL: URL) -> Bool {
         let isGranted = grantedFolderURLs.contains { $0.standardizedFileURL == folderURL.standardizedFileURL }
-        
+        print(">> isFolderGranted")
         if isGranted {
             print("✅ Folder access granted: \(folderURL.path)")
         } else {

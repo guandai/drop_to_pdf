@@ -32,6 +32,12 @@ class ProcessFile: ObservableObject {
         
         if false {
             print("pass")
+        } else if isPDFFile(url) {
+            return await PdfToPDF().convertPdfToPDF(fileURL: url)
+        } else if isIllustratorFile(url) {
+            return await PdfToPDF().convertPdfToPDF(fileURL: url)
+        } else if isRTFFile(url) {
+            return await RtfToPDF().convertRtfToPDF(fileURL: url)
         } else if isDocFile(at: url) {
             return await DocToPDF().convertDocToPDF(fileURL: url)
         } else if isDocxFile(at: url) {
@@ -48,7 +54,45 @@ class ProcessFile: ObservableObject {
         }
     }
    
-
+    
+    func isIllustratorFile(_ fileURL: URL) -> Bool {
+        do {
+            let data = try Data(contentsOf: fileURL, options: .mappedIfSafe)
+            if let header = String(data: data.prefix(12), encoding: .ascii) {
+                return header.hasPrefix("%PDF-") || header.hasPrefix("%!PS-Adobe-")
+            }
+        } catch {
+            print("❌ Error reading file for AI check: \(fileURL.path), \(error)")
+        }
+        return false
+    }
+    
+    func isRTFFile(_ fileURL: URL) -> Bool {
+        do {
+            let data = try Data(contentsOf: fileURL, options: .mappedIfSafe)
+            if let textSample = String(data: data.prefix(16), encoding: .utf8) {
+                return textSample.trimmingCharacters(in: .whitespacesAndNewlines)
+                                 .lowercased()
+                                 .hasPrefix("{\\rtf")
+            }
+        } catch {
+            print("❌ Error reading file for RTF check: \(fileURL.path), \(error)")
+        }
+        return false
+    }
+    
+    func isPDFFile(_ fileURL: URL) -> Bool {
+        do {
+            let data = try Data(contentsOf: fileURL, options: .mappedIfSafe)
+            if let header = String(data: data.prefix(5), encoding: .ascii) {
+                return header == "%PDF-"
+            }
+        } catch {
+            print("❌ Error reading file for PDF check: \(fileURL.path), \(error)")
+        }
+        return false
+    }
+    
     func isTextFile(at fileURL: URL) -> Bool {
         do {
             let resourceValues = try fileURL.resourceValues(forKeys: [.contentTypeKey])

@@ -51,12 +51,11 @@ class ImageToPDF {
                 }
 
                 saveToPdfIns.endContext(pdfContext)
-                
                 Task {
-                    let immutablePdfData = pdfData as Data // ✅ Convert NSMutableData to immutable Data
-                    let success = await saveToPdfIns.saveToPdf(fileURL: fileURL, pdfData: immutablePdfData)
+                    let immutablePdfData = pdfData as Data
+                    let success = await saveToPdfIns.saveDataToPdf(fileURL: fileURL, pdfData: immutablePdfData)
                     continuation.resume(returning: success)
-                    return
+                    return success
                 }
                 
             }

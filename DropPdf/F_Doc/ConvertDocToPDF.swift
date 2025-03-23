@@ -34,20 +34,21 @@ class DocToPDF {
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
                 Task {
-                    let docData = try Data(contentsOf: URL(fileURLWithPath: fileURL.path()))
-                    print(docData)
-                    
                     if let docData = try? Data(contentsOf: URL(fileURLWithPath: fileURL.path())),
                        let attributedString = try? NSAttributedString(data: docData,
                            options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.docFormat],
                            documentAttributes: nil)
                     {
-                        let plainText = attributedString.string
-                        print(plainText)
+                        let text = attributedString.string
+                        let (_, finalPath) = SaveToPdf().getPathes(fileURL)
                         
-                        let result = await StringToPDF().toPdf(string: plainText, fileURL: fileURL)
+                        let result = PrintToPDF().exportTextToPDF(text: text, to: finalPath)
                         continuation.resume(returning: result)
                         return
+                        
+//                        let result = await StringToPDF().toPdf(string: plainText, fileURL: fileURL)
+//                        continuation.resume(returning: result)
+//                        return
                     }
                     print("fail")
                     continuation.resume(returning: false)
