@@ -21,7 +21,6 @@ class ImageToPDF {
     }
 
     func convertImageToPDF(fileURL: URL) async -> Bool {
-        print(">> convertImageToPDF")
         let drawInContentIns = self.drawInContent
 
         guard getDidStart(fileURL: fileURL) else {

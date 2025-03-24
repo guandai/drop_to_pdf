@@ -23,7 +23,6 @@ class DocxToPDF {
     }
 
     func convertDocxToPDF(fileURL: URL) async -> Bool {
-        print(">> convertDocxToPDF")
         guard getDidStart(fileURL: fileURL) else {
             print("❌ Security-scoped resource access failed: \(fileURL.path)")
             return false

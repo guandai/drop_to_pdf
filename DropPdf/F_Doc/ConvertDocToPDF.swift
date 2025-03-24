@@ -31,8 +31,6 @@ class DocToPDF {
     }
 
     func convertDocToPDF(fileURL: URL) async -> Bool {
-        print(">>convertDocToPDF")
-        
         let nsOption = [ NSAttributedString.DocumentReadingOptionKey
                 .documentType: NSAttributedString.DocumentType
                 .docFormat

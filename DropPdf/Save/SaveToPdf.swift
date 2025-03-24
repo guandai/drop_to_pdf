@@ -113,7 +113,7 @@ class SaveToPdf {
         return await permissionWrapper(finalPath)(callback)
     }
 
-    // print by docType for (txt plains, rtfd, html)
+    // by docType for (txt plains, rtfd, html)
     func saveContentToPdf(
         fileURL: URL, docType: NSAttributedString.DocumentType
     ) async -> Bool {

@@ -42,7 +42,6 @@ class StringToPDF {
         let path = CGPath(rect: textFrameRect, transform: nil)
 
         while currentRange.location < textLength {
-            print("🔖 BEGIN PAGE")
             ctx.beginPDFPage(nil)  // ✅ Start page first
 
             let frame = CTFramesetterCreateFrame(framesetter, currentRange, path, nil)
@@ -52,7 +51,6 @@ class StringToPDF {
             currentRange.location += visibleRange.length
 
             ctx.endPDFPage() // ✅ Close page after drawing
-            print("🔖 END PAGE")
         }
         
         return true
@@ -62,7 +60,6 @@ class StringToPDF {
         let drawInContentIns = StringToPDF().drawInContent
         let saveToPdfIns = SaveToPdf()
 
-        print(">>> StringToPDF toPdf")
         guard let (pdfData, pdfContext, mediaBox) = saveToPdfIns.getPdfContext(595, 842, 0) else {
             print("❌ ERROR: Could not load image from \(fileURL.path)")
             return false

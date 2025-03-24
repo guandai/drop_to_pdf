@@ -3,7 +3,7 @@ import PDFKit
 
 class HtmlToPDF {
     func convertHtmlToPDF(fileURL: URL) async -> Bool {
-        print(">> RtfToPDF")
+        print("🗳️ >> Using RtfToPDF")
         guard getDidStart(fileURL: fileURL) else {
             print("❌ Security-scoped resource access failed: \(fileURL.path)")
             return false

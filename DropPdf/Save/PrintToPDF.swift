@@ -57,7 +57,6 @@ class PrintToPDF {
                 frame: NSRect(x: 0, y: 0, width: 595, height: 842),
                 attributedText: attributedText
             )
-            print(">> get print view")
             return runOpration(view: printView, info: getPrintInfo(finalPath))
         }
         return result

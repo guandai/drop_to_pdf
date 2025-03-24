@@ -28,7 +28,6 @@ class PermissionsManager: ObservableObject  {
         }
 
         if panel.runModal() == .OK, let folderURL = panel.url {
-            print("Selected folder: \(folderURL.path)")
             storeSecurityScopedBookmark(for: folderURL)
         }
         objectWillChange.send()
@@ -44,8 +43,6 @@ class PermissionsManager: ObservableObject  {
             UserDefaults.standard.set(storedBookmarks, forKey: savedFoldersKey)
 
             DispatchQueue.main.async {
-                print("store security url: \(url) , ")
-                print("self.grantedFolderURLs: \(self.grantedFolderURLs)")
                 if self.grantedFolderURLs.contains(url) {
                      return
                 } else {
@@ -70,18 +67,18 @@ class PermissionsManager: ObservableObject  {
                     let url = try URL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, bookmarkDataIsStale: &isStale)
 
                     if isStale {
-                        print("Bookmark data is stale, requesting permission again.")
+                        print("🪬 Bookmark data is stale, requesting permission again.")
                         continue
                     }
 
                     if url.startAccessingSecurityScopedResource() {
                         grantedFolderURLs.insert(url)
-                        print("Restored access to: \(url.path)")
+                        print("✅ Restored access to: \(url.path)")
                     } else {
-                        print("Failed to access security-scoped resource.")
+                        print("❌ Failed to access security-scoped resource.")
                     }
                 } catch {
-                    print("Failed to restore bookmark: \(error)")
+                    print("❌ Failed to restore bookmark: \(error)")
                 }
             }
         }
@@ -91,7 +88,6 @@ class PermissionsManager: ObservableObject  {
     /// Check if a given folder has been granted access
     func isFolderGranted(_ folderURL: URL) -> Bool {
         let isGranted = grantedFolderURLs.contains { $0.standardizedFileURL == folderURL.standardizedFileURL }
-        print(">> isFolderGranted")
         if isGranted {
             print("✅ Folder access granted: \(folderURL.path)")
         } else {

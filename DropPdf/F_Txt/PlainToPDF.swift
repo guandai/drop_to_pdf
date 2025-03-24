@@ -3,7 +3,7 @@ import PDFKit
 
 class PlainToPDF {
     func convertTxtToPDF(fileURL: URL) async -> Bool {
-        print(">> convertTxtToPDF")
+        print("🗳️ >> convertTxtToPDF")
         guard getDidStart(fileURL: fileURL) else {
             print("❌ Security-scoped resource access failed: \(fileURL.path)")
             return false

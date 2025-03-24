@@ -46,11 +46,8 @@ class ProcessFile: ObservableObject {
     /// 🔹 Process a single file and determines the correct conversion method
     func processOneFile(url: URL, appDelegate: AppDelegate) async -> Bool {
         print("📂 Processing file: \(url.path)")
-        print("🧪 isRtfdFile: \(isRtfdFile(url))")
-        print("🧪 isRtfFile: \(isRtfFile(url))")
-        
         if false {
-            print("pass")
+            print("⬇️ pass")
         } else if isPdfFile(url) {
             return await PdfToPDF().convertPdfToPDF(fileURL: url)
         } else if isIllustratorFile(url) {
@@ -111,7 +108,7 @@ class ProcessFile: ObservableObject {
             }
         } catch {
             print(
-                "❌ Error reading file for HTML check: \(fileURL.path), \(error)"
+                "❌ Error checking file for HTML: \(fileURL.path), \(error)"
             )
         }
 
@@ -155,11 +152,11 @@ class ProcessFile: ObservableObject {
             if let textSample = String(data: data.prefix(64), encoding: .utf8) {
                 let trimmed = textSample.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                 let isMatch = trimmed.hasPrefix("{\\rtf")
-                print("🧪 isRTFFile result for \(fileURL.lastPathComponent): \(isMatch)")
+
                 return isMatch
             }
         } catch {
-            print("❌ Error reading file for RTF check: \(fileURL.path), \(error)")
+            print("❌ Error checking file for RTF check: \(fileURL.path), \(error)")
         }
 
         return false
@@ -172,8 +169,7 @@ class ProcessFile: ObservableObject {
                 return header == "%PDF-"
             }
         } catch {
-            print(
-                "❌ Error reading file for PDF check: \(fileURL.path), \(error)")
+            print("❌ Error reading file for PDF: \(fileURL.path), \(error)")
         }
         return false
     }
@@ -186,8 +182,7 @@ class ProcessFile: ObservableObject {
             // `contentType` is a UTType? in Swift 5.5+
             return resourceValues.contentType != nil
         } catch {
-            print(
-                "❌ Error retrieving contentType for: \(fileURL.path), \(error)")
+            print("❌ Error retrieving contentType: \(fileURL.path), \(error)")
             return false
         }
     }

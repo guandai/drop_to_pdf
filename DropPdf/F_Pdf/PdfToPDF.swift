@@ -3,8 +3,6 @@ import PDFKit
 
 class PdfToPDF {
     func convertPdfToPDF(fileURL: URL) async -> Bool {
-        print(">> convertPdfToPDF")
-
         let saveToPdfIns = SaveToPdf()
         guard getDidStart(fileURL: fileURL) else {
             print("❌ Security-scoped resource access failed: \(fileURL.path)")
