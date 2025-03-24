@@ -46,28 +46,18 @@ class ProcessFile: ObservableObject {
     /// 🔹 Process a single file and determines the correct conversion method
     func processOneFile(url: URL, appDelegate: AppDelegate) async -> Bool {
         print("📂 Processing file: \(url.path)")
-//        let isPDFFileIns = self.isPDFFile
-//        let isIllustratorFileIns = self.isIllustratorFile
-//        let isRTFFileIns = self.isRTFFile
-//        let isRTFDFileIns = self.isRTFDFile
-//        let isHtmlFileIns = self.isHtmlFile
-//        let isDocFileIns = self.isDocFile
-//        let isDocxFileIns = self.isDocxFile
-//        let isImageFileIns = self.isImageFile
-//        let isTextFileIns = self.isTextFile
-
-        print("🧪 isRTFDFile: \(isRTFDFile(url))")
-        print("🧪 isRTFFile: \(isRTFFile(url))")
+        print("🧪 isRtfdFile: \(isRtfdFile(url))")
+        print("🧪 isRtfFile: \(isRtfFile(url))")
         
         if false {
             print("pass")
-        } else if isPDFFile(url) {
+        } else if isPdfFile(url) {
             return await PdfToPDF().convertPdfToPDF(fileURL: url)
         } else if isIllustratorFile(url) {
             return await PdfToPDF().convertPdfToPDF(fileURL: url)
-        } else if isRTFDFile(url) {
+        } else if isRtfdFile(url) {
             return await RtfdToPDF().convertRtfdToPDF(fileURL: url)
-        } else if isRTFFile(url) {
+        } else if isRtfFile(url) {
             return await RtfToPDF().convertRtfToPDF(fileURL: url)
         } else if isHtmlFile(url) {
             return await HtmlToPDF().convertHtmlToPDF(fileURL: url)
@@ -128,7 +118,7 @@ class ProcessFile: ObservableObject {
         return false
     }
 
-    func isRTFDFile(_ fileURL: URL) -> Bool {
+    func isRtfdFile(_ fileURL: URL) -> Bool {
         // RTFD is a directory with .rtfd extension
         var isDir: ObjCBool = false
         guard FileManager.default.fileExists(atPath: fileURL.path, isDirectory: &isDir),
@@ -139,10 +129,10 @@ class ProcessFile: ObservableObject {
         }
 
         // Check if it contains at least one .rtf file inside
-        if let contents = try? FileManager.default.contentsOfDirectory(atPath: fileURL.path) {
-            for item in contents {
-                if item.lowercased().hasSuffix(".rtf") {
-                    print("✅ Confirmed .rtfd content inside: \(item)")
+        if let contents = try? FileManager.default.contentsOfDirectory(at: fileURL, includingPropertiesForKeys: nil) {
+            for itemURL in contents {
+                if itemURL.pathExtension.lowercased() == "rtf" {
+                    print("✅ Confirmed .rtfd content inside: \(itemURL.lastPathComponent)")
                     return true
                 }
             }
@@ -151,11 +141,11 @@ class ProcessFile: ObservableObject {
         return false
     }
 
-    func isRTFFile(_ fileURL: URL) -> Bool {
+    func isRtfFile(_ fileURL: URL) -> Bool {
         // Skip directories like .rtfd bundles
         var isDir: ObjCBool = false
         if FileManager.default.fileExists(atPath: fileURL.path, isDirectory: &isDir), isDir.boolValue {
-            print("⛔ Skipping directory in isRTFFile: \(fileURL.lastPathComponent)")
+            print("⛔ Skipping directory in isRtfFile: \(fileURL.lastPathComponent)")
             return false
         }
 
@@ -175,7 +165,7 @@ class ProcessFile: ObservableObject {
         return false
     }
 
-    func isPDFFile(_ fileURL: URL) -> Bool {
+    func isPdfFile(_ fileURL: URL) -> Bool {
         do {
             let data = try Data(contentsOf: fileURL, options: .mappedIfSafe)
             if let header = String(data: data.prefix(5), encoding: .ascii) {

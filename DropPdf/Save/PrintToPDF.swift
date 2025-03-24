@@ -2,14 +2,15 @@ import Cocoa
 
 class PrintToPDF {
     func getPrintInfo(_ finalPath: URL) -> NSPrintInfo {
+        let margin: CGFloat = 30
         let printInfo = NSPrintInfo()
             printInfo.horizontalPagination = .automatic
             printInfo.verticalPagination = .automatic
             printInfo.paperSize = NSSize(width: 595, height: 842)
-            printInfo.topMargin = 20
-            printInfo.bottomMargin = 20
-            printInfo.leftMargin = 20
-            printInfo.rightMargin = 20
+            printInfo.topMargin = margin
+            printInfo.bottomMargin = margin
+            printInfo.leftMargin = margin
+            printInfo.rightMargin = margin
             printInfo.isHorizontallyCentered = true
             printInfo.isVerticallyCentered = false
             printInfo.jobDisposition = .save
@@ -30,21 +31,18 @@ class PrintToPDF {
         return runResult
     }
 
-    func printContentToPDF( finalPath: URL, fileURL: URL, docType: NSAttributedString.DocumentType) async -> Bool {
-        guard let data = try? Data(contentsOf: fileURL) else {
-            print("❌ Failed to load RTF data")
-            return false
-        }
-        
+    func printContentToPDF(finalPath: URL, fileURL: URL, docType: NSAttributedString.DocumentType) async -> Bool {
         let result = await MainActor.run { () -> Bool in
             guard let attributedText = try? NSAttributedString(
-                data: data,
+                url: fileURL,
                 options: [.documentType: docType],
-                documentAttributes: nil
-            ) else {
-                print("❌ Failed to load attributed text and content as \(docType)")
+                documentAttributes: nil)
+            else {
+                print("❌ Failed to load RTFD package from \(fileURL.path)")
                 return false
             }
+       
+
             let printView = ContentPrintView(
                 frame: NSRect(x: 0, y: 0, width: 595, height: 842),
                 attributedText: attributedText
