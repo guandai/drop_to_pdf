@@ -1,8 +1,8 @@
 import Cocoa
 import PDFKit
 
-class RtfToPDF {
-    func convertRtfToPDF(fileURL: URL) async -> Bool {
+class RtfdToPDF {
+    func convertRtfdToPDF(fileURL: URL) async -> Bool {
         print(">> RtfToPDF")
         guard getDidStart(fileURL: fileURL) else {
             print("❌ Security-scoped resource access failed: \(fileURL.path)")
@@ -10,6 +10,6 @@ class RtfToPDF {
         }
         
         let saveToPdfIns = SaveToPdf()
-        return await saveToPdfIns.saveRtfToPdf(fileURL: fileURL)
+        return await saveToPdfIns.saveContentToPdf(fileURL: fileURL, docType: .rtfd)
     }
 }

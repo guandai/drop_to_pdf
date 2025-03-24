@@ -48,9 +48,10 @@ class DocToPDF {
             return false
         }
         
-        let text = attributed.string
-        let saveToPdfIns = SaveToPdf()
-        return await saveToPdfIns.saveStringToPdf(fileURL: fileURL, data: text)
+        let string = attributed.string
+        return await StringToPDF().stringToPdf(fileURL: fileURL, string: string)
+        
+//        let saveToPdfIns = SaveToPdf()
+//        return await saveToPdfIns.saveContentToPdf(fileURL: fileURL, docType: .docFormat)
     }
-
 }

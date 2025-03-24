@@ -20,41 +20,57 @@ class StringToPDF {
             return content
         }
 
-    func drawInContent(ctx: CGContext, url: URL, box: CGRect, str: String? = nil)  -> Bool {
-            ctx.beginPDFPage(nil)
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.alignment = .left
-            let textAttributes: [NSAttributedString.Key: Any] = [
-                .font: NSFont.systemFont(ofSize: 12),
-                .foregroundColor: NSColor.black,
-                .paragraphStyle: paragraphStyle
-            ]
-
-            guard let string = getString(url: url, str: str) else {
-                return false
-            }
-            
-            let attributedText = NSAttributedString(string: string, attributes: textAttributes)
-            let framesetter = CTFramesetterCreateWithAttributedString(attributedText)
-            let framePath = CGPath(rect: box.insetBy(dx: 20, dy: 20), transform: nil)
-            let frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, attributedText.length), framePath, nil)
-            CTFrameDraw(frame, ctx)
-            return true
+    func drawInContent(ctx: CGContext, url: URL, box: CGRect, str: String? = nil) -> Bool {
+        guard let string = getString(url: url, str: str) else {
+            return false
         }
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .left
+        let textAttributes: [NSAttributedString.Key: Any] = [
+            .font: NSFont(name: "Helvetica", size: 12) ?? NSFont.systemFont(ofSize: 12),
+            .foregroundColor: NSColor.black,
+            .paragraphStyle: paragraphStyle
+        ]
+
+        let attributedText = NSAttributedString(string: string, attributes: textAttributes)
+        let framesetter = CTFramesetterCreateWithAttributedString(attributedText)
+        var currentRange = CFRange(location: 0, length: 0)
+        let textLength = attributedText.length
+        let pageRect = box
+        let textFrameRect = pageRect.insetBy(dx: 20, dy: 20)
+        let path = CGPath(rect: textFrameRect, transform: nil)
+
+        while currentRange.location < textLength {
+            print("🔖 BEGIN PAGE")
+            ctx.beginPDFPage(nil)  // ✅ Start page first
+
+            let frame = CTFramesetterCreateFrame(framesetter, currentRange, path, nil)
+            CTFrameDraw(frame, ctx)
+
+            let visibleRange = CTFrameGetVisibleStringRange(frame)
+            currentRange.location += visibleRange.length
+
+            ctx.endPDFPage() // ✅ Close page after drawing
+            print("🔖 END PAGE")
+        }
+        
+        return true
+    }
     
-    func toPdf(string: String, fileURL: URL) async -> Bool {
+    func stringToPdf(fileURL: URL, string: String) async -> Bool {
         let drawInContentIns = StringToPDF().drawInContent
         let saveToPdfIns = SaveToPdf()
 
         print(">>> StringToPDF toPdf")
-        guard let (pdfData, pdfContext, mediaBox) = saveToPdfIns.getPdfContext(595, 842, 10) else {
+        guard let (pdfData, pdfContext, mediaBox) = saveToPdfIns.getPdfContext(595, 842, 0) else {
             print("❌ ERROR: Could not load image from \(fileURL.path)")
             return false
         }
         if drawInContentIns(pdfContext, fileURL, mediaBox, string) == false {
             return false
         }
-        saveToPdfIns.endContext(pdfContext)
+        pdfContext.closePDF()
         return await saveToPdfIns.saveDataToPdf(fileURL: fileURL, data: pdfData as Data)
     }
 }

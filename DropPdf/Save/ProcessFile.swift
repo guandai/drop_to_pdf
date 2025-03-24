@@ -3,23 +3,32 @@ import Cocoa
 import Foundation
 import SwiftUI
 import UniformTypeIdentifiers  // for UTType, available in macOS 11+
-
+extension AppDelegate: @unchecked Sendable {}
 class ProcessFile: ObservableObject {
-    func processDroppedFiles(_ urls: [URL], _ appDelegate: AppDelegate) async
-        -> [URL: Bool]
-    {
+    func getSuccess(url: URL, appDelegate: AppDelegate) async -> Bool {
+        let process = self.processOneFile
+        return await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                let capturedAppDelegate = appDelegate
+                Task {
+                    if await process(url, capturedAppDelegate) {
+                        continuation.resume(returning: true)
+                    } else {
+                        continuation.resume(returning: false)
+                    }
+                }
+            }
+        }
+    }
+    
+    func processDroppedFiles(_ urls: [URL], _ appDelegate: AppDelegate) async -> [URL: Bool] {
         var results: [URL: Bool] = [:]
         for url in urls {
             print("📂 Dropped file: \(url.path)")
-            let success = await processOneFile(
-                url: url, appDelegate: appDelegate)
-            await updateProcessResult(
-                url: url, success: success, appDelegate: appDelegate)
-
+            let success = await getSuccess(url: url, appDelegate: appDelegate)
+            await updateProcessResult( url: url, success: success, appDelegate: appDelegate)
             if !success {
-                print(
-                    "❌ ERROR: Unsupported file type or failed conversion → \(url.lastPathComponent)"
-                )
+                print( "❌ ERROR: Unsupported file type or failed conversion → \(url.lastPathComponent)")
             }
             results[url] = success
         }
@@ -37,40 +46,44 @@ class ProcessFile: ObservableObject {
     /// 🔹 Process a single file and determines the correct conversion method
     func processOneFile(url: URL, appDelegate: AppDelegate) async -> Bool {
         print("📂 Processing file: \(url.path)")
-        let isPDFFileIns = self.isPDFFile
-        let isIllustratorFileIns = self.isIllustratorFile
-        let isRTFFileIns = self.isRTFFile
-        let isDocFileIns = self.isDocFile
-        let isDocxFileIns = self.isDocxFile
-        let isImageFileIns = self.isImageFile
-        let isTextFileIns = self.isTextFile
-        return await withCheckedContinuation { continuation in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                Task {
-                    if false {
-                        print("pass")
-                    } else if isPDFFileIns(url) {
-                        return await PdfToPDF().convertPdfToPDF(fileURL: url)
-                    } else if isIllustratorFileIns(url) {
-                        return await PdfToPDF().convertPdfToPDF(fileURL: url)
-                    } else if isRTFFileIns(url) {
-                        return await RtfToPDF().convertRtfToPDF(fileURL: url)
-                    } else if isDocFileIns(url) {
-                        return await DocToPDF().convertDocToPDF(fileURL: url)
-                    } else if isDocxFileIns(url) {
-                        return await DocxToPDF().convertDocxToPDF(fileURL: url)
-                    } else if isImageFileIns(url) {
-                        return await ImageToPDF().convertImageToPDF(fileURL: url)
-                    } else if isTextFileIns(url) {
-                        return await TxtToPDF().convertTxtToPDF(fileURL: url)
-                    } else {
-                        print(
-                            "⚠️ Unsupported file type → \(url.lastPathComponent)"
-                        )
-                        return false
-                    }
-                }
-            }
+//        let isPDFFileIns = self.isPDFFile
+//        let isIllustratorFileIns = self.isIllustratorFile
+//        let isRTFFileIns = self.isRTFFile
+//        let isRTFDFileIns = self.isRTFDFile
+//        let isHtmlFileIns = self.isHtmlFile
+//        let isDocFileIns = self.isDocFile
+//        let isDocxFileIns = self.isDocxFile
+//        let isImageFileIns = self.isImageFile
+//        let isTextFileIns = self.isTextFile
+
+        print("🧪 isRTFDFile: \(isRTFDFile(url))")
+        print("🧪 isRTFFile: \(isRTFFile(url))")
+        
+        if false {
+            print("pass")
+        } else if isPDFFile(url) {
+            return await PdfToPDF().convertPdfToPDF(fileURL: url)
+        } else if isIllustratorFile(url) {
+            return await PdfToPDF().convertPdfToPDF(fileURL: url)
+        } else if isRTFDFile(url) {
+            return await RtfdToPDF().convertRtfdToPDF(fileURL: url)
+        } else if isRTFFile(url) {
+            return await RtfToPDF().convertRtfToPDF(fileURL: url)
+        } else if isHtmlFile(url) {
+            return await HtmlToPDF().convertHtmlToPDF(fileURL: url)
+        } else if isDocFile(url) {
+            return await DocToPDF().convertDocToPDF(fileURL: url)
+        } else if isDocxFile(url) {
+            return await DocxToPDF().convertDocxToPDF(fileURL: url)
+        } else if isImageFile(url) {
+            return await ImageToPDF().convertImageToPDF(fileURL: url)
+        } else if isTextFile(url) {
+            return await PlainToPDF().convertTxtToPDF(fileURL: url)
+        } else {
+            print(
+                "⚠️ Unsupported file type → \(url.lastPathComponent)"
+            )
+            return false
         }
     }
 
@@ -87,21 +100,78 @@ class ProcessFile: ObservableObject {
         }
         return false
     }
-    
-    func isRTFFile(_ fileURL: URL) -> Bool {
+
+    func isHtmlFile(_ fileURL: URL) -> Bool {
+        // First, check the file extension
+        let htmlExtensions = ["html", "htm"]
+        if htmlExtensions.contains(fileURL.pathExtension.lowercased()) {
+            return true
+        }
+
+        // Then, check the content for typical HTML markers
         do {
             let data = try Data(contentsOf: fileURL, options: .mappedIfSafe)
-            if let textSample = String(data: data.prefix(16), encoding: .utf8) {
-                return textSample.trimmingCharacters(
-                    in: .whitespacesAndNewlines
-                )
+            if let textSample = String(data: data.prefix(256), encoding: .utf8)?
                 .lowercased()
-                .hasPrefix("{\\rtf")
+            {
+                return textSample.contains("<!doctype html")
+                    || textSample.contains("<html")
+                    || textSample.contains("<head")
+                    || textSample.contains("<body")
             }
         } catch {
             print(
-                "❌ Error reading file for RTF check: \(fileURL.path), \(error)")
+                "❌ Error reading file for HTML check: \(fileURL.path), \(error)"
+            )
         }
+
+        return false
+    }
+
+    func isRTFDFile(_ fileURL: URL) -> Bool {
+        // RTFD is a directory with .rtfd extension
+        var isDir: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: fileURL.path, isDirectory: &isDir),
+              isDir.boolValue,
+              fileURL.pathExtension.lowercased() == "rtfd"
+        else {
+            return false
+        }
+
+        // Check if it contains at least one .rtf file inside
+        if let contents = try? FileManager.default.contentsOfDirectory(atPath: fileURL.path) {
+            for item in contents {
+                if item.lowercased().hasSuffix(".rtf") {
+                    print("✅ Confirmed .rtfd content inside: \(item)")
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+
+    func isRTFFile(_ fileURL: URL) -> Bool {
+        // Skip directories like .rtfd bundles
+        var isDir: ObjCBool = false
+        if FileManager.default.fileExists(atPath: fileURL.path, isDirectory: &isDir), isDir.boolValue {
+            print("⛔ Skipping directory in isRTFFile: \(fileURL.lastPathComponent)")
+            return false
+        }
+
+        // Check for RTF signature
+        do {
+            let data = try Data(contentsOf: fileURL, options: .mappedIfSafe)
+            if let textSample = String(data: data.prefix(64), encoding: .utf8) {
+                let trimmed = textSample.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                let isMatch = trimmed.hasPrefix("{\\rtf")
+                print("🧪 isRTFFile result for \(fileURL.lastPathComponent): \(isMatch)")
+                return isMatch
+            }
+        } catch {
+            print("❌ Error reading file for RTF check: \(fileURL.path), \(error)")
+        }
+
         return false
     }
 
@@ -159,3 +229,4 @@ class ProcessFile: ObservableObject {
         }
     }
 }
+ 

@@ -1,6 +1,6 @@
 import Cocoa
 
-class RtfPrintView: NSView {
+class ContentPrintView: NSView {
     let textStorage: NSTextStorage
     let layoutManager = NSLayoutManager()
     var textContainer: NSTextContainer!
@@ -62,14 +62,15 @@ class RtfPrintView: NSView {
         guard pageIndex >= 0 && pageIndex < pageRanges.count else { return }
 
         let glyphRange = pageRanges[pageIndex]
-        let usedRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
 
+        let usedRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
         context.saveGState()
         context.translateBy(x: 0, y: -usedRect.origin.y)
+
         layoutManager.drawBackground(forGlyphRange: glyphRange, at: .zero)
         layoutManager.drawGlyphs(forGlyphRange: glyphRange, at: .zero)
         context.restoreGState()
     }
 
-    override var isFlipped: Bool { true }
+    override var isFlipped: Bool { return true }
 }

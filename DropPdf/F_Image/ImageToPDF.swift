@@ -48,7 +48,6 @@ class ImageToPDF {
         }
 
         saveToPdfIns.endContext(pdfContext)
-        
         return await saveToPdfIns.saveDataToPdf(fileURL: fileURL, data: pdfData as Data)
     }
 }
