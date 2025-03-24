@@ -22,23 +22,6 @@ class DocxToPDF {
         try FileManager.default.unzipItem(at: docxURL, to: destinationURL)
     }
 
-    func parseData(_ unzipURL: URL, docxProcess: ConvertDocxProcess) {
-        let docParser = DocxParser()
-        docParser
-            .parseDocument(
-                at: unzipURL.appendingPathComponent("word/document.xml")
-            )
-        for block in docParser.contentBlocks {
-            switch block {
-            case .paragraph(let runs):
-                docxProcess.processText(runs)
-            case .image(let rId, let w, let h):
-                docxProcess
-                    .processImage(unzipURL: unzipURL, rId: rId, w: w, h: h)
-            }
-        }
-    }
-
     func convertDocxToPDF(fileURL: URL) async -> Bool {
         print(">> convertDocxToPDF")
         guard getDidStart(fileURL: fileURL) else {
@@ -48,11 +31,9 @@ class DocxToPDF {
 
         let currentViewCopy = self.currentView ?? NSView()
         let yOffsetCopy = self.yOffset
-
         let pagesBox = Box(self.pages)
         let currentViewBox = Box(currentViewCopy)
         let yOffsetBox = Box(yOffsetCopy)
-
         let unzipURL = FileManager.default.temporaryDirectory
             .appendingPathComponent(
                 UUID().uuidString
@@ -73,14 +54,11 @@ class DocxToPDF {
             )
 
             docxPro.initPage()
-            self.parseData(unzipURL, docxProcess: docxPro)
-            // insert pages
+            docxPro.parseData(unzipURL, docxProcess: docxPro)
             let pdfDoc = await docxPro.insertPages()
-
             let saveToPdfIns = SaveToPdf()
             return await saveToPdfIns.savePdfDocumentToPdf(
                 fileURL: fileURL, pdfDoc: pdfDoc)
-
         } catch {
             print("❌ Error: \(error)")
             fileURL.stopAccessingSecurityScopedResource()

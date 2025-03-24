@@ -6,8 +6,9 @@ class ContentPrintView: NSView {
     var textContainer: NSTextContainer!
     var pageRanges: [NSRange] = []
     let pageSize: NSRect
-
+    
     init(frame: NSRect, attributedText: NSAttributedString) {
+        print(">> create print view")
         self.pageSize = frame
         self.textStorage = NSTextStorage(attributedString: attributedText)
         super.init(frame: frame)
@@ -27,19 +28,25 @@ class ContentPrintView: NSView {
         layoutManager.ensureLayout(for: textContainer)
 
         var glyphIndex = 0
+        
         while glyphIndex < layoutManager.numberOfGlyphs {
             let startIndex = glyphIndex
             var currentHeight: CGFloat = 0
-
+            
+            print("!run startIndex \(currentHeight)")
             while glyphIndex < layoutManager.numberOfGlyphs {
+                print("!run layoutManager \(layoutManager.numberOfGlyphs)")
+                
                 var lineRange = NSRange(location: 0, length: 0)
                 let lineRect = layoutManager.lineFragmentRect(forGlyphAt: glyphIndex, effectiveRange: &lineRange)
                 if currentHeight + lineRect.height > pageSize.height { break }
                 currentHeight += lineRect.height
+                print("!run currentHeight \(currentHeight)")
                 glyphIndex = NSMaxRange(lineRange)
             }
 
             let pageRange = NSRange(location: startIndex, length: glyphIndex - startIndex)
+            print("pageRange: \(pageRange)")
             pageRanges.append(pageRange)
         }
     }

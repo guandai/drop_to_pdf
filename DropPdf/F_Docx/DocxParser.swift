@@ -30,6 +30,7 @@ struct StyledText {
 
 enum DocxContentBlock {
     case paragraph([StyledText])
+    case pageBreak
     case image(String)
     case image(rId: String, width: CGFloat?, height: CGFloat?)
 }
@@ -91,6 +92,10 @@ class DocxParser: NSObject, XMLParserDelegate {
 
         if elementName == "w:p" {
             currentParagraph = []
+        }
+        
+        if elementName == "w:br", let type = attributeDict["w:type"], type == "page" {
+            contentBlocks.append(.pageBreak)
         }
 
         if elementName == "wp:extent" {
