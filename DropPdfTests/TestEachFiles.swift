@@ -3,7 +3,7 @@ import XCTest
 import Testing
 @testable import DropPdf
 
-class TestEach {
+public class TestEachFiles {
     let testFolder: URL
     let expectedSizes: [String: Int]
     
@@ -19,7 +19,7 @@ class TestEach {
         let result = await processFile.processDroppedFiles([fileURL], appDelegate)
         let success = result[fileURL] ?? false
         let prefix = fileName.components(separatedBy: ".").first!
-        let expectedSize = expectedSizes[prefix]
+        let expectedSize = expectedSizes[prefix] ?? -1
         
         #expect(success, "❌ Failed to process file: \(fileName)")
         
@@ -29,6 +29,7 @@ class TestEach {
         
         #expect(actualSize.isEqual(to: expectedSize),
                 "❌ Size mismatch for \(prefix): expecte \(expectedSize), got \(actualSize)")
+        
     }
 
     private func runSizeTest(for prefix: String) throws -> NSNumber? {

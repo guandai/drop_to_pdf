@@ -365,6 +365,7 @@
 			membershipExceptions = (
 				SizeTestFormats.swift,
 				SizeTestHtmls.swift,
+				TestEachFiles.swift,
 			);
 			target = 4935E49F2D6F14BC00E9AFBC /* DropPdfTests */;
 		};

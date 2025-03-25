@@ -13,7 +13,8 @@ class PrintToPDF {
         printInfo.rightMargin = margin
         printInfo.isHorizontallyCentered = true
         printInfo.isVerticallyCentered = false
-        printInfo.jobDisposition = .save
+//        printInfo.printer = NSPrinter(name: "VoidPrinter") ?? <#default value#>
+        printInfo.jobDisposition = NSPrintInfo.JobDisposition.save
         printInfo.dictionary()[
             NSPrintInfo.AttributeKey(
                 rawValue: NSPrintInfo.AttributeKey.jobSavingURL.rawValue)] =
