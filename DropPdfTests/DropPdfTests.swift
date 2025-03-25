@@ -70,7 +70,6 @@ struct DropPdfTests {
     }
     
     
-    
     @Test func testSize_doc() throws {
         try runSizeTest(for: "doc")
     }
@@ -127,6 +126,8 @@ struct DropPdfTests {
         let outputFiles = try fileManager.contentsOfDirectory(at: testFolder, includingPropertiesForKeys: nil)
         let pdfRegex = try NSRegularExpression(pattern: "^\(prefix)_[0-9]{8}_[0-9]{6}\\.pdf$")
 
+        Thread.sleep(forTimeInterval: 1) // 1 seconds delay
+        
         guard let matchedFile = outputFiles.first(where: {
             pdfRegex.firstMatch(in: $0.lastPathComponent, range: NSRange($0.lastPathComponent.startIndex..<$0.lastPathComponent.endIndex, in: $0.lastPathComponent)) != nil
         }) else {
@@ -135,9 +136,9 @@ struct DropPdfTests {
 
         let expectedSize = expectedSizes[prefix] ?? 0
         var actualSize: NSNumber = 0
-        let maxRetries = 5
+        let maxRetries = 3
 
-        for attempt in 1...maxRetries {
+        for _ in 1...maxRetries {
             let attributes = try fileManager.attributesOfItem(atPath: matchedFile.path)
             if let size = attributes[.size] as? NSNumber {
                 actualSize = size
@@ -145,7 +146,7 @@ struct DropPdfTests {
                     break
                 }
             }
-            Thread.sleep(forTimeInterval: 0.2) // 0.2 seconds delay
+            Thread.sleep(forTimeInterval: 0.5) // 0.2 seconds delay
         }
 
         #expect(actualSize.isEqual(to: expectedSize), "❌ Size mismatch for \(prefix): expected \(expectedSize), got \(actualSize)")
