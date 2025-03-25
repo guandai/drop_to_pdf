@@ -17,11 +17,10 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:DropPdf.xcodeproj",
-        "identifier" : "49235ED52D6CA9D3002F1FB6",
-        "name" : "DropPdfUITests"
+        "identifier" : "49F95B412D92783800ECB9CE",
+        "name" : "DropPdfUnitTests"
       }
     },
     {
@@ -30,6 +29,14 @@
         "containerPath" : "container:DropPdf.xcodeproj",
         "identifier" : "4935E49F2D6F14BC00E9AFBC",
         "name" : "DropPdfTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:DropPdf.xcodeproj",
+        "identifier" : "49235ED52D6CA9D3002F1FB6",
+        "name" : "DropPdfUITests"
       }
     }
   ],

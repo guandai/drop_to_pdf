@@ -6,8 +6,8 @@ final class DropPdfUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-//    @MainActor
-//    func testShowAndCloseProcessedFilesPanel() throws {
+    @MainActor
+    func testShowAndCloseProcessedFilesPanel() throws {
 //        let app = XCUIApplication()
 //        app.launch()
 //
@@ -27,5 +27,5 @@ final class DropPdfUITests: XCTestCase {
 //
 //        // 4️⃣ Verify the sheet disappears
 //        XCTAssertFalse(sheetTitle.waitForExistence(timeout: 2), "❌ Sheet did not close after clicking close")
-//    }
+    }
 }

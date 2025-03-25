@@ -363,7 +363,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				DropPdfTests.swift,
-				DropPdfTests2.swift,
 			);
 			target = 4935E49F2D6F14BC00E9AFBC /* DropPdfTests */;
 		};
@@ -1102,6 +1101,7 @@
 				DEVELOPMENT_TEAM = 7A8P3NLUDW;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_TESTABILITY = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/$(PRODUCT_NAME)/Info.plist";
