@@ -1,0 +1,53 @@
+{
+  "configurations" : [
+    {
+      "id" : "C14F049A-4CE0-4BD5-BD9C-7B3F902B3BFB",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:DropPdf.xcodeproj",
+      "identifier" : "49235EBB2D6CA9D1002F1FB6",
+      "name" : "DropPdf"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:TxtToPdf.xcodeproj",
+        "identifier" : "49F431862D685CD100BFA997",
+        "name" : "TxtToPdfTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:TxtToPdf.xcodeproj",
+        "identifier" : "49F431902D685CD100BFA997",
+        "name" : "TxtToPdfUITests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:DropPdf.xcodeproj",
+        "identifier" : "49235ED52D6CA9D3002F1FB6",
+        "name" : "DropPdfUITests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:DropPdf.xcodeproj",
+        "identifier" : "4935E49F2D6F14BC00E9AFBC",
+        "name" : "DropPdfTests"
+      }
+    }
+  ],
+  "version" : 1
+}
