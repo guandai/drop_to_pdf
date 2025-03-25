@@ -3,11 +3,13 @@ import Cocoa
 import Foundation
 import SwiftUI
 import UniformTypeIdentifiers  // for UTType, available in macOS 11+
+
 extension AppDelegate: @unchecked Sendable {}
 class ProcessFile: ObservableObject {
     func getSuccess(url: URL, appDelegate: AppDelegate) async -> Bool {
         let process = self.processOneFile
-        return await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
+        return await withCheckedContinuation {
+            (continuation: CheckedContinuation<Bool, Never>) in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 let capturedAppDelegate = appDelegate
                 Task {
@@ -20,15 +22,20 @@ class ProcessFile: ObservableObject {
             }
         }
     }
-    
-    func processDroppedFiles(_ urls: [URL], _ appDelegate: AppDelegate) async -> [URL: Bool] {
+
+    func processDroppedFiles(_ urls: [URL], _ appDelegate: AppDelegate) async
+        -> [URL: Bool]
+    {
         var results: [URL: Bool] = [:]
         for url in urls {
             print("📂 Dropped file: \(url.path)")
             let success = await getSuccess(url: url, appDelegate: appDelegate)
-            await updateProcessResult( url: url, success: success, appDelegate: appDelegate)
+            await updateProcessResult(
+                url: url, success: success, appDelegate: appDelegate)
             if !success {
-                print( "❌ ERROR: Unsupported file type or failed conversion → \(url.lastPathComponent)")
+                print(
+                    "❌ ERROR: Unsupported file type or failed conversion → \(url.lastPathComponent)"
+                )
             }
             results[url] = success
         }
@@ -48,12 +55,12 @@ class ProcessFile: ObservableObject {
         print("📂 Processing file: \(url.path)")
         if false {
             print("⬇️ pass")
+        } else if isRtfdFile(url) {
+            return await RtfdToPDF().convertRtfdToPDF(fileURL: url)
         } else if isPdfFile(url) {
             return await PdfToPDF().convertPdfToPDF(fileURL: url)
         } else if isIllustratorFile(url) {
             return await PdfToPDF().convertPdfToPDF(fileURL: url)
-        } else if isRtfdFile(url) {
-            return await RtfdToPDF().convertRtfdToPDF(fileURL: url)
         } else if isRtfFile(url) {
             return await RtfToPDF().convertRtfToPDF(fileURL: url)
         } else if isHtmlFile(url) {
@@ -83,7 +90,8 @@ class ProcessFile: ObservableObject {
             }
         } catch {
             print(
-                "❌ Error reading file for AI check: \(fileURL.path), \(error)")
+                "❌ Error reading in isIllustratorFile: \(fileURL.path), \(error)"
+            )
         }
         return false
     }
@@ -107,32 +115,75 @@ class ProcessFile: ObservableObject {
                     || textSample.contains("<body")
             }
         } catch {
-            print(
-                "❌ Error checking file for HTML: \(fileURL.path), \(error)"
-            )
+            print("❌ Error reading in isHtmlFile: \(fileURL.path), \(error)")
         }
 
         return false
     }
 
+    func isImageFile(_ fileURL: URL) -> Bool {
+        do {
+            let data = try Data(contentsOf: fileURL, options: .mappedIfSafe)
+            let prefix = data.prefix(8)
+
+            // JPEG: FF D8 FF
+            if prefix.starts(with: [0xFF, 0xD8, 0xFF]) {
+                return true
+            }
+
+            // PNG: 89 50 4E 47 0D 0A 1A 0A
+            if prefix.starts(with: [0x89, 0x50, 0x4E, 0x47]) {
+                return true
+            }
+
+            // GIF: GIF87a or GIF89a
+            if let str = String(data: data.prefix(6), encoding: .ascii),
+               str.hasPrefix("GIF") {
+                return true
+            }
+
+            // BMP: 42 4D
+            if prefix.starts(with: [0x42, 0x4D]) {
+                return true
+            }
+
+            // TIFF: 49 49 2A 00 or 4D 4D 00 2A
+            if prefix.starts(with: [0x49, 0x49, 0x2A, 0x00]) ||
+               prefix.starts(with: [0x4D, 0x4D, 0x00, 0x2A]) {
+                return true
+            }
+        } catch {
+            print("❌ Error reading in isImageFile: \(fileURL.path), \(error)")
+        }
+
+        return false
+    }
     func isRtfdFile(_ fileURL: URL) -> Bool {
         // RTFD is a directory with .rtfd extension
         var isDir: ObjCBool = false
-        guard FileManager.default.fileExists(atPath: fileURL.path, isDirectory: &isDir),
-              isDir.boolValue,
-              fileURL.pathExtension.lowercased() == "rtfd"
+        guard
+            FileManager.default.fileExists(
+                atPath: fileURL.path, isDirectory: &isDir),
+            isDir.boolValue,
+            fileURL.pathExtension.lowercased() == "rtfd"
         else {
             return false
         }
 
-        // Check if it contains at least one .rtf file inside
-        if let contents = try? FileManager.default.contentsOfDirectory(at: fileURL, includingPropertiesForKeys: nil) {
+        do {
+            // Check if it contains at least one .rtf file inside
+            let contents = try FileManager.default.contentsOfDirectory(
+                at: fileURL, includingPropertiesForKeys: nil)
+            
             for itemURL in contents {
                 if itemURL.pathExtension.lowercased() == "rtf" {
-                    print("✅ Confirmed .rtfd content inside: \(itemURL.lastPathComponent)")
+                    print( "✅ Confirmed .rtfd inside: \(itemURL.lastPathComponent)")
                     return true
                 }
             }
+        
+        } catch {
+            print("❌ Error reading in isRtfdFile: \(fileURL.path), \(error)")
         }
 
         return false
@@ -141,8 +192,12 @@ class ProcessFile: ObservableObject {
     func isRtfFile(_ fileURL: URL) -> Bool {
         // Skip directories like .rtfd bundles
         var isDir: ObjCBool = false
-        if FileManager.default.fileExists(atPath: fileURL.path, isDirectory: &isDir), isDir.boolValue {
-            print("⛔ Skipping directory in isRtfFile: \(fileURL.lastPathComponent)")
+        if FileManager.default.fileExists(
+            atPath: fileURL.path, isDirectory: &isDir), isDir.boolValue
+        {
+            print(
+                "⛔ Skipping directory in isRtfFile: \(fileURL.lastPathComponent)"
+            )
             return false
         }
 
@@ -150,13 +205,15 @@ class ProcessFile: ObservableObject {
         do {
             let data = try Data(contentsOf: fileURL, options: .mappedIfSafe)
             if let textSample = String(data: data.prefix(64), encoding: .utf8) {
-                let trimmed = textSample.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                let trimmed = textSample.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ).lowercased()
                 let isMatch = trimmed.hasPrefix("{\\rtf")
 
                 return isMatch
             }
         } catch {
-            print("❌ Error checking file for RTF check: \(fileURL.path), \(error)")
+            print("❌ Error reading in isRtfFile: \(fileURL.path), \(error)")
         }
 
         return false
@@ -169,7 +226,7 @@ class ProcessFile: ObservableObject {
                 return header == "%PDF-"
             }
         } catch {
-            print("❌ Error reading file for PDF: \(fileURL.path), \(error)")
+            print("❌ Error reading in isPdfFile: \(fileURL.path), \(error)")
         }
         return false
     }
@@ -187,11 +244,6 @@ class ProcessFile: ObservableObject {
         }
     }
 
-    /// 🔹 Check if the file is an image
-    func isImageFile(_ fileURL: URL) -> Bool {
-        return NSImage(contentsOf: fileURL) != nil
-    }
-
     /// 🔹 Check if the file is a DOCX
     func isDocxFile(_ fileURL: URL) -> Bool {
         do {
@@ -199,6 +251,7 @@ class ProcessFile: ObservableObject {
             // ZIP archives typically start with: 0x50 0x4B 0x03 0x04
             return data.prefix(4) == Data([0x50, 0x4B, 0x03, 0x04])
         } catch {
+            print("❌ Error reading in isDocxFile: \(fileURL.path), \(error)")
             return false
         }
     }
@@ -210,8 +263,8 @@ class ProcessFile: ObservableObject {
             let ole2Magic = Data([0xD0, 0xCF, 0x11, 0xE0])
             return data.prefix(4) == ole2Magic
         } catch {
+            print("❌ Error reading in isDocFile: \(fileURL.path), \(error)")
             return false
         }
     }
 }
- 
