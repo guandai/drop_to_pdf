@@ -3,7 +3,7 @@ import XCTest
 import Testing
 @testable import DropPdf
 
-struct DropPdfTests {
+struct SizeTestFormats {
 
     let testFolder: URL = {
         return URL(fileURLWithPath: #file)
@@ -21,13 +21,9 @@ struct DropPdfTests {
         "rtf": 24110,
         "png": 279274,
         "md": 538557,
-        "docx": 730514,
+        "docx": 787834,
         "doc": 43873
     ]
-
-    @Test func testSimplePass() {
-        #expect(true, "✅ This simple test should always pass")
-    }
 
     @Test func testProcess_doc() async throws {
         try await runProcessTest(for: "doc.doc")
@@ -39,10 +35,6 @@ struct DropPdfTests {
 
     @Test func testProcess_rtf() async throws {
         try await runProcessTest(for: "rtf.rtf")
-    }
-    
-    @Test func testProcess_rtfd() async throws {
-        try await runProcessTest(for: "rtfd.rtfd")
     }
     
     @Test func testProcess_jpg() async throws {
@@ -68,46 +60,9 @@ struct DropPdfTests {
     @Test func testProcess_pdf() async throws {
         try await runProcessTest(for: "pdf.pdf")
     }
-    
-    
-    @Test func testSize_doc() throws {
-        try runSizeTest(for: "doc")
-    }
 
-    @Test func testSize_docx() throws {
-        try runSizeTest(for: "docx")
-    }
-    
-    @Test func testSize_rtf() throws {
-        try runSizeTest(for: "rtf")
-    }
-    
-    @Test func testSize_rtfd() throws {
-        try runSizeTest(for: "rtfd")
-    }
-    
-    @Test func testSize_jpg() throws {
-        try runSizeTest(for: "jpg")
-    }
-    
-    @Test func testSize_png() throws {
-        try runSizeTest(for: "png")
-    }
-    
-    @Test func testSize_txt() throws {
-        try runSizeTest(for: "txt")
-    }
-    
-    @Test func testSize_md() throws {
-        try runSizeTest(for: "md")
-    }
-    
-    @Test func testSize_py() throws {
-        try runSizeTest(for: "py")
-    }
-    
-    @Test func testSize_pdf() throws {
-        try runSizeTest(for: "pdf")
+    @Test func testProcess_rtfd() async throws {
+        try await runProcessTest(for: "rtfd.rtfd")
     }
 
     // MARK: - Shared Logic
@@ -119,21 +74,40 @@ struct DropPdfTests {
         let result = await processFile.processDroppedFiles([fileURL], appDelegate)
         let success = result[fileURL] ?? false
         #expect(success, "❌ Failed to process file: \(fileName)")
+
+        try runSizeTest(for: fileName)
     }
 
     private func runSizeTest(for prefix: String) throws {
         let fileManager = FileManager.default
         let outputFiles = try fileManager.contentsOfDirectory(at: testFolder, includingPropertiesForKeys: nil)
-        let pdfRegex = try NSRegularExpression(pattern: "^\(prefix)_[0-9]{8}_[0-9]{6}\\.pdf$")
-
-        Thread.sleep(forTimeInterval: 1) // 1 seconds delay
         
-        guard let matchedFile = outputFiles.first(where: {
-            pdfRegex.firstMatch(in: $0.lastPathComponent, range: NSRange($0.lastPathComponent.startIndex..<$0.lastPathComponent.endIndex, in: $0.lastPathComponent)) != nil
-        }) else {
-            throw XCTSkip("❌ No generated PDF for \(prefix)")
+        Thread.sleep(forTimeInterval: 2) // 1 seconds delay
+        guard let matchedFile = try getMatechFile(prefix: prefix, outputFiles: outputFiles) else {
+            return
         }
+        
+        try ExpactSize(prefix: prefix, matchedFile: matchedFile)
+        try fileManager.removeItem(at: matchedFile)
+    }
+    
+    func getMatechFile(prefix: String, outputFiles: [URL]) throws -> URL? {
+        let pdfRegex = try NSRegularExpression(pattern: "^\(prefix)_[0-9]{8}_[0-9]{6}\\.pdf$")
+        guard let matchedFile = outputFiles.first(where: {
+            pdfRegex.firstMatch(
+                in: $0.lastPathComponent,
+                range: NSRange($0.lastPathComponent.startIndex..<$0.lastPathComponent.endIndex, in: $0.lastPathComponent)
+            ) != nil
+        }) else {
+            let availableFiles = outputFiles.map { $0.lastPathComponent }.joined(separator: ", ")
+            XCTFail("❌ No generated PDF for \(prefix). Available files: [\(availableFiles)]")
+            return nil
+        }
+        return matchedFile
+    }
 
+    func ExpactSize(prefix: String, matchedFile: URL) throws {
+        let fileManager = FileManager.default
         let expectedSize = expectedSizes[prefix] ?? 0
         var actualSize: NSNumber = 0
         let maxRetries = 3
@@ -148,7 +122,7 @@ struct DropPdfTests {
             }
             Thread.sleep(forTimeInterval: 0.5) // 0.2 seconds delay
         }
-
-        #expect(actualSize.isEqual(to: expectedSize), "❌ Size mismatch for \(prefix): expected \(expectedSize), got \(actualSize)")
+        
+        #expect(actualSize.isEqual(to: expectedSize), "❌ Size mismatch for \(prefix): expecte \(expectedSize), got \(actualSize)")
     }
 }

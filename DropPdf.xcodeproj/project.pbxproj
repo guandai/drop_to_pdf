@@ -363,7 +363,8 @@
 		49F95B502D9278AD00ECB9CE /* Exceptions for "DropPdfTests" folder in "DropPdfTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				DropPdfTests.swift,
+				SizeTestFormats.swift,
+				SizeTestHtmls.swift,
 			);
 			target = 4935E49F2D6F14BC00E9AFBC /* DropPdfTests */;
 		};
