@@ -344,6 +344,7 @@
 		49CBECDD2D9270C300B3FFCB /* standalone.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = standalone.html; sourceTree = "<group>"; };
 		49CBECDE2D9270C300B3FFCB /* Zive - Enterprise AI Platform.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "Zive - Enterprise AI Platform.html"; sourceTree = "<group>"; };
 		49F95B422D92783800ECB9CE /* DropPdfUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DropPdfUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		49F95C6B2D929CEC00ECB9CE /* test.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = test.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -776,6 +777,7 @@
 		49CBECE02D9270C300B3FFCB /* TestFiles */ = {
 			isa = PBXGroup;
 			children = (
+				49F95C6B2D929CEC00ECB9CE /* test.sh */,
 				49CBEBD22D9270C300B3FFCB /* formats */,
 				49CBECDF2D9270C300B3FFCB /* htmls */,
 			);

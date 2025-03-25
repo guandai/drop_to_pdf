@@ -29,84 +29,86 @@ struct DropPdfTests {
         #expect(true, "✅ This simple test should always pass")
     }
 
+    @Test func testProcess_doc() async throws {
+        try await runProcessTest(for: "doc.doc")
+    }
+    
     @Test func testProcess_docx() async throws {
         try await runProcessTest(for: "docx.docx")
-    }
-
-    @Test func testSize_docx() throws {
-        try runSizeTest(for: "docx")
     }
 
     @Test func testProcess_rtf() async throws {
         try await runProcessTest(for: "rtf.rtf")
     }
-
-    @Test func testSize_rtf() throws {
-        try runSizeTest(for: "rtf")
+    
+    @Test func testProcess_rtfd() async throws {
+        try await runProcessTest(for: "rtfd.rtfd")
+    }
+    
+    @Test func testProcess_jpg() async throws {
+        try await runProcessTest(for: "jpg.jpg")
+    }
+    
+    @Test func testProcess_png() async throws {
+        try await runProcessTest(for: "png.png")
     }
 
     @Test func testProcess_txt() async throws {
         try await runProcessTest(for: "txt.txt")
     }
-
-    @Test func testSize_txt() throws {
-        try runSizeTest(for: "txt")
-    }
-
-    @Test func testProcess_png() async throws {
-        try await runProcessTest(for: "png.png")
-    }
-
-    @Test func testSize_png() throws {
-        try runSizeTest(for: "png")
-    }
-
-    @Test func testProcess_jpg() async throws {
-        try await runProcessTest(for: "jpg.jpg")
-    }
-
-    @Test func testSize_jpg() throws {
-        try runSizeTest(for: "jpg")
-    }
-
-    @Test func testProcess_rtfd() async throws {
-        try await runProcessTest(for: "rtfd.rtfd")
-    }
-
-    @Test func testSize_rtfd() throws {
-        try runSizeTest(for: "rtfd")
-    }
-
+    
     @Test func testProcess_md() async throws {
         try await runProcessTest(for: "md.md")
     }
-
-    @Test func testSize_md() throws {
-        try runSizeTest(for: "md")
-    }
-
-    @Test func testProcess_pdf() async throws {
-        try await runProcessTest(for: "pdf.pdf")
-    }
-
-    @Test func testSize_pdf() throws {
-        try runSizeTest(for: "pdf")
-    }
-
+    
     @Test func testProcess_py() async throws {
         try await runProcessTest(for: "py.py")
     }
+    
+    @Test func testProcess_pdf() async throws {
+        try await runProcessTest(for: "pdf.pdf")
+    }
+    
+    
+    
+    @Test func testSize_doc() throws {
+        try runSizeTest(for: "doc")
+    }
 
+    @Test func testSize_docx() throws {
+        try runSizeTest(for: "docx")
+    }
+    
+    @Test func testSize_rtf() throws {
+        try runSizeTest(for: "rtf")
+    }
+    
+    @Test func testSize_rtfd() throws {
+        try runSizeTest(for: "rtfd")
+    }
+    
+    @Test func testSize_jpg() throws {
+        try runSizeTest(for: "jpg")
+    }
+    
+    @Test func testSize_png() throws {
+        try runSizeTest(for: "png")
+    }
+    
+    @Test func testSize_txt() throws {
+        try runSizeTest(for: "txt")
+    }
+    
+    @Test func testSize_md() throws {
+        try runSizeTest(for: "md")
+    }
+    
     @Test func testSize_py() throws {
         try runSizeTest(for: "py")
     }
-
-    @Test func testProcess_doc() async throws {
-        try await runProcessTest(for: "doc.doc")
-    }
-
-    @Test func testSize_doc() throws {
-        try runSizeTest(for: "doc")
+    
+    @Test func testSize_pdf() throws {
+        try runSizeTest(for: "pdf")
     }
 
     // MARK: - Shared Logic
@@ -131,9 +133,21 @@ struct DropPdfTests {
             throw XCTSkip("❌ No generated PDF for \(prefix)")
         }
 
-        let attributes = try fileManager.attributesOfItem(atPath: matchedFile.path)
-        let fileSize = attributes[.size] as? NSNumber ?? 0
         let expectedSize = expectedSizes[prefix] ?? 0
-        #expect(fileSize.isEqual(to: expectedSize), "❌ Size mismatch for \(prefix): expected \(expectedSize), got \(fileSize)")
+        var actualSize: NSNumber = 0
+        let maxRetries = 5
+
+        for attempt in 1...maxRetries {
+            let attributes = try fileManager.attributesOfItem(atPath: matchedFile.path)
+            if let size = attributes[.size] as? NSNumber {
+                actualSize = size
+                if actualSize.intValue > 0 {
+                    break
+                }
+            }
+            Thread.sleep(forTimeInterval: 0.2) // 0.2 seconds delay
+        }
+
+        #expect(actualSize.isEqual(to: expectedSize), "❌ Size mismatch for \(prefix): expected \(expectedSize), got \(actualSize)")
     }
 }
