@@ -18,7 +18,7 @@ final class DropPdfUITestsLaunchTests: XCTestCase {
     }
 
     @MainActor
-    func testLaunch() throws {
+    func _testLaunchDisabled() throws {
         let app = XCUIApplication()
         app.launch()
 

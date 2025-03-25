@@ -41,8 +41,9 @@
             buildForProfiling = "YES"
             buildForArchiving = "YES"
             buildForAnalyzing = "YES">
-            <AutocreatedTestPlanReference>
-            </AutocreatedTestPlanReference>
+            <TestPlanReference
+               reference = "container:DropPdf.xctestplan">
+            </TestPlanReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
@@ -50,8 +51,13 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:DropPdf.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+      </TestPlans>
       <Testables>
          <TestableReference
             skipped = "NO"
@@ -94,6 +100,17 @@
                BlueprintIdentifier = "4935E49F2D6F14BC00E9AFBC"
                BuildableName = "DropPdfTests.xctest"
                BlueprintName = "DropPdfTests"
+               ReferencedContainer = "container:DropPdf.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49F95B412D92783800ECB9CE"
+               BuildableName = "DropPdfUnitTests.xctest"
+               BlueprintName = "DropPdfUnitTests"
                ReferencedContainer = "container:DropPdf.xcodeproj">
             </BuildableReference>
          </TestableReference>

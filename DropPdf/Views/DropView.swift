@@ -33,6 +33,7 @@ struct DropView: View {
                         .foregroundColor(.blue)
                 }
                 .buttonStyle(PlainButtonStyle()) // No extra styling
+                .accessibilityIdentifier("infoButton")
             }
             .padding(.top, 10)
 
@@ -186,6 +187,7 @@ struct ProcessedFilesPanel: View {
             .cornerRadius(6)
             .padding(.top, 0)
             .buttonStyle(.plain)
+            .accessibilityIdentifier("closeButton") 
             
         }
         .frame(width: DropView.resultsLength, height: DropView.resultsLength)

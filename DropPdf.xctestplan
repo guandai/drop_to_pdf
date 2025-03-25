@@ -19,22 +19,6 @@
     {
       "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:TxtToPdf.xcodeproj",
-        "identifier" : "49F431862D685CD100BFA997",
-        "name" : "TxtToPdfTests"
-      }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:TxtToPdf.xcodeproj",
-        "identifier" : "49F431902D685CD100BFA997",
-        "name" : "TxtToPdfUITests"
-      }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
         "containerPath" : "container:DropPdf.xcodeproj",
         "identifier" : "49235ED52D6CA9D3002F1FB6",
         "name" : "DropPdfUITests"
