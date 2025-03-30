@@ -89,8 +89,8 @@
 		49CBEBD92D9270C300B3FFCB /* adforensics_csmcollection.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = adforensics_csmcollection.js; sourceTree = "<group>"; };
 		49CBEBDA2D9270C300B3FFCB /* admi.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = admi.html; sourceTree = "<group>"; };
 		49CBEBDB2D9270C300B3FFCB /* ads.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = ads.min.js; sourceTree = "<group>"; };
-		49CBEBDC2D9270C300B3FFCB /* adsct */ = {isa = PBXFileReference; lastKnownFileType = file; path = adsct; sourceTree = "<group>"; };
-		49CBEBDD2D9270C300B3FFCB /* adsct(1) */ = {isa = PBXFileReference; lastKnownFileType = file; path = "adsct(1)"; sourceTree = "<group>"; };
+		49CBEBDC2D9270C300B3FFCB /* adsct */ = {isa = PBXFileReference; lastKnownFileType = text; path = adsct; sourceTree = "<group>"; };
+		49CBEBDD2D9270C300B3FFCB /* adsct(1) */ = {isa = PBXFileReference; lastKnownFileType = text; path = "adsct(1)"; sourceTree = "<group>"; };
 		49CBEBDE2D9270C300B3FFCB /* adserver.min.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = adserver.min.css; sourceTree = "<group>"; };
 		49CBEBDF2D9270C300B3FFCB /* aframe.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = aframe.html; sourceTree = "<group>"; };
 		49CBEBE02D9270C300B3FFCB /* AGSKWxVNbUZzAF0aAC_L-0jFn_gs4vSooEjjU8mFPyc_vv5h6UIF5B8W12iHuxIW5EQHuNnDADq031_yQzbI8MLdhxq-dRTVDCVrc0J3b12gI_Xzto3hgkPIs-QMW1F88YXi53lh0MnvCg== */ = {isa = PBXFileReference; lastKnownFileType = text; path = "AGSKWxVNbUZzAF0aAC_L-0jFn_gs4vSooEjjU8mFPyc_vv5h6UIF5B8W12iHuxIW5EQHuNnDADq031_yQzbI8MLdhxq-dRTVDCVrc0J3b12gI_Xzto3hgkPIs-QMW1F88YXi53lh0MnvCg=="; sourceTree = "<group>"; };
@@ -113,7 +113,7 @@
 		49CBEBF12D9270C300B3FFCB /* async_usersync.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = async_usersync.html; sourceTree = "<group>"; };
 		49CBEBF22D9270C300B3FFCB /* autocomplete.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = autocomplete.js; sourceTree = "<group>"; };
 		49CBEBF32D9270C300B3FFCB /* beacon.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = beacon.html; sourceTree = "<group>"; };
-		49CBEBF42D9270C300B3FFCB /* blank */ = {isa = PBXFileReference; lastKnownFileType = file; path = blank; sourceTree = "<group>"; };
+		49CBEBF42D9270C300B3FFCB /* blank */ = {isa = PBXFileReference; lastKnownFileType = text; path = blank; sourceTree = "<group>"; };
 		49CBEBF52D9270C300B3FFCB /* bundle.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bundle.js; sourceTree = "<group>"; };
 		49CBEBF62D9270C300B3FFCB /* common.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = common.css; sourceTree = "<group>"; };
 		49CBEBF72D9270C300B3FFCB /* container.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = container.html; sourceTree = "<group>"; };
@@ -135,7 +135,7 @@
 		49CBEC072D9270C300B3FFCB /* iaw.min.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = iaw.min.css; sourceTree = "<group>"; };
 		49CBEC082D9270C300B3FFCB /* iaw.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = iaw.min.js; sourceTree = "<group>"; };
 		49CBEC092D9270C300B3FFCB /* id5-api.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "id5-api.js"; sourceTree = "<group>"; };
-		49CBEC0A2D9270C300B3FFCB /* imp */ = {isa = PBXFileReference; lastKnownFileType = file; path = imp; sourceTree = "<group>"; };
+		49CBEC0A2D9270C300B3FFCB /* imp */ = {isa = PBXFileReference; lastKnownFileType = text; path = imp; sourceTree = "<group>"; };
 		49CBEC0B2D9270C300B3FFCB /* It-costs-a-fortune_Liz_19.03.2025_164287797-e1738008356889.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "It-costs-a-fortune_Liz_19.03.2025_164287797-e1738008356889.jpg"; sourceTree = "<group>"; };
 		49CBEC0C2D9270C300B3FFCB /* iu3.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = iu3.html; sourceTree = "<group>"; };
 		49CBEC0D2D9270C300B3FFCB /* ixmatch.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = ixmatch.html; sourceTree = "<group>"; };

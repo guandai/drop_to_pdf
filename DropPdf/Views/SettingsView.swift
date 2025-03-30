@@ -13,32 +13,36 @@ struct SettingsView: View {
                 .font(.headline)
             
             ScrollView {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading) { // Ensure leading alignment for the VStack
                     if permissionsManager.grantedFolderURLs.isEmpty {
-                        Text("No folders selected.")
-                            .foregroundColor(.red)
+                        HStack {
+                            Text("No folders selected.")
+                                .foregroundColor(.red)
+                            Spacer() // Push the text to the left
+                        }
                     } else {
                         ForEach(
                             Array(permissionsManager.grantedFolderURLs),
                             id: \.self
                         ) { folder in
-                            
-                            Text(folder.path)
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                                .lineLimit(1)
-                                .padding(.vertical, 2)
+                            HStack {
+                                Text(folder.path)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                    .lineLimit(1)
+                                Spacer() // Push the text to the left
+                            }
                         }
                     }
                 }
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(width: 340, height: 180)
+            .frame(width: 350, height: 180)
             .background(Color(NSColor.windowBackgroundColor))  // Light background for contrast (macOS)
-            .clipShape(RoundedRectangle(cornerRadius: 10))  // Rounded edges
             .overlay(
-                RoundedRectangle(cornerRadius: 20)
+                RoundedRectangle(cornerRadius: 10)
                     .stroke(Color.gray.opacity(0.5), lineWidth: 1)  // Subtle border
             )
             
@@ -78,7 +82,6 @@ struct SettingsView: View {
                     .padding(.top, 0)
             }
             .buttonStyle(.plain)
-            
         }
         .frame(width: 350, height: 300)
         .padding()
