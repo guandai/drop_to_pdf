@@ -1,76 +1,74 @@
 import Cocoa
 import SwiftUI
-import UniformTypeIdentifiers
 
-class Windows: ObservableObject {
-    var settingsWindow: NSWindow?
-    var window: NSWindow?
-    var appDelegate: AppDelegate
+class Menus {
+    var mainMenu: NSMenu?
+    var windows: Windows?
 
-    init(_ window: NSWindow? = nil, _ appDelegate: AppDelegate) {
-        self.appDelegate = appDelegate
-        self.window = window
+    init(_ windows: Windows?) {
+        self.windows = windows
+        mainMenu = NSMenu()
     }
 
-    func setupMainWindow(_ window: NSWindow? = nil) {
-        if let existingWindow = self.window, existingWindow.isVisible {
-            existingWindow.makeKeyAndOrderFront(nil)
-            NSApplication.shared.activate(ignoringOtherApps: true)
-            return
+    func setupMenuBar() {
+        guard let mainMenu = mainMenu else { return }
+
+        // App Menu
+        let appMenuItem = NSMenuItem()
+        mainMenu.addItem(appMenuItem)
+        let appMenu = NSMenu()
+        appMenuItem.submenu = appMenu
+
+        // "About" menu item
+        let aboutMenuItem = NSMenuItem(title: "About \(Bundle.main.appName)", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "b")
+        appMenu.addItem(aboutMenuItem)
+
+        // Separator
+        appMenu.addItem(NSMenuItem.separator())
+
+        // Settings menu item
+        let settingsMenuItem = NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: ",")
+        settingsMenuItem.target = self
+        appMenu.addItem(settingsMenuItem)
+
+        // *** Add your custom menu item here, BELOW the "Settings" item ***
+        let customMenuItem = NSMenuItem(title: "Show Box", action: #selector(showDropView), keyEquivalent: "o")
+        customMenuItem.target = self
+        appMenu.addItem(customMenuItem)
+
+        // Support Menu Item
+        let supportMenuItem = NSMenuItem(title: "Support", action: #selector(openSupportURL), keyEquivalent: "u")
+        supportMenuItem.target = self
+        appMenu.addItem(supportMenuItem)
+
+        // *** Add another separator if you want visual separation ***
+        appMenu.addItem(NSMenuItem.separator())
+
+        // "Quit" menu item
+        let quitMenuItem = NSMenuItem(title: "Quit \(Bundle.main.appName)", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(quitMenuItem)
+
+        NSApplication.shared.mainMenu = mainMenu
+    }
+
+    @objc func openSettings() {
+        windows?.showSettingsWindow()
+    }
+
+    @objc func showDropView() {
+        print("showDropViewWindow!")
+        windows?.showDropViewWindow()
+    }
+
+    @objc func openSupportURL() {
+        if let url = URL(string: "https://twindai.com/droppdf") {
+            NSWorkspace.shared.open(url)
         }
-
-        let hostingController = NSHostingController(
-            rootView: AnyView(
-                DropView()
-                    .environmentObject(appDelegate)
-                    .environmentObject(appDelegate.processFile)
-            ))
-
-        let newWindow = NSWindow(
-            contentRect: NSRect(x: 200, y: 200, width: 400, height: 300),
-            styleMask: [.titled, .closable, .resizable],
-            backing: .buffered,
-            defer: false
-        )
-        newWindow.center()
-        newWindow.title = "> Drop To PDF"
-        newWindow.contentView = hostingController.view
-        newWindow.makeKeyAndOrderFront(nil)
-        newWindow.isReleasedWhenClosed = false
-
-        self.window = newWindow
-        NSApplication.shared.activate(ignoringOtherApps: true)
     }
-    
-    func setupSettingsWindow(_ window: NSWindow? = nil) {
-        if settingsWindow == nil {
-            let settingsHostingController = NSHostingController(rootView: SettingsView())
-            
-            let newSettingsWindow = NSWindow(
-                contentRect: NSRect(x: 200, y: 200, width: 400, height: 300),
-                styleMask: [.titled, .closable, .resizable],
-                backing: .buffered,
-                defer: false
-            )
-            newSettingsWindow.center()
-            newSettingsWindow.title = "Settings"
-            newSettingsWindow.contentView = settingsHostingController.view
-            newSettingsWindow.makeKeyAndOrderFront(nil)
-            newSettingsWindow.isReleasedWhenClosed = false
-            
-            self.settingsWindow = newSettingsWindow
-        } else {
-            settingsWindow?.makeKeyAndOrderFront(nil)
-        }
-        NSApplication.shared.activate(ignoringOtherApps: true)
-    }
+}
 
-
-    func showDropViewWindow() {
-        setupMainWindow()
-    }
-    
-    func showSettingsWindow() {
-        setupSettingsWindow()
+extension Bundle {
+    var appName: String {
+        return self.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "App"
     }
 }

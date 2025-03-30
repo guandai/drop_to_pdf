@@ -7,6 +7,7 @@ struct DropPdf: App {
 
     init() {
         UserDefaults.standard.set(false, forKey: "NSPrintSpoolerLogToConsole")
+        appDelegate.menus?.setupMenuBar()
     }
     
     var body: some Scene {
