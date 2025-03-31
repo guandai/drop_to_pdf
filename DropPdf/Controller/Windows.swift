@@ -34,7 +34,7 @@ class Windows: ObservableObject {
             defer: false
         )
         newWindow.center()
-        newWindow.title = "> Drop To PDF"
+        newWindow.title = "Drop To PDF"
         newWindow.contentView = hostingController.view
         newWindow.makeKeyAndOrderFront(nil)
         newWindow.isReleasedWhenClosed = false
