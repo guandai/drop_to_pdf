@@ -46,6 +46,7 @@ class SaveToPdf {
             }
 
             if !PermissionsManager().isFolderGranted(path) {
+                print(">>>  reject  permission")
                 return false
             }
         }

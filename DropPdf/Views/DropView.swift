@@ -113,7 +113,7 @@ struct DropView: View {
                 defer { dispatchGroup.leave() }
 
                 guard let data = item as? Data, let fileURL = URL(dataRepresentation: data, relativeTo: nil) else { return }
-
+                print(">>>>data fileurl \(fileURL)")
                 DispatchQueue.main.async {
                     newFiles.append(fileURL)
                 }

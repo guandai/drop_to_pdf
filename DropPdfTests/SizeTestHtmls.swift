@@ -5,7 +5,7 @@ import Testing
 
 struct SizeTestHtmls {
     let testFolder: URL = {
-        return URL(fileURLWithPath: #file)
+        return URL(fileURLWithPath: NameMod.toFileString(#file))
             .deletingLastPathComponent()
             .deletingLastPathComponent()
             .appendingPathComponent("TestFiles/htmls")

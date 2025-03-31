@@ -12,44 +12,46 @@ struct SettingsView: View {
             Text("Allowed Folders:")
                 .font(.headline)
             
-            ScrollView {
-                VStack(alignment: .leading) { // Ensure leading alignment for the VStack
+            ScrollView([.horizontal, .vertical]) {
+                VStack(alignment: .leading) {
                     if permissionsManager.grantedFolderURLs.isEmpty {
-                        HStack {
-                            Text("No folders selected.")
-                                .foregroundColor(.red)
-                            Spacer() // Push the text to the left
-                        }
+                        Text("No folders selected.")
+                            .foregroundColor(.red)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
-                        ForEach(
-                            Array(permissionsManager.grantedFolderURLs),
-                            id: \.self
-                        ) { folder in
-                            HStack {
-                                Text(folder.path)
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                                    .lineLimit(1)
-                                Spacer() // Push the text to the left
-                            }
+                        ForEach(Array(permissionsManager.grantedFolderURLs), id: \.self) { folder in
+                            Text(folder.path)
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                                .lineLimit(1)
+                                .frame(maxWidth: .infinity, alignment: .leading)  // Add this
                         }
                     }
                 }
                 .padding(.horizontal, 10)
-                .padding(.vertical, 4)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 4)  // Only top padding for vertical alignment
+                .frame(
+                    maxWidth: .infinity,
+                    minHeight: 180,  // Match scroll view height
+                    alignment: .topLeading
+                )
             }
             .frame(width: 350, height: 180)
-            .background(Color(NSColor.windowBackgroundColor))  // Light background for contrast (macOS)
+            .background(Color(NSColor.windowBackgroundColor))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)  // Subtle border
+                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
             )
+
             
             HStack(spacing: 10) {
                 // Button to select a new folder
                 Button(action: {
-                    permissionsManager.requestAccess()
+                    if let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                        permissionsManager.requestAccess(documentsURL.path)
+                    } else {
+                        permissionsManager.requestAccess(FileManager.default.homeDirectoryForCurrentUser.path)
+                    }
                 }) {
                     Text("Choose Folder")
                         .frame(width: 100, height: 30)
@@ -89,28 +91,5 @@ struct SettingsView: View {
 
     private func closeSettingsWindow() {
         NSApplication.shared.keyWindow?.close()
-    }
-
-    private func handleDrop(providers: [NSItemProvider]) -> Bool {
-        guard let provider = providers.first else { return false }
-
-        provider.loadItem(
-            forTypeIdentifier: UTType.fileURL.identifier, options: nil
-        ) { (item, error) in
-            DispatchQueue.main.async {
-                if let urlData = item as? Data,
-                    let url = URL(dataRepresentation: urlData, relativeTo: nil)
-                {
-                    self.draggedFilePath = url.path
-
-                    permissionsManager.ensureFolderAccess(for: url) { granted in
-                        if !granted {
-                            self.draggedFilePath = "Access Denied"
-                        }
-                    }
-                }
-            }
-        }
-        return true
     }
 }

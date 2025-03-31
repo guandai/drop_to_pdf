@@ -12,46 +12,77 @@ class PermissionsManager: ObservableObject  {
     init() {
         restoreFolderAccess()
     }
-
+    
+    func setupDirectoryURL(_ initialURL: URL, _ panel: NSOpenPanel) {
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: initialURL.path, isDirectory: &isDirectory) {
+            panel.directoryURL = isDirectory.boolValue ? initialURL : initialURL.deletingLastPathComponent()
+        } else {
+            panel.directoryURL = FileManager.default.homeDirectoryForCurrentUser
+            print("⚠️ Path not found, using default directory: \(panel.directoryURL!)")
+        }
+        
+        print("🗂 directoryURL: \(panel.directoryURL?.absoluteString ?? "nil")")
+    }
+    
+    func run_panel(_ panel: NSOpenPanel) {
+        if panel.runModal() == .OK, let folderURL = panel.url {
+            let fixedUrl = NameMod.toFileURL(folderURL)
+            print("✅ Selected folder: \(fixedUrl.absoluteString)")
+            
+            // Directly use the URL from the panel (already encoded properly)
+            storeSecurityScopedBookmark(for: fixedUrl)
+            self.grantedFolderURLs.insert(fixedUrl)
+            
+            // Optional: Verify accessibility
+            do {
+                let _ = try fixedUrl.checkResourceIsReachable()
+            } catch {
+                print("❌ Accessibility check failed: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     /// Ask user to select a folder, opening the dialog at a specified path if provided
-    func requestAccess(_ initialPath: String? = nil) {
+    func requestAccess(_ initialPath: String) {
         let panel = NSOpenPanel()
         panel.title = "Select a folder to grant access"
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
-
-        // Set the initial directory safely
-        if let initialPath = initialPath {
-            let initialURL = URL(fileURLWithPath: initialPath, isDirectory: true)
-            panel.directoryURL = initialURL
-        }
-
-        if panel.runModal() == .OK, let folderURL = panel.url {
-            storeSecurityScopedBookmark(for: folderURL)
-        }
+       
+        // 1. Resolve path components
+        let resolvedPath = NameMod.toFileString(initialPath)
+        // 2. Create URL with UTF-8 awareness
+        let initialURL = NameMod.stringToURL(resolvedPath)
+        // 3. Validate directory existence
+        setupDirectoryURL(initialURL, panel)
+        // 4. Run panel and handle result
+        run_panel(panel)
+        
         objectWillChange.send()
     }
 
     /// Store security-scoped bookmark for a selected folder
     private func storeSecurityScopedBookmark(for url: URL) {
         do {
-            let bookmarkData = try url.bookmarkData(options: .withSecurityScope)
+            let fixedUrl = NameMod.toFileURL(url)
+            let bookmarkData = try fixedUrl.bookmarkData(options: .withSecurityScope)
             // Retrieve stored bookmarks
             var storedBookmarks = UserDefaults.standard.array(forKey: savedFoldersKey) as? [Data] ?? []
             storedBookmarks.append(bookmarkData)  // ✅ Store multiple bookmarks
             UserDefaults.standard.set(storedBookmarks, forKey: savedFoldersKey)
 
             DispatchQueue.main.async {
-                if self.grantedFolderURLs.contains(url) {
+                if self.grantedFolderURLs.contains(fixedUrl) {
                      return
                 } else {
-                    self.grantedFolderURLs.insert(url)
+                    self.grantedFolderURLs.insert(fixedUrl)
                 }
                 
             }
             objectWillChange.send()
-            print("✅ Folder access granted: \(url.path)")
+            print("✅ Folder access granted: \(fixedUrl.path)")
         } catch {
             print("❌ Failed to store bookmark: \(error)")
         }
@@ -65,7 +96,8 @@ class PermissionsManager: ObservableObject  {
                 do {
                     var isStale = false
                     let url = try URL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, bookmarkDataIsStale: &isStale)
-
+                    print(">>>>bookmark url \(url)")
+                    
                     if isStale {
                         print("🪬 Bookmark data is stale, requesting permission again.")
                         continue
@@ -98,7 +130,7 @@ class PermissionsManager: ObservableObject  {
     }
 
     /// Check if a file's folder is allowed, request access if not
-    func ensureFolderAccess(for fileURL: URL, completion: @escaping (Bool) -> Void) {
+    func folderAccessWithCallback(for fileURL: URL, completion: @escaping (Bool) -> Void) {
         let fileDirectory = fileURL.deletingLastPathComponent()
 
         if grantedFolderURLs.contains(fileDirectory) {
@@ -107,8 +139,7 @@ class PermissionsManager: ObservableObject  {
         } else {
             print("❌ Folder is not allowed: \(fileDirectory.path), requesting access...")
             DispatchQueue.main.async {
-                self.requestAccess()
-                self.grantedFolderURLs.insert(fileDirectory)
+                self.requestAccess(fileDirectory.path)
                 completion(true)
             }
         }

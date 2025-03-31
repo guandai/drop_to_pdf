@@ -33,9 +33,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     override init() {
         super.init()
     }
-
+    
     func application(_ sender: NSApplication, openFiles filenames: [String]) {
-        let urls = filenames.map { URL(fileURLWithPath: $0) }
+        let urls = filenames.map { URL( fileURLWithPath: NameMod.toFileString($0)) }
         handleFileDrop(urls)
     }
 
