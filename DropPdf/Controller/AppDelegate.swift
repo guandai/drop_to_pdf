@@ -25,7 +25,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if flag {
             dropWindow?.makeKeyAndOrderFront(nil)
         } else {
-            windows?.setupMainWindow()
+            windows?.setupMainWindow()EnvironmentObject
         }
         return true
     }
