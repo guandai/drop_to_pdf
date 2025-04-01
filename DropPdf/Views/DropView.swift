@@ -3,12 +3,13 @@ import SwiftUI
 struct DropView: View {
     @EnvironmentObject var appDelegate: AppDelegate
     @EnvironmentObject var processFile: ProcessFile
+    @EnvironmentObject var createOneFile = false
+
     @State private var isDragging = false
     @State private var showMark = false
     @State private var systemName = "checkmark.circle.fill"
     @State private var systemColor: Color = .green
     @State private var showPanel = false
-    @State private var createOneFile = false
 
     static let baseSize: CGFloat = 80  // ✅ Use `static let`
     static let dropAreaLength: CGFloat = 2.8 * DropView.baseSize
