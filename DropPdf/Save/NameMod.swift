@@ -1,6 +1,19 @@
 import Cocoa
 
 struct NameMod {
+    static func getTempFolder() -> URL {
+        let tempFolder = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString) // Use a unique identifier
+
+        do {
+            try FileManager.default.createDirectory(
+                at: tempFolder, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            print("❌ Failed to create temporary folder: \(error)")
+        }
+        return tempFolder
+    }
+
     /// 🔹 Generates a timestamp string
     static func getTime() -> String {
         let dateFormatter = DateFormatter()

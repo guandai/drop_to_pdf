@@ -2,13 +2,16 @@ import SwiftUI
 
 struct ProcessedFilesPanel: View {
     let processedFiles: [Int: (URL, Bool)]
+    static let resultsLength: CGFloat = 6 * DropView.baseSize
+    static let historyLength: CGFloat = 4.5 * DropView.baseSize
     @Binding var isPresented: Bool
+    
 
     var body: some View {
         VStack {
             Text("Processed Files")
                 .font(.headline)
-                .padding(5)
+                .padding(2)
 
             ScrollView {
                 LazyVStack {
@@ -30,7 +33,7 @@ struct ProcessedFilesPanel: View {
                 }
                 .id(UUID())
             }
-            .frame(height: DropView.historyLength)
+            .frame(height: ProcessedFilesPanel.historyLength + 30)
             .background(Color(NSColor.windowBackgroundColor))
             .clipShape(RoundedRectangle(cornerRadius: 5))
             .overlay(
@@ -52,6 +55,6 @@ struct ProcessedFilesPanel: View {
             .accessibilityIdentifier("closeButton")
             
         }
-        .frame(width: DropView.resultsLength, height: DropView.resultsLength)
+        .frame(width: ProcessedFilesPanel.resultsLength, height: ProcessedFilesPanel.resultsLength)
     }
 }

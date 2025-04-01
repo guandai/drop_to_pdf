@@ -21,7 +21,7 @@ class DocxToPDF {
             )
         try FileManager.default.unzipItem(at: docxURL, to: destinationURL)
     }
-
+    
     func convertDocxToPDF(fileURL: URL) async -> Bool {
         guard getDidStart(fileURL: fileURL) else {
             print("❌ Security-scoped resource access failed: \(fileURL.path)")
@@ -33,10 +33,8 @@ class DocxToPDF {
         let pagesBox = Box(self.pages)
         let currentViewBox = Box(currentViewCopy)
         let yOffsetBox = Box(yOffsetCopy)
-        let unzipURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent(
-                UUID().uuidString
-            )
+        let saveToPdfIns = SaveToPdf()
+        let unzipURL = NameMod.getTempFolder()
 
         do {
             try await MainActor.run {
@@ -55,7 +53,7 @@ class DocxToPDF {
             docxPro.initPage()
             docxPro.parseData(unzipURL, docxProcess: docxPro)
             let pdfDoc = await docxPro.insertPages()
-            let saveToPdfIns = SaveToPdf()
+            
             return await saveToPdfIns.savePdfDocumentToPdf(
                 fileURL: fileURL, pdfDoc: pdfDoc)
         } catch {

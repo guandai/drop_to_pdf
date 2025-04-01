@@ -96,7 +96,6 @@ class PermissionsManager: ObservableObject  {
                 do {
                     var isStale = false
                     let url = try URL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, bookmarkDataIsStale: &isStale)
-                    print(">>>>bookmark url \(url)")
                     
                     if isStale {
                         print("🪬 Bookmark data is stale, requesting permission again.")
@@ -117,8 +116,32 @@ class PermissionsManager: ObservableObject  {
         objectWillChange.send()
     }
 
+    func isSystemTemporaryFolder(_ folderURL: URL) -> Bool {
+        // Get the system temporary directory
+        let systemTempDir = FileManager.default.temporaryDirectory
+
+        // Standardize both URLs to ensure consistent comparison
+        let standardizedFolderURL = folderURL.standardizedFileURL
+        let standardizedTempDir = systemTempDir.standardizedFileURL
+
+        // Check if the folder is the system temporary directory or a subdirectory of it
+        let isTempFolder = standardizedFolderURL.path.hasPrefix(standardizedTempDir.path)
+
+        if isTempFolder {
+            print("✅ The folder is within the system temporary directory: \(folderURL.path)")
+        } else {
+            print("🗂️ The folder is NOT within the system temporary directory: \(folderURL.path)")
+        }
+
+        return isTempFolder
+    }
+    
     /// Check if a given folder has been granted access
     func isFolderGranted(_ folderURL: URL) -> Bool {
+        if isSystemTemporaryFolder(folderURL) {
+            return true
+        }
+
         let isGranted = grantedFolderURLs.contains { $0.standardizedFileURL == folderURL.standardizedFileURL }
         if isGranted {
             print("✅ Folder access granted: \(folderURL.path)")

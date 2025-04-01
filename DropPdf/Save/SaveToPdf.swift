@@ -1,4 +1,5 @@
 import Cocoa
+import SwiftUICore
 import PDFKit
 import UniformTypeIdentifiers
 
@@ -28,12 +29,35 @@ class SaveToPdf {
         pdfContext.endPage()
         pdfContext.closePDF()
     }
+    
+    private var appDelegate: AppDelegate {
+        // Ensure thread-safe access to AppDelegate.shared
+        if !Thread.isMainThread {
+            return DispatchQueue.main.sync {
+                return AppDelegate.shared
+            }
+        }
+        return AppDelegate.shared
+    }
+
+    func checkBundle(_ url: URL) -> URL {
+        if appDelegate.createOneFile {
+            // Extract the file name from the input URL
+            let fileName = url.lastPathComponent
+            
+            // Append the file name to the batchTmpFolder directory
+            let finalURL = appDelegate.batchTmpFolder.appendingPathComponent(fileName)
+            print(">>>>>>>> Bundle Final URL: \(finalURL)")
+            return finalURL
+        }
+        return url
+    }
 
     func getPathes(_ fileURL: URL) -> (URL, URL) {
         let originalName = fileURL.deletingPathExtension().lastPathComponent
         let newName = NameMod.getTimeName(name: originalName)  // e.g. "photo_20250311_1430.pdf"
         let path = fileURL.deletingLastPathComponent()
-        let finalPath = path.appendingPathComponent(newName)
+        let finalPath = checkBundle(path.appendingPathComponent(newName))
         return (path, finalPath)
     }
 
@@ -131,7 +155,7 @@ class SaveToPdf {
         do {
             try data.write(to: url, options: .atomic)
             print("✅ PDF saved to: \(url.path)")
-            openFolder(url.deletingLastPathComponent())  // Open the folder
+            // openFolder(url.deletingLastPathComponent())  // Open the folder
             return true
         } catch {
             print("❌ ERROR: Failed to save PDF, Error: \(error)")
