@@ -3,7 +3,6 @@ import SwiftUI
 struct DropView: View {
     @EnvironmentObject var appDelegate: AppDelegate
     @EnvironmentObject var processFile: ProcessFile
-    @EnvironmentObject var createOneFile = false
 
     @State private var isDragging = false
     @State private var showMark = false
@@ -15,8 +14,7 @@ struct DropView: View {
     static let dropAreaLength: CGFloat = 2.8 * DropView.baseSize
     static let iconLength: CGFloat = 1 * DropView.baseSize
     static let outerLength: CGFloat = 3 * DropView.baseSize
-    static let resultsLength: CGFloat = 6 * DropView.baseSize
-    static let historyLength: CGFloat = 4.5 * DropView.baseSize
+    
     
     var BoxSign : some View {
         VStack {
@@ -66,7 +64,7 @@ struct DropView: View {
             }
         }
         .onDrop(of: ["public.file-url"], isTargeted: $isDragging) { providers in
-            handleDrop(providers)
+            handleFileDrop(providers)
         }
     }
     
@@ -86,13 +84,13 @@ struct DropView: View {
     
     var TopBar: some View {
         HStack {
-            Toggle(isOn: $createOneFile) {}
+            Toggle(isOn: $appDelegate.createOneFile) {}
             .toggleStyle(SwitchToggleStyle())
             .accessibilityIdentifier("switchButton")
             .padding(.leading, 4)
 
             // Show the on/off result as text
-            Text(createOneFile ? "Create A Bundle" : "Create Separate")
+            Text(appDelegate.createOneFile ? "Create A Bundle" : "Create Separate")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .padding(.leading, 8)
@@ -147,8 +145,8 @@ struct DropView: View {
         return Color(NSColor.windowBackgroundColor)
         #endif
     }
-
-    private func handleDrop(_ providers: [NSItemProvider]) -> Bool {
+    
+    private func handleFileDrop(_ providers: [NSItemProvider]) -> Bool {
         let dispatchGroup = DispatchGroup()
         var newFiles: [URL] = []
 
@@ -158,7 +156,7 @@ struct DropView: View {
                 defer { dispatchGroup.leave() }
 
                 guard let data = item as? Data, let fileURL = URL(dataRepresentation: data, relativeTo: nil) else { return }
-                print(">>>>data fileurl \(fileURL)")
+                print(">>>> data fileurl: \(fileURL)")
                 DispatchQueue.main.async {
                     newFiles.append(fileURL)
                 }
@@ -166,14 +164,15 @@ struct DropView: View {
         }
 
         dispatchGroup.notify(queue: .main) {
-            appDelegate.droppedFiles.append(contentsOf: newFiles)
             Task {
-                let result = await processFile.processDroppedFiles(newFiles, appDelegate)
+//                appDelegate.droppedFiles.append(contentsOf: newFiles)
+//                let result = await processFile.processDroppedFiles(newFiles, appDelegate)
+                let result = await appDelegate.startDrop(newFiles)
+                
                 DispatchQueue.main.async {
                     showMark = true
                     systemName = result.values.contains(false) ?  "xmark.circle.fill" : "checkmark.circle.fill";
                     systemColor = result.values.contains(false) ?  .red : .green;
-                    
                 }
             }
         }

@@ -3,12 +3,28 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
+    static var shared = AppDelegate()
+
     @Published var droppedFiles: [URL] = []
     @Published var processResult: [Int: (URL, Bool)] = [:]
+    @Published var createOneFile: Bool = false
+    @Published var batchTmpFolder: URL = NameMod.getTempFolder()
+
     var processFile = ProcessFile()
     var dropWindow: NSWindow?
     var windows: Windows?
     var menus: Menus?  // Add a property to hold a reference to Menus
+
+    override init() {
+        super.init()
+    }
+    
+    func setBatchFolder() {
+        let tempFolder = NameMod.getTempFolder()
+        DispatchQueue.main.async {
+            self.batchTmpFolder = tempFolder
+        }
+    }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         UserDefaults.standard.set(false, forKey: "NSPrintSpoolerLogToConsole")
@@ -29,30 +45,30 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
         return true
     }
-
-    override init() {
-        super.init()
-    }
     
     func application(_ sender: NSApplication, openFiles filenames: [String]) {
         let urls = filenames.map { URL( fileURLWithPath: NameMod.toFileString($0)) }
-        handleFileDrop(urls)
+        Task {
+            await startDrop(urls)
+        }
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {
-        handleFileDrop(urls)
+        Task {
+            await self.startDrop(urls)
+        }
     }
 
-    private func handleFileDrop(_ urls: [URL]) {
-        DispatchQueue.main.async {
-            self.droppedFiles.append(contentsOf: urls)
-        }
-        windows?.setupMainWindow()
-
-        DispatchQueue.main.async {
-            Task {
-                await self.processFile.processDroppedFiles(urls, self)
+    func startDrop(_ urls: [URL]) async -> [URL: Bool]  {
+        if AppDelegate.shared.createOneFile {
+            DispatchQueue.main.async {
+                AppDelegate.shared.setBatchFolder()
             }
+            print(">>>>>>>> new bath \(AppDelegate.shared.batchTmpFolder)")
         }
+        
+        self.droppedFiles.append(contentsOf: urls)
+        let result = await self.processFile.processDroppedFiles(urls, self)
+        return result
     }
 }
