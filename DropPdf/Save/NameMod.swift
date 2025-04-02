@@ -22,7 +22,7 @@ struct NameMod {
     }
 
     /// 🔹 Generates a timestamped file name
-    static func getTimeName(name: String) -> String {
+    static func getTimeName(_ name: String) -> String {
         return "\(name)_\(getTime()).pdf"
     }
     

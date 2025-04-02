@@ -91,7 +91,6 @@ struct DropView: View {
             .accessibilityIdentifier("switchButton")
             .padding(.leading, 4)
 
-            // Show the on/off result as text
             Text(appDelegate.createOneFile ? "Create A Bundle" : "Create Separate")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
@@ -157,9 +156,7 @@ struct DropView: View {
                 dispatchGroup.enter()
                 provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, _ in
                     defer { dispatchGroup.leave() }
-
                     guard let data = item as? Data, let fileURL = URL(dataRepresentation: data, relativeTo: nil) else { return }
-                    
                     DispatchQueue.main.async {
                         newFiles.append(fileURL)
                     }

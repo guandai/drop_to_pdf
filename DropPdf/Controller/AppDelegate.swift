@@ -7,7 +7,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     @Published var droppedFiles: [URL] = []
     @Published var processResult: [Int: (URL, Bool)] = [:]
-    @Published var createOneFile: Bool = false
+    @Published var createOneFile: Bool = true
     @Published var batchTmpFolder: URL = NameMod.getTempFolder()
 
     var processFile = ProcessFile()
@@ -44,34 +44,41 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     
     
     func application(_ application: NSApplication, open urls: [URL]) {
-        print(">>>>app open urls")
         Task {
-            await self.startDrop(urls)
+            await AppDelegate.shared.startDrop(urls)
         }
     }
 
     func setDroppedFiles(_ urls: [URL]) {
-        print("setDroppedFiles")
-        print(self.batchTmpFolder)
+
+        print(AppDelegate.shared.createOneFile)
         if AppDelegate.shared.createOneFile {
-            let tempFolder = NameMod.getTempFolder()
-            self.batchTmpFolder = tempFolder
-            print(tempFolder)
-            print(self.batchTmpFolder)
+            AppDelegate.shared.batchTmpFolder = NameMod.getTempFolder()
+            print(AppDelegate.shared.batchTmpFolder)
         }
-        self.droppedFiles.append(contentsOf: urls)
+        AppDelegate.shared.droppedFiles.append(contentsOf: urls)
     }
     
     func startDrop (_ urls: [URL]) async -> [URL: Bool] {
         return await withCheckedContinuation { (continuation: CheckedContinuation<[URL: Bool], Never>) in
             DispatchQueue.main.async {
-                print(">>>>>> startDrop")
-                self.setDroppedFiles(urls)
+                AppDelegate.shared.setDroppedFiles(urls)
                 Task {
-                    let results = await self.processFile.processDroppedFiles(urls, self)
+                    let results = await AppDelegate.shared.processFile.processDroppedFiles(urls, self)
+                    if AppDelegate.shared.createOneFile {
+                        AppDelegate.shared.bundleToOnePdf(urls)
+                    }
                     continuation.resume(returning: results)
                 }
             }
         }
+    }
+    
+    func bundleToOnePdf(_ urls: [URL]) {
+        guard let firstUrl = urls.first else { return }
+        let bundleFile = firstUrl.deletingLastPathComponent().appendingPathComponent(NameMod.getTimeName("bundle"))
+        print(AppDelegate.shared.batchTmpFolder, bundleFile)
+
+        _ = SaveToPdf().bundleToOneFile(AppDelegate.shared.batchTmpFolder, bundleFile)
     }
 }
