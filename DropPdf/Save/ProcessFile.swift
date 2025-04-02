@@ -50,7 +50,6 @@ class ProcessFile: ObservableObject {
         appDelegate.processResult[newKey] = (url, success)
     }
 
-    /// 🔹 Process a single file and determines the correct conversion method
     func processOneFile(url: URL, appDelegate: AppDelegate) async -> Bool {
         print("📂 Processing file: \(url.path)")
         if false {

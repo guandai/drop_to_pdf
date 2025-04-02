@@ -30,7 +30,7 @@ class SaveToPdf {
         pdfContext.closePDF()
     }
     
-    private var appDelegate: AppDelegate {
+    private var appDelegateShared: AppDelegate {
         // Ensure thread-safe access to AppDelegate.shared
         if !Thread.isMainThread {
             return DispatchQueue.main.sync {
@@ -41,12 +41,16 @@ class SaveToPdf {
     }
 
     func checkBundle(_ url: URL) -> URL {
-        if appDelegate.createOneFile {
+        if appDelegateShared.createOneFile {
             // Extract the file name from the input URL
             let fileName = url.lastPathComponent
             
             // Append the file name to the batchTmpFolder directory
-            let finalURL = appDelegate.batchTmpFolder.appendingPathComponent(fileName)
+            if !FileManager.default.fileExists(atPath: appDelegateShared.batchTmpFolder.path) {
+                try? FileManager.default.createDirectory(
+                    at: appDelegateShared.batchTmpFolder, withIntermediateDirectories: true, attributes: nil)
+            }
+            let finalURL = appDelegateShared.batchTmpFolder.appendingPathComponent(fileName)
             print(">>>>>>>> Bundle Final URL: \(finalURL)")
             return finalURL
         }
@@ -153,6 +157,7 @@ class SaveToPdf {
     // Data write to file
     func tryWriteData(url: URL, data: Data) -> Bool {
         do {
+            print(">>>>>>>> url in tryWriteData: \(url.path)")
             try data.write(to: url, options: .atomic)
             print("✅ PDF saved to: \(url.path)")
             // openFolder(url.deletingLastPathComponent())  // Open the folder

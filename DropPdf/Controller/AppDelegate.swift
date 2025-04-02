@@ -18,15 +18,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     override init() {
         super.init()
     }
-    
-    func setBatchFolder() {
-        let tempFolder = NameMod.getTempFolder()
-        DispatchQueue.main.async {
-            self.batchTmpFolder = tempFolder
-        }
-    }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        print("applicationDidFinishLaunching")
         UserDefaults.standard.set(false, forKey: "NSPrintSpoolerLogToConsole")
         windows = Windows(dropWindow, self)
         menus = Menus(windows)  // Initialize Menus
@@ -36,8 +30,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
 
     func applicationShouldHandleReopen(
-        _ sender: NSApplication, hasVisibleWindows flag: Bool
+        _ sender: NSApplication,
+        hasVisibleWindows flag: Bool
     ) -> Bool {
+        print(">>>>app applicationShouldHandleReopen")
         if flag {
             dropWindow?.makeKeyAndOrderFront(nil)
         } else {
@@ -46,29 +42,36 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         return true
     }
     
-    func application(_ sender: NSApplication, openFiles filenames: [String]) {
-        let urls = filenames.map { URL( fileURLWithPath: NameMod.toFileString($0)) }
-        Task {
-            await startDrop(urls)
-        }
-    }
-
+    
     func application(_ application: NSApplication, open urls: [URL]) {
+        print(">>>>app open urls")
         Task {
             await self.startDrop(urls)
         }
     }
 
-    func startDrop(_ urls: [URL]) async -> [URL: Bool]  {
+    func setDroppedFiles(_ urls: [URL]) {
+        print("setDroppedFiles")
+        print(self.batchTmpFolder)
         if AppDelegate.shared.createOneFile {
-            DispatchQueue.main.async {
-                AppDelegate.shared.setBatchFolder()
-            }
-            print(">>>>>>>> new bath \(AppDelegate.shared.batchTmpFolder)")
+            let tempFolder = NameMod.getTempFolder()
+            self.batchTmpFolder = tempFolder
+            print(tempFolder)
+            print(self.batchTmpFolder)
         }
-        
         self.droppedFiles.append(contentsOf: urls)
-        let result = await self.processFile.processDroppedFiles(urls, self)
-        return result
+    }
+    
+    func startDrop (_ urls: [URL]) async -> [URL: Bool] {
+        return await withCheckedContinuation { (continuation: CheckedContinuation<[URL: Bool], Never>) in
+            DispatchQueue.main.async {
+                print(">>>>>> startDrop")
+                self.setDroppedFiles(urls)
+                Task {
+                    let results = await self.processFile.processDroppedFiles(urls, self)
+                    continuation.resume(returning: results)
+                }
+            }
+        }
     }
 }
