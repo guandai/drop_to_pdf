@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>DropPdf.pkg</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>x86_64</string>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>19</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>4116EBC16ACE4702F6C509D3B3385B9AF6D8EFAB</string>
+				<key>dateExpires</key>
+				<string>2/25/26</string>
+				<key>type</key>
+				<string>Apple Distribution</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>x86_64</string>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>19</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>4116EBC16ACE4702F6C509D3B3385B9AF6D8EFAB</string>
+						<key>dateExpires</key>
+						<string>2/25/26</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>XMLCoder_-151FBA5FCEA59F1A_PackageProduct.framework</string>
+					<key>symbols</key>
+					<true/>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>7A8P3NLUDW</string>
+						<key>name</key>
+						<string>zheng dai</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.1</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>x86_64</string>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>19</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>4116EBC16ACE4702F6C509D3B3385B9AF6D8EFAB</string>
+						<key>dateExpires</key>
+						<string>2/25/26</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>ZIPFoundation_-14A6248D789D2CE9_PackageProduct.framework</string>
+					<key>symbols</key>
+					<true/>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>7A8P3NLUDW</string>
+						<key>name</key>
+						<string>zheng dai</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.1</string>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>com.apple.application-identifier</key>
+				<string>7A8P3NLUDW.com.twindai.DropPdf</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>7A8P3NLUDW</string>
+				<key>com.apple.security.app-sandbox</key>
+				<true/>
+				<key>com.apple.security.files.user-selected.read-write</key>
+				<true/>
+			</dict>
+			<key>name</key>
+			<string>DropPdf.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>cbc5956f-8979-4d58-a07f-de4a54258130</string>
+				<key>dateExpires</key>
+				<string>2/25/26</string>
+				<key>name</key>
+				<string>Mac Team Store Provisioning Profile: com.twindai.DropPdf</string>
+			</dict>
+			<key>symbols</key>
+			<true/>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>7A8P3NLUDW</string>
+				<key>name</key>
+				<string>zheng dai</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>1.1</string>
+		</dict>
+	</array>
+</dict>
+</plist>
