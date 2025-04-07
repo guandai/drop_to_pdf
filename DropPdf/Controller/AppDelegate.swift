@@ -20,7 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        print("applicationDidFinishLaunching")
+        print(">>> applicationDidFinishLaunching")
         UserDefaults.standard.set(false, forKey: "NSPrintSpoolerLogToConsole")
         windows = Windows(dropWindow, self)
         menus = Menus(windows)  // Initialize Menus
@@ -50,11 +50,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
 
     func setDroppedFiles(_ urls: [URL]) {
-
-        print(AppDelegate.shared.createOneFile)
         if AppDelegate.shared.createOneFile {
             AppDelegate.shared.batchTmpFolder = NameMod.getTempFolder()
-            print(AppDelegate.shared.batchTmpFolder)
+            print("batchFolder: \(AppDelegate.shared.batchTmpFolder)")
         }
         AppDelegate.shared.droppedFiles.append(contentsOf: urls)
     }
@@ -64,9 +62,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             DispatchQueue.main.async {
                 AppDelegate.shared.setDroppedFiles(urls)
                 Task {
-                    let results = await AppDelegate.shared.processFile.processDroppedFiles(urls, self)
+                    var results = await AppDelegate.shared.processFile.processDroppedFiles(urls, self)
                     if AppDelegate.shared.createOneFile {
-                        AppDelegate.shared.bundleToOnePdf(urls)
+                        results = await AppDelegate.shared.bundleToOnePdf(urls)
                     }
                     continuation.resume(returning: results)
                 }
@@ -74,11 +72,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
     }
     
-    func bundleToOnePdf(_ urls: [URL]) {
-        guard let firstUrl = urls.first else { return }
-        let bundleFile = firstUrl.deletingLastPathComponent().appendingPathComponent(NameMod.getTimeName("bundle"))
-        print(AppDelegate.shared.batchTmpFolder, bundleFile)
+    func bundleToOnePdf(_ urls: [URL]) async -> [URL: Bool] {
+        guard let firstUrl = urls.first else { return [:] }
+        let bundleFile = firstUrl.deletingLastPathComponent().appendingPathComponent("bundle.pdf")
 
-        _ = SaveToPdf().bundleToOneFile(AppDelegate.shared.batchTmpFolder, bundleFile)
+        let result = await SaveToPdf().saveBundleToPdf(AppDelegate.shared.batchTmpFolder, bundleFile)
+        return [bundleFile: result]
     }
 }

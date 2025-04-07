@@ -102,13 +102,6 @@ class HtmlPrinter {
 
     func getHtmlAttributedText(_ fileURL: URL) -> NSAttributedString? {
         guard let cleanedHtml = getHtmlString(fileURL) else { return nil }
-//        let tempFileURL = fileURL.deletingLastPathComponent().appendingPathComponent("temp.html")
-//            do {
-//                try cleanedHtml.write(to: tempFileURL, atomically: true, encoding: .utf8)
-//                print("✅ Cleaned HTML saved to: \(tempFileURL.path)")
-//            } catch {
-//                print("❌ Failed to write cleaned HTML to file: \(error.localizedDescription)")
-//            }
         guard let attributed = getHtmlNSAttributedString(fileURL, cleanedHtml)
         else { return nil }
         return changeHtmlFont(attributed)

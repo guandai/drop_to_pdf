@@ -39,127 +39,98 @@ class SaveToPdf {
         }
         return AppDelegate.shared
     }
-
-    func checkBundle(_ url: URL) -> URL {
-        if appDelegateShared.createOneFile {
-            // Extract the file name from the input URL
-            let fileName = url.lastPathComponent
-            
-            // Append the file name to the batchTmpFolder directory
-            if !FileManager.default.fileExists(atPath: appDelegateShared.batchTmpFolder.path) {
-                try? FileManager.default.createDirectory(
-                    at: appDelegateShared.batchTmpFolder, withIntermediateDirectories: true, attributes: nil)
-            }
-            let finalURL = appDelegateShared.batchTmpFolder.appendingPathComponent(fileName)
-            return finalURL
-        }
-        return url
-    }
-
-    func getPathes(_ fileURL: URL) -> (URL, URL) {
+    
+    func getFileTimePdfName(_ fileURL: URL) -> String {
         let originalName = fileURL.deletingPathExtension().lastPathComponent
-        let newName = NameMod.getTimeName(originalName)  // e.g. "photo_20250311_1430.pdf"
+        return NameMod.getTimeName(originalName)  // e.g. "photo_20250311_1430.pdf"
+    }
+
+    func getBundlePathes(_ fileURL: URL) -> URL {
+        let newName = getFileTimePdfName(fileURL)
+        
+        // Append the file name to the batchTmpFolder directory
+        if !FileManager.default.fileExists(atPath: appDelegateShared.batchTmpFolder.path) {
+            try? FileManager.default.createDirectory(
+                at: appDelegateShared.batchTmpFolder, withIntermediateDirectories: true, attributes: nil)
+        }
+        return appDelegateShared.batchTmpFolder.appendingPathComponent(newName)
+    }
+    
+    func getSiblingPathes(_ fileURL: URL) -> URL {
+        let newName = getFileTimePdfName(fileURL)
         let path = fileURL.deletingLastPathComponent()
-        let finalPath = checkBundle(path.appendingPathComponent(newName))
-        return (path, finalPath)
+        return path.appendingPathComponent(newName)
     }
-
-    func getPermission(_ finalPath: URL) async -> Bool {
-        let permissionM = PermissionsManager.shared
-        let path = finalPath.deletingLastPathComponent()
-        if permissionM.isAppSandboxed() && !permissionM.isFolderGranted(path) {
-            await MainActor.run {
-                permissionM.requestAccess(path.path())
-            }
-
-            if !PermissionsManager().isFolderGranted(path) {
-                print(">>>  reject  permission")
-                return false
-            }
+    
+    func getExportPath(_ fileURL: URL) -> URL {
+        if appDelegateShared.createOneFile {
+            return getBundlePathes(fileURL)
+        } else {
+            return getSiblingPathes(fileURL)
         }
-        return true
     }
-
-    func permissionWrapper(_ finalPath: URL) -> (@escaping () async -> Bool)
-        async -> Bool
-    {
-        func fn(_ callback: @escaping () async -> Bool) async -> Bool {
-            let granted = await self.getPermission(finalPath)
-            if !granted {
-                return false
-            }
-            return await callback()
-        }
-        return fn
-    }
-
-    func CallbackToPdf(_ finalPath: URL, _ callback: @escaping () -> Bool) async
-        -> Bool
-    {
-        return await permissionWrapper(finalPath)(callback)
+    
+    func check_permission(_ finalPath: URL) async -> Bool{
+        return await PermissionsManager.shared.getPermission(finalPath)
     }
 
     // Save Data shortcut for image / pdf / String (doc)
     func saveDataToPdf(fileURL: URL, data: Data) async -> Bool {
-        let (_, finalPath) = getPathes(fileURL)
-        func callback() -> Bool {
-            return tryWriteData(url: finalPath, data: data)
-        }
-        return await CallbackToPdf(finalPath, callback)
+        let finalPath = getExportPath(fileURL)
+        if !(await check_permission(finalPath)) { return false }
+        return tryWriteData(url: finalPath, data: data)
     }
 
     // Plain shortcut
     func savePlainToPdf(fileURL: URL) async -> Bool {
-        let (_, finalPath) = getPathes(fileURL)
-        func callback() async -> Bool {
-            return await PrintToPDF().printContentToPDF(
-                finalPath: finalPath, fileURL: fileURL, docType: .plain)
-        }
-        return await permissionWrapper(finalPath)(callback)
+        let finalPath = getExportPath(fileURL)
+        if !(await check_permission(finalPath)) { return false }
+        return await PrintToPDF().printContentToPDF(
+            finalPath: getExportPath(finalPath), fileURL: fileURL, docType: .plain)
     }
 
     // RfF shortcut
     func saveRtfToPdf(fileURL: URL) async -> Bool {
-        let (_, finalPath) = getPathes(fileURL)
-        func callback() async -> Bool {
-            return await PrintToPDF().printContentToPDF(
-                finalPath: finalPath, fileURL: fileURL, docType: .rtf)
-        }
-        return await permissionWrapper(finalPath)(callback)
+        let finalPath = getExportPath(fileURL)
+        if !(await check_permission(finalPath)) { return false }
+        return await PrintToPDF().printContentToPDF(
+            finalPath: finalPath, fileURL: fileURL, docType: .rtf)
     }
 
     // docx
     func savePdfDocumentToPdf(fileURL: URL, pdfDoc: PDFDocument) async -> Bool {
-        let (_, finalPath) = getPathes(fileURL)
-        func callback() -> Bool {
-            guard let pdfData = pdfDoc.dataRepresentation() else {
-                print("❌ Failed to convert PDFDocument to Data")
-                return false
-            }
-            return tryWriteData(url: finalPath, data: pdfData)
+        let finalPath = getExportPath(fileURL)
+        if !(await check_permission(finalPath)) { return false }
+        guard let pdfData = pdfDoc.dataRepresentation() else {
+            print("❌ Failed to convert PDFDocument to Data")
+            return false
         }
-        return await permissionWrapper(finalPath)(callback)
+        return tryWriteData(url: finalPath, data: pdfData)
     }
 
     // by docType for (txt plains, rtfd, html)
     func saveContentToPdf(
         fileURL: URL, docType: NSAttributedString.DocumentType
     ) async -> Bool {
-        let (_, finalPath) = getPathes(fileURL)
-        func callback() async -> Bool {
-            return await PrintToPDF().printContentToPDF(
-                finalPath: finalPath, fileURL: fileURL, docType: docType)
-        }
-        return await permissionWrapper(finalPath)(callback)
+        let finalPath = getExportPath(fileURL)
+        if !(await check_permission(finalPath)) { return false }
+        return await PrintToPDF().printContentToPDF(
+            finalPath: finalPath, fileURL: fileURL, docType: docType)
+    }
+    
+    func saveBundleToPdf(_ sourceTempFolder: URL, _ fileURL: URL) async -> Bool {
+        let finalPath = getSiblingPathes(fileURL)
+        if !(await check_permission(finalPath)) { return false }
+        return await bundleToOneFile(sourceTempFolder, finalPath)
     }
 
     // Data write to file
     func tryWriteData(url: URL, data: Data) -> Bool {
         do {
-            print(">>>>>>>> url in tryWriteData: \(url.path)")
+            print(">>> debug url in tryWriteData: \(url.path)")
             try data.write(to: url, options: .atomic)
             print("✅ PDF saved to: \(url.path)")
-            openFolder(url.deletingLastPathComponent())
+//            openFolder(url.deletingLastPathComponent())
             return true
         } catch {
             print("❌ ERROR: Failed to save PDF, Error: \(error)")
@@ -198,28 +169,37 @@ class SaveToPdf {
         }
     }
     
-    func combineAndWritePdf(_ combinedPDF: PDFDocument, _ finalUrl: URL) -> Bool {
+    func combineAndWritePdf(_ combinedPDF: PDFDocument, _ finalUrl: URL) async -> Bool {
         // Write the combined PDF to the final URL
-        if combinedPDF.write(to: finalUrl) {
-            print("✅ Combined PDF saved to: \(finalUrl.path)")
-            return true
+        do {
+            let result: Bool = try await withCheckedThrowingContinuation { continuation in
+                if combinedPDF.write(to: finalUrl) {
+                    print("✅ Combined PDF saved to: \(finalUrl.path)")
+                    continuation.resume(returning: true)
+                } else {
+                    print("❌ Failed to save combined PDF to: \(finalUrl.path)")
+                    continuation.resume(returning: false)
+                }
+            }
+            return result // Use the returned result
+        } catch {
+            print("❌ Error saving combined PDF: \(error)")
+            return false // Failure case
         }
-        print("❌ Failed to save combined PDF to: \(finalUrl.path)")
-        return false
     }
     
-    func bundleToOneFile(_ folderUrl: URL, _ finalUrl: URL) -> Bool {
+    func bundleToOneFile(_ sourceTempFolder: URL, _ finalUrl: URL) async -> Bool {
         // Create a PDFDocument to hold the combined PDF
         let combinedPDF = PDFDocument()
 
         // Get all PDF files in the folder
         let fileManager = FileManager.default
         guard let fileUrls = try? fileManager.contentsOfDirectory(
-            at: folderUrl,
+            at: sourceTempFolder,
             includingPropertiesForKeys: nil,
             options: .skipsHiddenFiles)
         else {
-            print("❌ Failed to get contents of directory: \(folderUrl.path)")
+            print("❌ Failed to get contents of directory: \(sourceTempFolder.path)")
             return false
         }
 
@@ -228,10 +208,9 @@ class SaveToPdf {
 
         // Sort PDF URLs based on the timestamp in the filename
         let sortedPdfUrls = getSortedPdf(pdfUrls)
-
         bundleInsertPage(sortedPdfUrls, combinedPDF)
 
-        return combineAndWritePdf(combinedPDF, finalUrl)
+        return await combineAndWritePdf(combinedPDF, finalUrl)
     }
 
     // Helper function to extract timestamp from filename

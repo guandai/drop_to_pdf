@@ -13,6 +13,21 @@ class PermissionsManager: ObservableObject  {
         restoreFolderAccess()
     }
     
+    func getPermission(_ finalPath: URL) async -> Bool {
+        let path = finalPath.deletingLastPathComponent()
+        if isAppSandboxed() && !isFolderGranted(path) {
+            await MainActor.run {
+                requestAccess(path.path())
+            }
+
+            if !isFolderGranted(path) {
+                print(">>> debug reject  permission")
+                return false
+            }
+        }
+        return true
+    }
+    
     func setupDirectoryURL(_ initialURL: URL, _ panel: NSOpenPanel) {
         var isDirectory: ObjCBool = false
         if FileManager.default.fileExists(atPath: initialURL.path, isDirectory: &isDirectory) {
@@ -139,6 +154,7 @@ class PermissionsManager: ObservableObject  {
     /// Check if a given folder has been granted access
     func isFolderGranted(_ folderURL: URL) -> Bool {
         if isSystemTemporaryFolder(folderURL) {
+            print("check folder is system temp , so return true")
             return true
         }
 
@@ -148,7 +164,6 @@ class PermissionsManager: ObservableObject  {
         } else {
             print("❌ Folder access not granted: \(folderURL.path)")
         }
-        
         return isGranted
     }
 
@@ -181,6 +196,7 @@ class PermissionsManager: ObservableObject  {
     }
     
     func isAppSandboxed() -> Bool {
+        // "APP_SANDBOX_CONTAINER_ID" is Optional("com.twindai.DropPdf")
         return ProcessInfo.processInfo.environment["APP_SANDBOX_CONTAINER_ID"] != nil
     }
 }
