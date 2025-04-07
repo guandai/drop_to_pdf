@@ -9,7 +9,7 @@ struct DropView: View {
     @State private var systemName = "checkmark.circle.fill"
     @State private var systemColor: Color = .green
     @State private var showPanel = false
-    @State private var progress: Double = 0.0
+    @State private var progress: Double = 0.0 // Track progress
 
     static let baseSize: CGFloat = 80
     static let dropAreaLength: CGFloat = 2.8 * DropView.baseSize
@@ -18,19 +18,24 @@ struct DropView: View {
 
     var body: some View {
         ZStack {
-            WrapperMainBox(
-                createOneFile: $appDelegate.createOneFile,
-                dropBox: AnyView(
-                    DropBox(
-                        isDragging: $isDragging,
-                        showMark: $showMark,
-                        systemName: systemName,
-                        systemColor: systemColor,
-                        handleFileDrop: handleFileDrop
+            VStack {
+                WrapperMainBox(
+                    createOneFile: $appDelegate.createOneFile,
+                    dropBox: AnyView(
+                        DropBox(
+                            isDragging: $isDragging,
+                            showMark: $showMark,
+                            systemName: systemName,
+                            systemColor: systemColor,
+                            handleFileDrop: handleFileDrop
+                        )
                     )
                 )
-            )
+            }
             WrapperProcessButton(showPanel: $showPanel, processedFiles: appDelegate.processResult)
+            // Add the CenteredProgressView
+            CenteredProgressView(progress: $progress)
+                .frame(width: DropView.dropAreaLength + 20, height: DropView.dropAreaLength + 50)
         }
         .frame(width: DropView.outerLength + 10, height: DropView.outerLength + 40)
     }
@@ -39,13 +44,26 @@ struct DropView: View {
         let dispatchGroup = DispatchGroup()
         let newFiles = await appendNewFiles(providers: providers, dispatchGroup: dispatchGroup)
 
+        // Reset progress
+        progress = 0.0
+        let totalFiles = Double(newFiles.count)
+
         dispatchGroup.notify(queue: .main) {
             Task {
-                let result = await appDelegate.startDrop(newFiles)
+                var results: [URL: Bool] = [:]
+                for (index, file) in newFiles.enumerated() {
+                    let result = await appDelegate.processFile.processOneFile(url: file, appDelegate: appDelegate)
+                    progress = Double(index + 1) / totalFiles // Update progress
+                    results[file] = result
+                }
+                
+                if AppDelegate.shared.createOneFile {
+                    results = await AppDelegate.shared.bundleToOnePdf(newFiles)
+                }
 
                 showMark = true
-                systemName = result.values.contains(false) ? "xmark.circle.fill" : "checkmark.circle.fill"
-                systemColor = result.values.contains(false) ? .red : .green
+                systemName = results.values.contains(false) ? "xmark.circle.fill" : "checkmark.circle.fill"
+                systemColor = results.values.contains(false) ? .red : .green
             }
         }
     }

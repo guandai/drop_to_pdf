@@ -113,6 +113,28 @@ struct DropBox: View {
     }
 }
 
+struct CenteredProgressView: View {
+    @Binding var progress: Double // Bind progress value
+
+    var body: some View {
+        if progress > 0.0 && progress < 1.0 { // Show only when progress is active
+            ZStack {
+                // Add a semi-transparent background overlay
+                Color.black.opacity(0.7) // Dark overlay for clarity
+                    .edgesIgnoringSafeArea(.all)
+
+                // ProgressView in the center
+                ProgressView(value: progress, total: 1.0)
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white)) // Use white for better contrast
+                    .scaleEffect(1.5) // Adjust size of the progress view
+                    .padding()
+            }
+            .transition(.opacity) // Smooth fade-in/out
+            .animation(.easeInOut, value: progress)
+        }
+    }
+}
+
 
 struct WrapperMainBox: View {
     @Binding var createOneFile: Bool
