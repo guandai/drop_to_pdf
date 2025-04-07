@@ -20,7 +20,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        print(">>> applicationDidFinishLaunching")
         UserDefaults.standard.set(false, forKey: "NSPrintSpoolerLogToConsole")
         windows = Windows(dropWindow, self)
         menus = Menus(windows)  // Initialize Menus
@@ -33,7 +32,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         _ sender: NSApplication,
         hasVisibleWindows flag: Bool
     ) -> Bool {
-        print(">>>>app applicationShouldHandleReopen")
         if flag {
             dropWindow?.makeKeyAndOrderFront(nil)
         } else {
