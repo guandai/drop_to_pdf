@@ -159,14 +159,7 @@ class SaveToPdf {
     
     func getSortedPdf(_ pdfUrls: [URL]) -> [URL] {
         // Sort PDF URLs based on the timestamp in the filename
-        return pdfUrls.sorted { url1, url2 in
-            // Extract timestamp from filename
-            let timestamp1 = extractTimestamp(from: url1.lastPathComponent)
-            let timestamp2 = extractTimestamp(from: url2.lastPathComponent)
-
-            // Compare timestamps
-            return timestamp1 < timestamp2
-        }
+        return Array(pdfUrls.reversed())
     }
     
     func combineAndWritePdf(_ combinedPDF: PDFDocument, _ finalUrl: URL) async -> Bool {

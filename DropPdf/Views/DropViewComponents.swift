@@ -54,11 +54,10 @@ struct ProcessedFilesButton: View {
                 .frame(width: 15, height: 15)
                 .foregroundColor(.blue)
         }
-        .buttonStyle(PlainButtonStyle()) // No extra styling
+        .buttonStyle(PlainButtonStyle())  // No extra styling
         .accessibilityIdentifier("infoButton")
     }
 }
-
 
 struct TopBar: View {
     @Binding var createOneFile: Bool
@@ -79,7 +78,6 @@ struct TopBar: View {
     }
 }
 
-
 struct DropBox: View {
     @Binding var isDragging: Bool
     @Binding var showMark: Bool
@@ -90,16 +88,40 @@ struct DropBox: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
-                .fill(LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.2), Color.purple.opacity(0.3)]), startPoint: .topLeading, endPoint: .bottomTrailing))
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color.blue.opacity(0.2), Color.purple.opacity(0.3),
+                        ]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
                 .overlay(
                     RoundedRectangle(cornerRadius: 20)
-                        .stroke(isDragging ? Color.blue : Color.gray.opacity(0.5), lineWidth: 3)
+                        .stroke(
+                            isDragging ? Color.blue : Color.gray.opacity(0.5),
+                            lineWidth: 3
+                        )
                 )
-                .shadow(color: isDragging ? Color.blue.opacity(0.5) : Color.gray.opacity(0.3), radius: 10, x: 0, y: 5)
-                .frame(width: DropView.dropAreaLength, height: DropView.dropAreaLength)
+                .shadow(
+                    color: isDragging
+                        ? Color.blue.opacity(0.5) : Color.gray.opacity(0.3),
+                    radius: 10,
+                    x: 0,
+                    y: 5
+                )
+                .frame(
+                    width: DropView.dropAreaLength,
+                    height: DropView.dropAreaLength
+                )
 
             if showMark {
-                CheckResult(systemName: systemName, systemColor: systemColor, showMark: $showMark)
+                CheckResult(
+                    systemName: systemName,
+                    systemColor: systemColor,
+                    showMark: $showMark
+                )
             } else {
                 BoxSign(isDragging: isDragging)
             }
@@ -114,27 +136,28 @@ struct DropBox: View {
 }
 
 struct CenteredProgressView: View {
-    @Binding var progress: Double // Bind progress value
+    @Binding var progress: Double  // Bind progress value
 
     var body: some View {
-        if progress > 0.0 && progress < 1.0 { // Show only when progress is active
+        if progress > 0.0 && progress < 1.0 {  // Show only when progress is active
             ZStack {
                 // Add a semi-transparent background overlay
-                Color.black.opacity(0.7) // Dark overlay for clarity
+                Color.black.opacity(0.7)  // Dark overlay for clarity
                     .edgesIgnoringSafeArea(.all)
-
-                // ProgressView in the center
-                ProgressView(value: progress, total: 1.0)
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white)) // Use white for better contrast
-                    .scaleEffect(1.5) // Adjust size of the progress view
+                
+                ProgressView(value: progress, total: 1)
+                    .tint(.green)
+                    .scaleEffect(1)
+                    .contrast(3)
                     .padding()
+                    .frame(width: 200)
+
             }
-            .transition(.opacity) // Smooth fade-in/out
+            .transition(.opacity)  // Smooth fade-in/out
             .animation(.easeInOut, value: progress)
         }
     }
 }
-
 
 struct WrapperMainBox: View {
     @Binding var createOneFile: Bool
@@ -159,18 +182,16 @@ struct WrapperMainBox: View {
     /// Determines the correct background color for iOS and macOS
     private func getBackgroundColor() -> Color {
         #if os(iOS)
-        return Color(UIColor.systemBackground)
+            return Color(UIColor.systemBackground)
         #elseif os(macOS)
-        return Color(NSColor.windowBackgroundColor)
+            return Color(NSColor.windowBackgroundColor)
         #endif
     }
 }
 
-
-
 struct WrapperProcessButton: View {
     @Binding var showPanel: Bool
-    var processedFiles: [Int: (URL, Bool)] // Replace `ProcessedFile` with the actual type
+    var processedFiles: [Int: (URL, Bool)]  // Replace `ProcessedFile` with the actual type
 
     var body: some View {
         VStack {
@@ -181,9 +202,18 @@ struct WrapperProcessButton: View {
                     .padding(.trailing, 5)
                     .padding(.bottom, 20)
                     .sheet(isPresented: $showPanel) {
-                        ProcessedFilesPanel(processedFiles: processedFiles, isPresented: $showPanel)
+                        ProcessedFilesPanel(
+                            processedFiles: processedFiles,
+                            isPresented: $showPanel
+                        )
                     }
             }
         }
     }
+}
+
+#Preview {
+    DropView()
+        .environmentObject(AppDelegate())  // <-- inject your AppDelegate
+        .environmentObject(ProcessFile())  // <-- inject your ProcessFile
 }

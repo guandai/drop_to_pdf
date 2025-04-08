@@ -5,7 +5,6 @@ import UniformTypeIdentifiers
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     static var shared = AppDelegate()
 
-    @Published var droppedFiles: [URL] = []
     @Published var processResult: [Int: (URL, Bool)] = [:]
     @Published var createOneFile: Bool = true
     @Published var batchTmpFolder: URL = NameMod.getTempFolder()
@@ -47,18 +46,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
     }
 
-    func setDroppedFiles(_ urls: [URL]) {
+    func setBatchTmpFolder(_ urls: [URL]) {
         if AppDelegate.shared.createOneFile {
             AppDelegate.shared.batchTmpFolder = NameMod.getTempFolder()
             print("batchFolder: \(AppDelegate.shared.batchTmpFolder)")
         }
-        AppDelegate.shared.droppedFiles.append(contentsOf: urls)
     }
     
     func startDrop (_ urls: [URL]) async -> [URL: Bool] {
         return await withCheckedContinuation { (continuation: CheckedContinuation<[URL: Bool], Never>) in
             DispatchQueue.main.async {
-                AppDelegate.shared.setDroppedFiles(urls)
+                AppDelegate.shared.setBatchTmpFolder(urls)
                 Task {
                     var results = await AppDelegate.shared.processFile.processDroppedFiles(urls, self)
                     if AppDelegate.shared.createOneFile {

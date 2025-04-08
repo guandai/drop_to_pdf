@@ -14,7 +14,7 @@ struct DropView: View {
     static let baseSize: CGFloat = 80
     static let dropAreaLength: CGFloat = 2.8 * DropView.baseSize
     static let iconLength: CGFloat = 1 * DropView.baseSize
-    static let outerLength: CGFloat = 3 * DropView.baseSize
+    static let outerLength: CGFloat = 3 * DropView.baseSize + 10
 
     var body: some View {
         ZStack {
@@ -35,42 +35,43 @@ struct DropView: View {
             WrapperProcessButton(showPanel: $showPanel, processedFiles: appDelegate.processResult)
             // Add the CenteredProgressView
             CenteredProgressView(progress: $progress)
-                .frame(width: DropView.dropAreaLength + 20, height: DropView.dropAreaLength + 50)
+                
         }
-        .frame(width: DropView.outerLength + 10, height: DropView.outerLength + 40)
+        .frame(width: DropView.outerLength, height: DropView.outerLength + 40)
     }
 
     private func handleFileDrop(_ providers: [NSItemProvider]) async -> Void {
-        let dispatchGroup = DispatchGroup()
-        let newFiles = await appendNewFiles(providers: providers, dispatchGroup: dispatchGroup)
+        let newFiles = await appendNewFiles(providers: providers)
 
         // Reset progress
         progress = 0.0
         let totalFiles = Double(newFiles.count)
 
-        dispatchGroup.notify(queue: .main) {
-            Task {
-                var results: [URL: Bool] = [:]
-                for (index, file) in newFiles.enumerated() {
-                    let result = await appDelegate.processFile.processOneFile(url: file, appDelegate: appDelegate)
-                    progress = Double(index + 1) / totalFiles // Update progress
-                    results[file] = result
-                }
-                
-                if AppDelegate.shared.createOneFile {
-                    results = await AppDelegate.shared.bundleToOnePdf(newFiles)
-                }
-
-                showMark = true
-                systemName = results.values.contains(false) ? "xmark.circle.fill" : "checkmark.circle.fill"
-                systemColor = results.values.contains(false) ? .red : .green
+        Task {
+            var results: [URL: Bool] = [:]
+            AppDelegate.shared.setBatchTmpFolder(newFiles)
+            for (index, file) in newFiles.enumerated() {
+                let result = await appDelegate.processFile.processOneFile(url: file, appDelegate: appDelegate)
+                progress = Double(index+1) / totalFiles // Update progress
+                print(progress)
+                results[file] = result
             }
+            
+            if AppDelegate.shared.createOneFile {
+                results = await AppDelegate.shared.bundleToOnePdf(newFiles)
+            }
+
+            showMark = true
+            systemName = results.values.contains(false) ? "xmark.circle.fill" : "checkmark.circle.fill"
+            systemColor = results.values.contains(false) ? .red : .green
         }
+    
     }
 
-    private func appendNewFiles(providers: [NSItemProvider], dispatchGroup: DispatchGroup) async -> [URL] {
+    private func appendNewFiles(providers: [NSItemProvider]) async -> [URL] {
         var newFiles: [URL] = []
-
+        let dispatchGroup = DispatchGroup()
+        
         return await withCheckedContinuation { continuation in
             for provider in providers {
                 dispatchGroup.enter()
@@ -88,4 +89,11 @@ struct DropView: View {
             }
         }
     }
+}
+
+
+#Preview {
+    DropView()
+        .environmentObject(AppDelegate())      // <-- inject your AppDelegate
+        .environmentObject(ProcessFile())      // <-- inject your ProcessFile
 }
